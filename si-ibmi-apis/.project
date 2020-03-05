@@ -7,5 +7,6 @@
 	<buildSpec>
 	</buildSpec>
 	<natures>
+		<nature>com.ibm.etools.systems.projects.core.remoteunixnature</nature>
 	</natures>
 </projectDescription>

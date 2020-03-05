@@ -5,7 +5,7 @@
              DCL        &tgtrls    *CHAR LEN(10)
              DCL        &object     *CHAR LEN(10)
              DCL        &srctype    *CHAR LEN(10)
-             DCL        &error      *INT  LEN(5)
+             DCL        &error      *INT  LEN(4)
 /* ---------------------------------------------------------------*/
              CALLSUBR   runINIT
              CALLSUBR   crtMSGF
