@@ -1,0 +1,4 @@
+             STRPGMEXP  PGMLVL(*CURRENT) SIGNATURE('SI v201904271322')
+                EXPORT     SYMBOL('SIOD_new')
+                EXPORT     SYMBOL('SIOD_creationDateAndTime')
+             ENDPGMEXP

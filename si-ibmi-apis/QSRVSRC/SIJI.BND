@@ -1,0 +1,6 @@
+             STRPGMEXP  PGMLVL(*CURRENT) SIGNATURE('SI v201908021637')
+                EXPORT     SYMBOL('SIJI_new')
+                EXPORT     SYMBOL('SIJI_existProgramInCallStack')
+                EXPORT     SYMBOL('SIJI_listCallStackEntrys')
+                EXPORT     SYMBOL('SIJI_getCallStackEntryForCaller')
+             ENDPGMEXP

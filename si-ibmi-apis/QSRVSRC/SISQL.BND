@@ -1,0 +1,5 @@
+             STRPGMEXP  PGMLVL(*CURRENT) SIGNATURE('SI v201903061343')
+                EXPORT     SYMBOL('SISQL_isWarning')
+                EXPORT     SYMBOL('SISQL_noData')
+                EXPORT     SYMBOL('SISQL_isError')
+             ENDPGMEXP
