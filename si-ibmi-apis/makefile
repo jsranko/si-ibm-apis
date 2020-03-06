@@ -3,7 +3,6 @@ DBGVIEW=*SOURCE
 
 OBJECT_DESC='(SI) IBM i Apis Framework'
 MAKELOG=makefile.output
-
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 SRVPGMS=\
@@ -41,12 +40,12 @@ build: build-main
 build-main: $(LIBRARY).lib $(LIBRARY).bnddir $(SRVPGMS)
 
 %.srvpgm: %.module
-	system -q "CRTSRVPGM SRVPGM($(LIBRARY)/$(@:%.srvpgm=%)) MODULE($(LIBRARY)/$(@:%.srvpgm=%)) EXPORT(*ALL) ACTGRP(*CALLER)" > $(MAKELOG) && touch $@
-	
+	system -q "CRTSRVPGM SRVPGM($(LIBRARY)/$(@:%.srvpgm=%)) MODULE($(LIBRARY)/$(@:%.srvpgm=%)) EXPORT(*ALL) ACTGRP(*CALLER)" > $(MAKELOG) && touch $@	
 	-system -q "ADDBNDDIRE BNDDIR($(LIBRARY)/$(LIBRARY)) OBJ(($(LIBRARY)/$(@:%.srvpgm=%) *SRVPGM *IMMED))" > $(MAKELOG) 
+	system -q "DLTMOD MODULE($(LIBRARY)/$(@:%.srvpgm=%))" > $(MAKELOG) 
 
 %.lib:
-	(system -q 'CHKOBJ $* *LIB' || system -q 'CRTLIB $*') && touch $@
+	(system -q "CHKOBJ $* *LIB" || system -q "CRTLIB $* TEXT($(OBJECT_DESC))") && touch $@
 	
 %.module: QRPGLESRC/%.RPGLE
 	system -q "CRTRPGMOD MODULE($(LIBRARY)/$*) SRCSTMF('$<') DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)')" > $(MAKELOG)  && touch $@	
