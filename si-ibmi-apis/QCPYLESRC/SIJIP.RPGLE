@@ -5,10 +5,10 @@
          /eof
          /endif
 
-         /include qcpylesrc,qusrjobip
+         /include qcpylesrc/qusrjobip
 
-         /include qcpylesrc,siitrp
-         /include qcpylesrc,qwvrcstkp
+         /include qcpylesrc/siitrp
+         /include qcpylesrc/qwvrcstkp
         //==========================================================================================
         // Constants
         //==========================================================================================

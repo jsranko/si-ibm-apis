@@ -4,7 +4,7 @@
          /eof
          /endif
 
-         /include qcpylesrc,siitrp
+         /include qcpylesrc/siitrp
 
         //==========================================================================================
         // Constant

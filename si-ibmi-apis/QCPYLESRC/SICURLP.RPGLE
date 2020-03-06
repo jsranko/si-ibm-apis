@@ -4,10 +4,10 @@
          /eof
          /endif
 
-         /include qcpylesrc,siulcp
-         /include qcpylesrc,siitrp
-         /include qcpylesrc,siqshp
-         /include qcpylesrc,siqshlogp
+         /include qcpylesrc/siulcp
+         /include qcpylesrc/siitrp
+         /include qcpylesrc/siqshp
+         /include qcpylesrc/siqshlogp
 
         //==========================================================================================
         // Constant

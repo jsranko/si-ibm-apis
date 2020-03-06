@@ -1,20 +1,62 @@
-OBJECT_LIBRARY=SIIIA
+LIBRARY=SIIIA
+DBGVIEW=*SOURCE
+
 OBJECT_DESC='(SI) IBM i Apis Framework'
-CLLE_DIR=QCLLESRC
-CLLE_SRC=$(wildcard $(CLLE_DIR)/*.clle)
-RPG_DIR=QRPGLESRC
-RPG_SRC=$(wildcard $(RPG_DIR)/*.rpgle)
-SQLRPG_SRC=$(wildcard $(RPG_DIR)/*.sqlrpgle)
+MAKELOG=makefile.output
+
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
-all: $(CLLE_SRC) $(RPG_SRC) $(SQLRPG_SRC)
+SRVPGMS=\
+	SIUI.srvpgm \
+	SIXCP.srvpgm \
+	SIHASH.srvpgm \
+	SIOD.srvpgm \
+	SIITR.srvpgm \
+	SIJL.srvpgm \
+	SIDT.srvpgm \
+	SISQL.srvpgm \
+	SIULC.srvpgm \
+	SIPATH.srvpgm \
+	SIDBGA.srvpgm \
+	SIUUID.srvpgm \
+	SISTR.srvpgm \
+	SIQSH.srvpgm \
+	SIQSHLOG.srvpgm \
+	SICURL.srvpgm \
+	SIIMF.srvpgm \
+	SIIOF.srvpgm \
+	SINL.srvpgm \
+	SIISF.srvpgm \
+	SIDIR.srvpgm \
+	SIJI.srvpgm 
 
-%.clle:
-	system -q "CRTBNDCL PGM($(OBJECT_LIBRARY)/$*) SRCSTMF('$(CLLE_DIR)/$*.clle') REPLACE(*YES) ALWRTVSRC(*YES) DBGVIEW(*ALL) INCDIR('$(ROOT_DIR)')";	
+# Ensure that intermediate files created by rules chains don't get
+# automatically deleted
+.PRECIOUS: %.srvpgm %.lib
+
+all: build
+
+build: build-main
+
+build-main: $(LIBRARY).lib $(LIBRARY).bnddir $(SRVPGMS)
+
+%.srvpgm: %.module
+	system -q "CRTSRVPGM SRVPGM($(LIBRARY)/$(@:%.srvpgm=%)) MODULE($(LIBRARY)/$(@:%.srvpgm=%)) EXPORT(*ALL) ACTGRP(*CALLER)" > $(MAKELOG) && touch $@
 	
-%.rpgle:
-	system -q "CRTSQLRPGI OBJ($(OBJECT_LIBRARY)/$*) SRCSTMF('$(CLLE_DIR)/$*.rpgle') OBJTYPE(*PGM) RPGPPOPT(*LVL2) DBGVIEW(*SOURCE) COMPILEOPT('INCDIR(''$(ROOT_DIR)'')')"
+	-system -q "ADDBNDDIRE BNDDIR($(LIBRARY)/$(LIBRARY)) OBJ(($(LIBRARY)/$(@:%.srvpgm=%) *SRVPGM *IMMED))" > $(MAKELOG) 
+
+%.lib:
+	(system -q 'CHKOBJ $* *LIB' || system -q 'CRTLIB $*') && touch $@
 	
-%.sqlrpgle:
-	system -q "CRTSQLRPGI OBJ($(OBJECT_LIBRARY)/$*) SRCSTMF('$(CLLE_DIR)/$*.sqlrpgle') OBJTYPE(*PGM) RPGPPOPT(*LVL2) DBGVIEW(*SOURCE) COMPILEOPT('INCDIR(''$(ROOT_DIR)'')')"
+%.module: QRPGLESRC/%.RPGLE
+	system -q "CRTRPGMOD MODULE($(LIBRARY)/$*) SRCSTMF('$<') DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)')" > $(MAKELOG)  && touch $@	
 	
+%.module: QRPGLESRC/%.SQLRPGLE
+	system -q "CRTSQLRPGI OBJ($(LIBRARY)/$*) SRCSTMF('$<') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'')')" > $(MAKELOG)  && touch $@
+	
+%.bnddir: $(LIBRARY).lib
+	(system -q "CHKOBJ OBJ($(LIBRARY)/$*) OBJTYPE(*BNDDIR)" || system -q "CRTBNDDIR BNDDIR($(LIBRARY)/$*) TEXT($(OBJECT_DESC))") > $(MAKELOG) && touch $@	
+	
+clean:
+	rm -f *.lib *.pgm *.srvpgm *.module *.output *.bnddir
+	system -q 'DLTLIB $(LIBRARY)' || :	

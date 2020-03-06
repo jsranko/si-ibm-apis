@@ -4,7 +4,7 @@
          /eof
          /endif
 
-         /include qcpylesrc,errnop
+         /include qcpylesrc/errnop
 
         //==========================================================================================
         //             Templates

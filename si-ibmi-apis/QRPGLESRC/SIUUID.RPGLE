@@ -28,10 +28,10 @@
         //==========================================================================================
 
          /define SIUUID
-         /include qcpylesrc,siuuidp
+         /include qcpylesrc/siuuidp
 
-         /include qcpylesrc,genuuidp
-         /include qcpylesrc,cvthcp
+         /include qcpylesrc/genuuidp
+         /include qcpylesrc/cvthcp
 
         //==========================================================================================
         // Procedures

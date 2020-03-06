@@ -5,7 +5,7 @@
 
 /define qwvrcstkp
 
-/include qcpylesrc,qusecp
+/include qcpylesrc/qusecp
 
 // -----------------------------------------------------------------------------
 dcl-c cQWVRCSTK_Format0100 const('CSTK0100');

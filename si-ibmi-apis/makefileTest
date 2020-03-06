@@ -1,0 +1,6 @@
+LIBRARY=@LIBRARY@
+DBGVIEW=@DEBUG@
+
+all:
+	@echo '$(LIBRARY)' 
+	@echo '$(DBGVIEW)' 

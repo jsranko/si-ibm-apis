@@ -14,7 +14,7 @@
         //==========================================================================================
 
          ctl-opt NoMain;
-         ctl-opt bnddir('SIIIA');
+         ctl-opt bnddir('SIIIA/SIIIA');
 
         //==========================================================================================
         // Templates
@@ -29,10 +29,10 @@
         //==========================================================================================
 
          /define SIHASH
-         /include qcpylesrc,sihashp
+         /include qcpylesrc/sihashp
 
-         /include qcpylesrc,cvthcp
-         /include qcpylesrc,sixcpp
+         /include qcpylesrc/cvthcp
+         /include qcpylesrc/sixcpp
 
         //==========================================================================================
         // Procedures

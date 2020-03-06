@@ -35,10 +35,10 @@
         //==========================================================================================
 
          /define SIUI
-         /include qcpylesrc,siuip
+         /include qcpylesrc/siuip
 
-         /include qcpylesrc,psdsp
-         /include qcpylesrc,memcpyp
+         /include qcpylesrc/psdsp
+         /include qcpylesrc/memcpyp
 
         //==========================================================================================
         // Procedures

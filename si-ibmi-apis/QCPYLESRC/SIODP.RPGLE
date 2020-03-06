@@ -5,8 +5,8 @@
          /eof
          /endif
 
-         /include qcpylesrc,siobjtypp
-         /include qcpylesrc,qusrobjdp
+         /include qcpylesrc/siobjtypp
+         /include qcpylesrc/qusrobjdp
 
         //==========================================================================================
         // Constant

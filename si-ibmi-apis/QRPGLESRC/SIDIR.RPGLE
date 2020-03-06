@@ -14,7 +14,7 @@
         //
         //==========================================================================================
 
-         ctl-opt NoMain bnddir('SIIIA');
+         ctl-opt NoMain bnddir('SIIIA/SIIIA');
 
         //==========================================================================================
         // Templates
@@ -29,17 +29,17 @@
         //==========================================================================================
 
          /define SIDIR
-         /include qcpylesrc,sidirp
+         /include qcpylesrc/sidirp
 
-         /include qcpylesrc,errnop
-         /include qcpylesrc,strerrorp
-         /include qcpylesrc,sidbgap
-         /include qcpylesrc,sijlp
-         /include qcpylesrc,mkdirp
-         /include qcpylesrc,accessp
-         /include qcpylesrc,chdirp
-         /include qcpylesrc,sixcpp
-         /include qcpylesrc,getcwdp
+         /include qcpylesrc/errnop
+         /include qcpylesrc/strerrorp
+         /include qcpylesrc/sidbgap
+         /include qcpylesrc/sijlp
+         /include qcpylesrc/mkdirp
+         /include qcpylesrc/accessp
+         /include qcpylesrc/chdirp
+         /include qcpylesrc/sixcpp
+         /include qcpylesrc/getcwdp
 
         //==========================================================================================
         // Procedures

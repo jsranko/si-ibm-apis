@@ -16,9 +16,9 @@
          ctl-opt NoMain;
 
          /define SIITR
-         /include qcpylesrc,siitrp
+         /include qcpylesrc/siitrp
 
-         /include qcpylesrc,memcpyp
+         /include qcpylesrc/memcpyp
 
         //==========================================================================================
         //             Templates

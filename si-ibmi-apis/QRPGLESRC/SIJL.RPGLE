@@ -32,9 +32,9 @@
         //==========================================================================================
 
          /define SIJL
-         /include qcpylesrc,sijlp
+         /include qcpylesrc/sijlp
 
-         /include qcpylesrc,qp0zcpap
+         /include qcpylesrc/qp0zcpap
 
         //==========================================================================================
         // Procedures

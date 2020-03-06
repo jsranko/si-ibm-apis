@@ -13,7 +13,7 @@
         //
         //==========================================================================================
 
-         ctl-opt main(siisfut) dftactgrp(*no) actgrp(*new) bnddir('SIIIA');
+         ctl-opt main(siisfut) dftactgrp(*no) actgrp(*new) bnddir('SIIIA/SIIIA');
 
         //==========================================================================================
         // Templates
@@ -27,10 +27,10 @@
         // Prototypes
         //==========================================================================================
 
-         /include qcpylesrc,siisfp
-         /include qcpylesrc,siimfp
-         /include qcpylesrc,siiofp
-         /include qcpylesrc,sinlp
+         /include qcpylesrc/siisfp
+         /include qcpylesrc/siimfp
+         /include qcpylesrc/siiofp
+         /include qcpylesrc/sinlp
 
         //==========================================================================================
         // Procedures

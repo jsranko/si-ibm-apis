@@ -15,7 +15,7 @@
         //==========================================================================================
 
          ctl-opt NoMain;
-         ctl-opt Bnddir('SIIIA');
+         ctl-opt bnddir('SIIIA/SIIIA');
 
         //==========================================================================================
         // Templates
@@ -30,11 +30,11 @@
         //==========================================================================================
 
          /define SIDBGA
-         /include qcpylesrc,sidbgap
+         /include qcpylesrc/sidbgap
 
-         /include qcpylesrc,sijlp
-         /include qcpylesrc,systemp
-         /include qcpylesrc,sixcpp
+         /include qcpylesrc/sijlp
+         /include qcpylesrc/systemp
+         /include qcpylesrc/sixcpp
 
         //==========================================================================================
         // Procedures

@@ -14,7 +14,7 @@
         //
         //==========================================================================================
 
-         ctl-opt NoMain bnddir('SIIIA');
+         ctl-opt NoMain bnddir('SIIIA/SIIIA');
 
         //==========================================================================================
         // Templates
@@ -29,10 +29,10 @@
         //==========================================================================================
 
          /define SISTR
-         /include qcpylesrc,sistrp
+         /include qcpylesrc/sistrp
 
-         /include qcpylesrc,qlgcnvcsp
-         /include qcpylesrc,strtokp
+         /include qcpylesrc/qlgcnvcsp
+         /include qcpylesrc/strtokp
 
         //==========================================================================================
         // Procedures

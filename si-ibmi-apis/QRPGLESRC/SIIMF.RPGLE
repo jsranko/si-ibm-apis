@@ -28,7 +28,7 @@
         //==========================================================================================
 
          /define SIIMF
-         /include qcpylesrc,siimfp
+         /include qcpylesrc/siimfp
 
          /include qsysinc/qrpglesrc,sysstat
 

@@ -5,8 +5,8 @@
          /eof
          /endif
 
-         /include qcpylesrc,qmhsndpmp
-         /include qcpylesrc,siiiap
+         /include qcpylesrc/qmhsndpmp
+         /include qcpylesrc/siiiap
 
         //==========================================================================================
         // Constant

@@ -13,14 +13,14 @@
         //
         //==========================================================================================
 
-         ctl-opt NoMain bnddir('SIIIA');
+         ctl-opt NoMain bnddir('SIIIA/SIIIA');
 
          /define SIQSH
-         /include qcpylesrc,siqshp
+         /include qcpylesrc/siqshp
 
          /include qsysinc/qrpglesrc,ifs
-         /include qcpylesrc,systemp
-         /include qcpylesrc,strtokp
+         /include qcpylesrc/systemp
+         /include qcpylesrc/strtokp
 
         //==========================================================================================
         //             Konstanten

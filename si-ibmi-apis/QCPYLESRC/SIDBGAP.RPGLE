@@ -5,7 +5,7 @@
          /eof
          /endif
 
-         /include qcpylesrc,qtedbgsp
+         /include qcpylesrc/qtedbgsp
 
         //==========================================================================================
         // Constant

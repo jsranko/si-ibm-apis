@@ -14,7 +14,7 @@
         //
         //==========================================================================================
 
-         ctl-opt NoMain bnddir('SIIIA');
+         ctl-opt NoMain bnddir('SIIIA/SIIIA');
 
         //==========================================================================================
         // Constants
@@ -36,16 +36,16 @@
         //==========================================================================================
 
          /define SIISF
-         /include qcpylesrc,siisfp
+         /include qcpylesrc/siisfp
 
-         /include qcpylesrc,siiofp
-         /include qcpylesrc,siimfp
-         /include qcpylesrc,sinlp
-         /include qcpylesrc,errnop
-         /include qcpylesrc,strerrorp
-         /include qcpylesrc,sidbgap
-         /include qcpylesrc,sijlp
-         ///include qcpylesrc,statp
+         /include qcpylesrc/siiofp
+         /include qcpylesrc/siimfp
+         /include qcpylesrc/sinlp
+         /include qcpylesrc/errnop
+         /include qcpylesrc/strerrorp
+         /include qcpylesrc/sidbgap
+         /include qcpylesrc/sijlp
+         ///include qcpylesrc/statp
 
         //==========================================================================================
         // Procedures

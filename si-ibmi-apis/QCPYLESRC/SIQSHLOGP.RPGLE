@@ -4,9 +4,9 @@
          /eof
          /endif
 
-         /include qcpylesrc,siuuidp
-         /include qcpylesrc,siqshp
-         /include qcpylesrc,siitrp
+         /include qcpylesrc/siuuidp
+         /include qcpylesrc/siqshp
+         /include qcpylesrc/siitrp
 
         //==========================================================================================
         // Constant

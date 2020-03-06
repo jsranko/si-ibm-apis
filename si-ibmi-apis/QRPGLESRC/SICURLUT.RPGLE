@@ -13,7 +13,7 @@
         //
         //==========================================================================================
 
-         ctl-opt main(SICURLUT) dftactgrp(*no) actgrp(*new) bnddir('SIIIA');
+         ctl-opt main(SICURLUT) dftactgrp(*no) actgrp(*new) bnddir('SIIIA/SIIIA');
 
         //==========================================================================================
         // Templates
@@ -27,9 +27,9 @@
         // Prototypes
         //==========================================================================================
 
-         /include qcpylesrc,sicurlp
-         /include qcpylesrc,siulcp
-         /include qcpylesrc,siqshp
+         /include qcpylesrc/sicurlp
+         /include qcpylesrc/siulcp
+         /include qcpylesrc/siqshp
 
         //==========================================================================================
         // Procedures

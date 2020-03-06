@@ -13,7 +13,7 @@
         //
         //==========================================================================================
 
-         ctl-opt main(SIQSHLOGUT) dftactgrp(*no) actgrp(*new) bnddir('SIIIA');
+         ctl-opt main(SIQSHLOGUT) dftactgrp(*no) actgrp(*new) bnddir('SIIIA/SIIIA');
 
         //==========================================================================================
         // Templates
@@ -27,8 +27,8 @@
         // Prototypes
         //==========================================================================================
 
-         /include qcpylesrc,siqshp
-         /include qcpylesrc,siqshlogp
+         /include qcpylesrc/siqshp
+         /include qcpylesrc/siqshlogp
 
         //==========================================================================================
         // Procedures

@@ -13,7 +13,7 @@
         //
         //==========================================================================================
 
-         ctl-opt NoMain bnddir('SIIIA');
+         ctl-opt NoMain bnddir('SIIIA/SIIIA');
 
         //==========================================================================================
         // Constants
@@ -59,14 +59,14 @@
         //==========================================================================================
 
          /define SICURL
-         /include qcpylesrc,sicurlp
+         /include qcpylesrc/sicurlp
 
-         /include qcpylesrc,sipathp
-         /include qcpylesrc,siqshlogp
-         /include qcpylesrc,sidbgap
-         /include qcpylesrc,sijlp
-         /include qcpylesrc,sistrp
-         /include qcpylesrc,sixcpp
+         /include qcpylesrc/sipathp
+         /include qcpylesrc/siqshlogp
+         /include qcpylesrc/sidbgap
+         /include qcpylesrc/sijlp
+         /include qcpylesrc/sistrp
+         /include qcpylesrc/sixcpp
 
         //==========================================================================================
         // Procedures

@@ -13,7 +13,7 @@
         //
         //==========================================================================================
 
-         ctl-opt NoMain bnddir('SIIIA');
+         ctl-opt NoMain bnddir('SIIIA/SIIIA');
 
         //==========================================================================================
         // Constants
@@ -32,11 +32,11 @@
         //==========================================================================================
 
          /define SIQSHLOG
-         /include qcpylesrc,siqshlogp
+         /include qcpylesrc/siqshlogp
 
-         /include qcpylesrc,sisqlp
+         /include qcpylesrc/sisqlp
          /include qsysinc/qrpglesrc,ifs
-         /include qcpylesrc,strtokp
+         /include qcpylesrc/strtokp
 
          exec sql set option commit = *none;
 

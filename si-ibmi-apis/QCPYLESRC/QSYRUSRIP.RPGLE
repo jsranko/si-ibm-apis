@@ -5,7 +5,7 @@
          /eof
          /endif
 
-         /include qcpylesrc,qusecp
+         /include qcpylesrc/qusecp
 
         //==========================================================================================
         // Constants

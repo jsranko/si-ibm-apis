@@ -5,9 +5,9 @@
          /endif
 
          /include qsysinc/qrpglesrc,ifs
-         /include qcpylesrc,sinlp
-         /include qcpylesrc,siiofp
-         /include qcpylesrc,siimfp
+         /include qcpylesrc/sinlp
+         /include qcpylesrc/siiofp
+         /include qcpylesrc/siimfp
 
         //==========================================================================================
         // Constant

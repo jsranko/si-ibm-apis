@@ -28,7 +28,7 @@
         //==========================================================================================
 
          /define SIIOF
-         /include qcpylesrc,siiofp
+         /include qcpylesrc/siiofp
 
          /include qsysinc/qrpglesrc,fcntl
 

@@ -5,7 +5,7 @@
          /eof
          /endif
 
-         /include qcpylesrc,qsyrusrip
+         /include qcpylesrc/qsyrusrip
 
         //==========================================================================================
         // Constant
