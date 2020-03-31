@@ -3,4 +3,8 @@
                 EXPORT     SYMBOL('SIJI_existProgramInCallStack')
                 EXPORT     SYMBOL('SIJI_listCallStackEntrys')
                 EXPORT     SYMBOL('SIJI_getCallStackEntryForCaller')
+                EXPORT     SYMBOL('SIJI_getQualifiedJobName')
+                EXPORT     SYMBOL('SIJI_close')
+                EXPORT     SYMBOL('SIJI_getCodedCharacterSetID')
+                EXPORT     SYMBOL('SIJI_existProgramInCallStack')
              ENDPGMEXP

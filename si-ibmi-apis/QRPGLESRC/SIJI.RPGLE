@@ -33,8 +33,8 @@
         //==========================================================================================
 
          /define SIJI
-         /include qcpylesrc/sijip
-         /include qcpylesrc/sixcpp
+         /include siiia/qcpylesrc,sijip
+         /include siiia/qcpylesrc,sixcpp
 
         //==========================================================================================
         // Procedures
@@ -55,7 +55,7 @@
            dsSIJI.QualifiedJobName.Username = Username;
          endif;
          if %parms >= %parmnum(Jobnumber);
-         dsSIJI.QualifiedJobName.Jobnumber = Jobnumber;
+           dsSIJI.QualifiedJobName.Jobnumber = Jobnumber;
          endif;
 
          if Jobname = *blanks;
@@ -68,11 +68,24 @@
         //------------------------------------------------------------------------------------------
 
          dcl-proc getData;
-         dcl-pi getData ind;
-           dsSIJI like(tSIJI_Def);
+         dcl-pi getData char(32767);
+           dsSIJI likeds(tSIJI_Def);
+           FormatName like(tQUSRJOBI_FormatName) const;
          end-pi;
+         dcl-s ReceiverVariable like(tQUSRJOBI_ReceiverVariable);
+         dcl-ds ErrorCode likeds(tQUSEC);
 
-         return *on;
+         RetrieveJobInformation(ReceiverVariable
+                               :%size(ReceiverVariable)
+                               :FormatName
+                               :dsSIJI.QualifiedJobName
+                               :*blanks
+                               :ErrorCode);
+         if ErrorCode.ExceptionId <> *blanks;
+           return *off;
+         endif;
+
+         return ReceiverVariable;
          end-proc;
 
         //------------------------------------------------------------------------------------------
@@ -84,11 +97,13 @@
          dcl-ds dsSIJI likeds(tSIJI_Def) based(pSIJI);
          pSIJI = %addr(SIJI);
 
-         if not getData(dsSIJI);
+         monitor;
+           dsSIJI.Data0150 = getData(dsSIJI:cQUSRJOBI_FORMAT_AdditionalPerformanceInformation);
+         on-error;
+           SIXCP_throwWithMessageId('CPD3CB2':dsSIJI.QualifiedJobName:cSIXCP_QCPFMSG);
+         endmon;
 
-         endif;
-
-         return dsSIJI.Data.TemporaryStorageUsed;
+         return dsSIJI.Data0150.TemporaryStorageUsed;
          end-proc;
 
         //------------------------------------------------------------------------------------------
@@ -222,3 +237,56 @@
 
          return CallStackList;
          end-proc;
+
+        //------------------------------------------------------------------------------------------
+
+         dcl-proc SIJI_getQualifiedJobName export;
+         dcl-pi SIJI_getQualifiedJobName like(tSIJI_QualifiedJobName) extproc(*dclcase);
+           SIJI like(tSIJI);
+         end-pi;
+         dcl-ds dsSIJI likeds(tSIJI_Def) based(pSIJI);
+         pSIJI = %addr(SIJI);
+
+         monitor;
+           dsSIJI.Data0150 = getData(dsSIJI:cQUSRJOBI_FORMAT_AdditionalPerformanceInformation);
+         on-error;
+           SIXCP_throwWithMessageId('CPD3CB2':dsSIJI.QualifiedJobName:cSIXCP_QCPFMSG);
+         endmon;
+
+         return %char(dsSIJI.Data0150.JobNumber) + '/' +
+                %trim(dsSIJI.Data0150.UserName) + '/' +
+                %trim(dsSIJI.Data0150.JobName);
+         end-proc;
+
+        //------------------------------------------------------------------------------------------
+
+         dcl-proc SIJI_close export;
+         dcl-pi SIJI_close extproc(*dclcase);
+           SIJI like(tSIJI);
+         end-pi;
+         dcl-ds dsSIJI likeds(tSIJI_Def) based(pSIJI);
+         pSIJI = %addr(SIJI);
+
+         clear dsSIJI;
+
+         return;
+         end-proc;
+
+        //------------------------------------------------------------------------------------------
+
+         dcl-proc SIJI_getCodedCharacterSetID export;
+         dcl-pi SIJI_getCodedCharacterSetID like(tSIJI_CodedCharacterSetID) extproc(*dclcase);
+           SIJI like(tSIJI);
+         end-pi;
+         dcl-ds dsSIJI likeds(tSIJI_Def) based(pSIJI);
+         pSIJI = %addr(SIJI);
+
+         monitor;
+           dsSIJI.Data0400 = getData(dsSIJI:cQUSRJOBI_FORMAT_JobAttributeInformation);
+         on-error;
+           SIXCP_throwWithMessageId('CPD3CB2':dsSIJI.QualifiedJobName:cSIXCP_QCPFMSG);
+         endmon;
+
+         return dsSIJI.Data0400.CodedCharacterSetID;
+         end-proc;
+
