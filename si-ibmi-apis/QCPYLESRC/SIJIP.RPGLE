@@ -46,6 +46,7 @@
           ActivationGroupNumberLong like(tQWVRCSTK_ActivationGroupNumberLong);
           ProcedureName like(tQWVRCSTK_ProcedureName);
         end-ds;
+        dcl-s tSIJI_CodedCharacterSetID like(tQUSRJOBI_CodedCharacterSetID)  template;
 
         dcl-ds tSIJI_Def qualified;
           QualifiedJobName likeds(tSINL_QualifiedJobName);
