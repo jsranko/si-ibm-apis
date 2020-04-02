@@ -33,9 +33,9 @@
 003300190802        //==========================================================================================
 003400190802
 003500200120         /define SICJ
-003600200120         /include siiia/qcpylesrc,sicjp
-003700200120         /include siiia/qcpylesrc,qwtchgjbp
-003701200120         /include siiia/qcpylesrc,memcpyp
+003600200120         /include qcpylesrc/sicjp
+003700200120         /include qcpylesrc/qwtchgjbp
+003701200120         /include qcpylesrc/memcpyp
 003900190802
 004000190802        //==========================================================================================
 004100190802        // Procedures

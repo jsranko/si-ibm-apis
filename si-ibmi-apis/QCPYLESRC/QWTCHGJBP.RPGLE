@@ -5,7 +5,7 @@
 000104191102
 000105200120/define qwtchgjbp
 000106191102
-000107191217/include siiia/qcpylesrc,qusecp
+000107191217/include qcpylesrc/qusecp
 000108191102
 000109191102// -----------------------------------------------------------------------------
 000110200120dcl-c cQWTCHGJB_Format_JOBC0100 const('JOBC0100');

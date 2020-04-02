@@ -33,8 +33,8 @@
         //==========================================================================================
 
          /define SIJI
-         /include siiia/qcpylesrc,sijip
-         /include siiia/qcpylesrc,sixcpp
+         /include qcpylesrc/sijip
+         /include qcpylesrc/sixcpp
 
         //==========================================================================================
         // Procedures
