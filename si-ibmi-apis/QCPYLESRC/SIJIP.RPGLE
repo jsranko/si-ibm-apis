@@ -5,10 +5,10 @@
          /eof
          /endif
 
-         /include qcpylesrc/qusrjobip
+         /include siiia/qcpylesrc,qusrjobip
 
-         /include qcpylesrc/siitrp
-         /include qcpylesrc/qwvrcstkp
+         /include siiia/qcpylesrc,siitrp
+         /include siiia/qcpylesrc,qwvrcstkp
         //==========================================================================================
         // Constants
         //==========================================================================================
@@ -22,7 +22,7 @@
         dcl-s tSIJI_Jobname char(10) template;
         dcl-s tSIJI_Username char(10) template;
         dcl-s tSIJI_Jobnumber char(6) template;
-        dcl-ds tSINL_QualifiedJobName template;
+        dcl-ds tSIJI_QualifiedJobName template;
            Jobname like(tSIJI_Jobname);
            Username like(tSIJI_Username);
            Jobnumber like(tSIJI_Jobnumber);
@@ -46,11 +46,12 @@
           ActivationGroupNumberLong like(tQWVRCSTK_ActivationGroupNumberLong);
           ProcedureName like(tQWVRCSTK_ProcedureName);
         end-ds;
-        dcl-s tSIJI_CodedCharacterSetID like(tQUSRJOBI_CodedCharacterSetID)  template;
+        dcl-s tSIJI_CodedCharacterSetID like(tQUSRJOBI_CodedCharacterSetID) template;
 
         dcl-ds tSIJI_Def qualified;
-          QualifiedJobName likeds(tSINL_QualifiedJobName);
-          Data likeds(tQUSRJOBI_JOBI0150);    // DS with everythink
+          QualifiedJobName likeds(tSIJI_QualifiedJobName);
+          Data0150 likeds(tQUSRJOBI_JOBI0150);    // DS with everythink
+          Data0400 likeds(tQUSRJOBI_JOBI0400);
         end-ds;
 
          /if defined(SIJI)
@@ -76,5 +77,21 @@
          end-pr;
 
          dcl-pr SIJI_getCallStackEntryForCaller like(tSIJI_CallStackEntry) extproc(*dclcase);
+           SIJI like(tSIJI);
+         end-pr;
+
+         dcl-pr SIJI_getQualifiedJobName like(tSIJI_QualifiedJobName) extproc(*dclcase);
+           SIJI like(tSIJI);
+         end-pr;
+
+         dcl-pr SIJI_close extproc(*dclcase);
+           SIJI like(tSIJI);
+         end-pr;
+
+         dcl-pr SIJI_getCodedCharacterSetID like(tSIJI_CodedCharacterSetID) extproc(*dclcase);
+           SIJI like(tSIJI);
+         end-pr;
+
+         dcl-pr SIJI_getUserName like(tSIJI_UserName) extproc(*dclcase);
            SIJI like(tSIJI);
          end-pr;
