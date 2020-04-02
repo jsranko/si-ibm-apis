@@ -1,69 +1,69 @@
-        //******************************************************************************************
-        //
-        //
-        // Programname    : SIQSHLOGUT
-        // Programautor   : Sranko Informatik
-        // Created on     : 01.03.2019
-        //
-        //==========================================================================================
-        //             Program-Compiling
-        //==========================================================================================
-        //
-        // See QCLLESRC,makesiiia
-        //
-        //==========================================================================================
+**FREE
 
-         ctl-opt main(SIQSHLOGUT) dftactgrp(*no) actgrp(*new) bnddir('SIIIA/SIIIA');
+//******************************************************************************************
+//
+//
+// Programname    : SIQSHLOGUT
+// Programautor   : Sranko Informatik
+// Created on     : 01.03.2019
+//
+//==========================================================================================
+//             Program-Compiling
+//==========================================================================================
+//
+// See QCLLESRC,makesiiia
+//
+//==========================================================================================
 
-        //==========================================================================================
-        // Templates
-        //==========================================================================================
+ctl-opt main(SIQSHLOGUT) dftactgrp(*no) actgrp(*new) bnddir('SIIIA/SIIIA');
 
-        //==========================================================================================
-        // Global-Definition
-        //==========================================================================================
+//==========================================================================================
+// Templates
+//==========================================================================================
 
-        //==========================================================================================
-        // Prototypes
-        //==========================================================================================
+//==========================================================================================
+// Global-Definition
+//==========================================================================================
 
-         /include qcpylesrc/siqshp
-         /include qcpylesrc/siqshlogp
+//==========================================================================================
+// Prototypes
+//==========================================================================================
 
-        //==========================================================================================
-        // Procedures
-        //==========================================================================================
+/include qcpylesrc/siqshp
+/include qcpylesrc/siqshlogp
 
-         dcl-proc SIQSHLOGUT;
-         dcl-pi SIQSHLOGUT;
-         end-pi;
-         dcl-s QShell like(tSIQSH);
-         dcl-s QShellLog like(tSIQSHLOG);
+//==========================================================================================
+// Procedures
+//==========================================================================================
 
-         QShellLog = SIQSHLOG_create();
-         QShell = SIQSH_init('siqshlogut.stdin'
-                            :'siqshlogut.stdout'
-                            :'siqshlogut.stderr');
+dcl-proc SIQSHLOGUT;
+dcl-pi SIQSHLOGUT;
+end-pi;
+dcl-s QShell like(tSIQSH);
+dcl-s QShellLog like(tSIQSHLOG);
 
-         SIQSH_runCommand(QShell:'ls -la');
+  QShellLog = SIQSHLOG_create();
+  QShell = SIQSH_init('siqshlogut.stdin'
+                     :'siqshlogut.stdout'
+                     :'siqshlogut.stderr');
 
-         SIQSHLOG_write(QShellLog:QShell);
+  SIQSH_runCommand(QShell:'ls -la');
 
-         SIQSH_clearStdFiles(QShell);
+  SIQSHLOG_write(QShellLog:QShell);
 
-         SIQSH_runCommand(QShell:'curl --xxxxxx');
+  SIQSH_clearStdFiles(QShell);
 
-         SIQSHLOG_write(QShellLog:QShell);
+  SIQSH_runCommand(QShell:'curl --xxxxxx');
 
-         SIQSH_close(QShell);
-         SIQSH_deleteStdInFile(QShell);
-         SIQSH_deleteStdOutFile(QShell);
-         SIQSH_deleteStdErrFile(QShell);
-         SIQSHLOG_delete(QShellLog);
+  SIQSHLOG_write(QShellLog:QShell);
 
-         return;
-         end-proc;
+  SIQSH_close(QShell);
+  SIQSH_deleteStdInFile(QShell);
+  SIQSH_deleteStdOutFile(QShell);
+  SIQSH_deleteStdErrFile(QShell);
+  SIQSHLOG_delete(QShellLog);
 
-        //------------------------------------------------------------------------------------------
+  return;
+end-proc;
 
 

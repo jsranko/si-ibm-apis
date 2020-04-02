@@ -1,6 +1,17 @@
-LIBRARY=@LIBRARY@
-DBGVIEW=@DEBUG@
+somevar := apple
+export somevar
+
+update1 := $(shell perl -e 'print "method 1 $$ENV{somevar}\n"')
+# Make runs the shell command, the shell does not know somevar, so update1 is "method 1 ".
+
+update2 := perl -e 'print "method 2 $$ENV{somevar}\n"'
+# Now update2 is perl -e 'print "method 2 $$ENV{somevar}\n"'
+
+# Lest we forget:
+update3 := method 3 $(somevar)
 
 all:
-	@echo '$(LIBRARY)' 
-	@echo '$(DBGVIEW)' 
+	echo $(update1)
+	$(update2)
+	echo $(update3)
+	perl -e 'print method 4 "$$ENV{somevar}\n"'
