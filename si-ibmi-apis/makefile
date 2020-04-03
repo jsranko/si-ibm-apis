@@ -47,10 +47,13 @@ TESTPGMS=\
 
 MSGFS=\
 	SIMSGF.messagefile
-	
+
+CMDS=\
+	SICRTMSGF.command
+
 # Ensure that intermediate files created by rules chains don't get
 # automatically deleted
-.PRECIOUS: %.srvpgm %.lib
+.PRECIOUS: %.srvpgm %.lib %.command %.messagefile
 
 all: build
 
@@ -90,6 +93,9 @@ build-tests: $(TESTPGMS)
 		
 %.messagefile: QMSGFSRC/%.msgf
 	system -q "SICRTMSGF SRCSTMF('$(ROOT_DIR)/$<')" && touch $@
+	
+%.command: QCMDSRC/%.cmd
+	system -q "CRTCMD CMD($(LIBRARY)/$*) PGM($(LIBRARY)/$<) SRCSTMF($(ROOT_DIR)/$<) REPLACE(*YES)" && touch $@
 			
 clean:
 	rm -f *.lib *.pgm *.srvpgm *.module *.output *.bnddir
