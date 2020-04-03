@@ -1,0 +1,6 @@
+*.srvpgm
+*.pgm
+*.module
+*.envvar
+*.lib
+*.bnddir
