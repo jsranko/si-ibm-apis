@@ -53,4 +53,9 @@ export PATH=${OPENSRC_DIR}:$PATH
 echo "installing dependencies for si-ibm-apis ..."
 install_yum_dependencies
 
-echo "Done. You can now build the si-ibm-apis with: gmake build"
+echo "Done. "
+echo "Everything is now prepared for the installation. It will be installed in the library SIIIA. The library can be changed, open makefile and change the variable LIBRARY."
+echo "The build process can now be started."
+echo ""
+echo "       gmake or gmake -f makefile"
+echo ""
