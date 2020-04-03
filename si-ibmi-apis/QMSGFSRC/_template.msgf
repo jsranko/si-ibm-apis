@@ -39,8 +39,8 @@
             "upperValue":""
          },
          "rel":{
-            "vergleichsoperator":"*NONE",
-            "wert":""
+            "relationOperator":"*NONE",
+            "value":""
          },
          "dft":"*none",
          "dftpgm":{
@@ -51,8 +51,8 @@
             "*job"
          ],
          "alropt":{
-            "alertArt":"*no",
-            "ressourcennamenvariable":"*none"
+            "alertType":"*no",
+            "ressourceNameVariable":"*none"
          },
          "logprb":"*no",
          "ccsid":"*job"

@@ -5,6 +5,7 @@ STGMDL=*INHERIT
 OBJECT_DESC='(SI) IBM i Apis Framework'
 MAKELOG=makefile.output
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+SIIIA_CTLOPT=QCPYLESRC/SICTLOPT.RPGLE
 
 SRVPGMS=\
 	SIUI.srvpgm \
@@ -73,8 +74,9 @@ build-tests: $(TESTPGMS)
 	-system -q "ADDBNDDIRE BNDDIR($(LIBRARY)/$(LIBRARY)) OBJ(($(LIBRARY)/$(@:%.srvpgm=%) *SRVPGM *IMMED))" && touch $@ 
 	system -q "DLTMOD MODULE($(LIBRARY)/$(@:%.srvpgm=%))"
 
-%.lib:
+%.lib: 
 	(system -q "CHKOBJ $* *LIB" || system -q "CRTLIB $* TEXT($(OBJECT_DESC))") && touch $@
+	touch $(SIIIA_CTLOPT) && printf "**FREE\n\n/if not defined(SICTLOPTP)\n  /define SICTLOPTP\n/else\n  /eof\n/endif\n\nctl-opt bnddir('$(LIBRARY)/SIIIA');" > $(SIIIA_CTLOPT)
 	
 %.module: QRPGLESRC/%.RPGLE
 	system -q "CRTRPGMOD MODULE($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') STGMDL($(STGMDL)) TGTCCSID(*JOB)" && touch $@	
@@ -86,7 +88,9 @@ build-tests: $(TESTPGMS)
 	(system -q "CHKOBJ OBJ($(LIBRARY)/$*) OBJTYPE(*BNDDIR)" || system -q "CRTBNDDIR BNDDIR($(LIBRARY)/$*) TEXT($(OBJECT_DESC))") && touch $@	
 	
 %.pgm: QRPGLESRC/%.SQLRPGLE
-	system -q "CRTSQLRPGI OBJ($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*PGM) DBGVIEW($(DBGVIEW)) RPGPPOPT(*LVL2) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') TGTCCSID(*JOB) DFTACTGRP(*NO) ACTGRP(*NEW)')" && touch $@
+	# Create source for sqlprecompiler ... problem exist with RNS9334, if just PPSRCSTMF(*SRCSTMF)
+	(system "CHKOBJ OBJ($(LIBRARY)/QSQLPRE) OBJTYPE(*FILE)" || system "CRTSRCPF FILE($(LIBRARY)/QSQLPRE) RCDLEN(240)")
+	system -q "CRTSQLRPGI OBJ($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*PGM) DBGVIEW($(DBGVIEW)) RPGPPOPT(*LVL2) REPLACE(*YES) TOSRCFILE($(LIBRARY)/QSQLPRE) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') TGTCCSID(*JOB) DFTACTGRP(*NO) ACTGRP(*NEW)')" && touch $@
 
 %.pgm: QRPGLESRC/%.RPGLE
 	system -q "CRTBNDRPG PGM($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') TGTCCSID(*JOB)" && touch $@
