@@ -61,7 +61,7 @@ all: build
 
 build: build-main build-tests
 
-build-main: $(LIBRARY).lib $(LIBRARY).bnddir $(SRVPGMS) $(MSGFS) RPGINCDIR.envvar
+build-main: $(LIBRARY).lib $(LIBRARY).bnddir $(SRVPGMS) $(CMDS) $(MSGFS) RPGINCDIR.envvar
 
 build-tests: $(TESTPGMS)
 
@@ -94,7 +94,7 @@ build-tests: $(TESTPGMS)
 %.messagefile: QMSGFSRC/%.msgf
 	system -q "SICRTMSGF SRCSTMF('$(ROOT_DIR)/$<')" && touch $@
 	
-%.command: QCMDSRC/%.cmd
+%.command: QCMDSRC/%.cmd %.pgm
 	system -q "CRTCMD CMD($(LIBRARY)/$*) PGM($(LIBRARY)/$<) SRCSTMF($(ROOT_DIR)/$<) REPLACE(*YES)" && touch $@
 			
 clean:
