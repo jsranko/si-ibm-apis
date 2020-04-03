@@ -45,6 +45,9 @@ TESTPGMS=\
 	SIUUIDUT.pgm \
 	SIXCPUT.pgm
 
+MSGFS=\
+	SIMSGF.messagefile
+	
 # Ensure that intermediate files created by rules chains don't get
 # automatically deleted
 .PRECIOUS: %.srvpgm %.lib
@@ -55,7 +58,7 @@ all: build
 
 build: build-main build-tests
 
-build-main: $(LIBRARY).lib $(LIBRARY).bnddir $(SRVPGMS) RPGINCDIR.envvar
+build-main: $(LIBRARY).lib $(LIBRARY).bnddir $(SRVPGMS) $(MSGFS) RPGINCDIR.envvar
 
 build-tests: $(TESTPGMS)
 
@@ -85,6 +88,9 @@ build-tests: $(TESTPGMS)
 %.pgm: QRPGLESRC/%.RPGLE
 	system -q "CRTBNDRPG PGM($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') TGTCCSID(*JOB)" && touch $@
 		
+%.messagefile: QMSGFSRC/%.msgf
+	system -q "SICRTMSGF SRCSTMF('$(ROOT_DIR)/$<')" && touch $@
+			
 clean:
 	rm -f *.lib *.pgm *.srvpgm *.module *.output *.bnddir
 	system -q 'DLTLIB $(LIBRARY)' || :	
