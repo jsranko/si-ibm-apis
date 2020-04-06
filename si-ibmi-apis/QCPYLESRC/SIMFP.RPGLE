@@ -1,10 +1,10 @@
 **FREE
 
-///if defined(SIMFP)
-//  /define SIMFP
-///else
-//  /eof
-///endif
+/if not defined(SIMFP)
+  /define SIMFP
+/else
+  /eof
+/endif
 
 /include qcpylesrc/siitrp
 
@@ -20,6 +20,30 @@ dcl-s tSIMF_SizeIncrementStorageSize int(10) template;
 dcl-s tSIMF_SizeMaximumIncrements char(6) template;
 dcl-s tSIMF_Aut char(10) template;
 dcl-s tSIMF_Ccsid char(11) template;
+dcl-s tSIMF_Msgid char(7) template;
+dcl-s tSIMF_Msg char(132) template;
+dcl-s tSIMF_SecLvl char(3000) template;
+dcl-s tSIMF_Sev int(10) template;
+dcl-s tSIMF_FmtDataType char(8) template;
+dcl-s tSIMF_FmtLength int(10) template;
+dcl-s tSIMF_FmtDecimalPositions int(10) template;
+dcl-s tSIMF_Type char(6) template;
+dcl-s tSIMF_LenLength char(6) template;
+dcl-s tSIMF_LenDecimalPositions int(10) template;
+dcl-s tSIMF_Values char(660) template;
+dcl-s tSIMF_SpcvalOriginalFromValue char(660) template;
+dcl-s tSIMF_SpcvalReplacementToValue char(660) template;
+dcl-s tSIMF_RangeLowerValue char(33) template;
+dcl-s tSIMF_RangeUpperValue char(33) template;
+dcl-s tSIMF_RelRelationOperator char(5) template;
+dcl-s tSIMF_RelValue char(33) template;
+dcl-s tSIMF_Dft char(132) template;
+dcl-s tSIMF_DftpgmObject char(10) template;
+dcl-s tSIMF_DftpgmLibrary char(10) template;
+dcl-s tSIMF_Dmplst char(7) template;
+dcl-s tSIMF_AlroptAlertArt char(9) template;
+dcl-s tSIMF_AlroptressourceNameVariable char(6) template;
+dcl-s tSIMF_Logprb char(4) template;
 dcl-ds tSIMF_Description qualified template;
   text like(tSIMF_Text);
   sizeInitialStorageSize like(tSIMF_SizeInitialStorageSize);
@@ -29,31 +53,31 @@ dcl-ds tSIMF_Description qualified template;
   ccsid like(tSIMF_Ccsid);
 end-ds;
 dcl-ds tSIMF_Message qualified template;
-  msgid char(7);
-  msg char(132);
-  seclvl char(3000);
-  sev int(10);
-  fmtDataType char(8);
-  fmtLength int(10);
-  fmtDecimalPositions int(10);
-  type char(6);
-  lenLength char(6);
-  lenDecimalPositions int(10);
-  values char(33) dim(20);
-  spcvalOriginalFromValue char(33) dim(20);
-  spcvalReplacementToValue char(33) dim(20);
-  rangeLowerValue char(33);
-  rangeUpperValue char(33);
-  relRelationOperator char(5);
-  relValue char(33);
-  dft char(132);
-  dftpgmObject char(10);
-  dftpgmLibrary char(10);
-  dmplst char(7) dim(20);
-  alroptAlertArt char(9);
-  alroptressourceNameVariable char(6);
-  logprb char(4);
-  ccsid char(11);
+  msgid like(tSIMF_Msgid);
+  msg like(tSIMF_Msg);
+  seclvl like(tSIMF_SecLvl);
+  sev like(tSIMF_Sev);
+  fmtDataType like(tSIMF_FmtDataType);
+  fmtLength like(tSIMF_FmtLength);
+  fmtDecimalPositions like(tSIMF_FmtDecimalPositions);
+  type like(tSIMF_Type);
+  lenLength like(tSIMF_LenLength);
+  lenDecimalPositions like(tSIMF_LenDecimalPositions);
+  values like(tSIMF_Values);// dim(20);
+  spcvalOriginalFromValue like(tSIMF_SpcvalOriginalFromValue);// dim(20);
+  spcvalReplacementToValue like(tSIMF_SpcvalReplacementToValue);// dim(20);
+  rangeLowerValue like(tSIMF_RangeLowerValue);
+  rangeUpperValue like(tSIMF_RangeUpperValue);
+  relRelationOperator like(tSIMF_RelRelationOperator);
+  relValue like(tSIMF_RelValue);
+  dft like(tSIMF_Dft);
+  dftpgmObject like(tSIMF_DftpgmObject);
+  dftpgmLibrary like(tSIMF_DftpgmLibrary);
+  dmplst like(tSIMF_Dmplst);// dim(20);
+  alroptAlertArt like(tSIMF_AlroptAlertArt);
+  alroptressourceNameVariable like(tSIMF_AlroptressourceNameVariable);
+  logprb like(tSIMF_Logprb);
+  ccsid like(tSIMF_Ccsid);
 end-ds;
 
 dcl-ds tSIMF_Def qualified;

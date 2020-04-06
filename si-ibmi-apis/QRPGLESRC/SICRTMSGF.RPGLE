@@ -44,7 +44,6 @@ dcl-pi SICRTMSGF;
   Streamfile like(tSICRTMSGF_Streamfile) const;
 end-pi;
 dcl-s StmFile like(tSIISF);
-dcl-s Desc like(tDescription);
 
   StmFile = SIISF_newByFileName(%trim(Streamfile));
 
