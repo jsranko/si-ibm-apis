@@ -15,7 +15,9 @@
 //
 //==========================================================================================
 
- ctl-opt NoMain bnddir('SIIIA/SIIIA');
+ ctl-opt NoMain;
+
+ /include qcpylesrc/sictlopt
 
 //==========================================================================================
 // Constants
@@ -216,14 +218,14 @@ dcl-s aNull int(5) dim(50);
 //                            ) Error On Error
 //                  ) as jsontbl
 //  ;
-  exec sql open crsListMessages;
+//  exec sql open crsListMessages;
   dow not %shtdn();
-    exec sql fetch crsListMessages into :Message :aNull;
+//    exec sql fetch crsListMessages into :Message :aNull;
     if sqlcode < *zeros;
       leave;
     endif;
     if sqlcode = 100;
-      exec sql close crsListMessages;
+//      exec sql close crsListMessages;
       leave;
     endif;
 
