@@ -1,10 +1,10 @@
 **FREE
 
-/if defined(SIMFP)
-  /define SIMFP
-/else
-  /eof
-/endif
+///if defined(SIMFP)
+//  /define SIMFP
+///else
+//  /eof
+///endif
 
 /include qcpylesrc/siitrp
 
@@ -74,7 +74,7 @@ end-ds;
 
  dcl-pr SIMF_new like(tSIMF) extproc(*dclcase);
    File like(tSIMF_File) const;
-   Library likeds(tSIMF_Library) const;
+   Library like(tSIMF_Library) const;
    Description likeds(tSIMF_Description) options(*nopass);
  end-pr;
 
