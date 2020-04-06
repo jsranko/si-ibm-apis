@@ -3,61 +3,56 @@
 //******************************************************************************************
 //
 //
-// Programname    : SICRTMSGF
+// Programname    : SIEPCSQ01
 // Programautor   : Sranko Informatik, Juraj Sranko
-// Created on     : 01.20.2020
+// Created on     : 06.04.2020
+//
+// Exit-program is necessary to create sqlrpgle programs.
+// There is a bug in crtsqlrpgli if you want to enter PPSRCFILE or PPSRCSTMF.
+// See SI71483 - SQL-CMPL-OTHER-MSGCPD0042 CRTSQLCI/CRTSQLCPPI ERROR WITH TER
 //
 //==========================================================================================
 //             Program-Compiling
 //==========================================================================================
 //
-// gmake SICRTMSGF.pgm
+// See gmake makefile
 //
 //==========================================================================================
 
- ctl-opt main(SICRTMSGF) dftactgrp(*no) actgrp(*new);
-
- /include qcpylesrc/sictlopt
+ ctl-opt main(SIEPCSQ01) dftactgrp(*no) actgrp(*new);
 
 //==========================================================================================
 // Templates
 //==========================================================================================
 
-
+//==========================================================================================
+// Global-Definition
+//==========================================================================================
 
 //==========================================================================================
 // Prototypes
 //==========================================================================================
 
-/include qcpylesrc/sicrtmsgfp
+/include qcpylesrc/siepcsq01p
 
-/include qcpylesrc/sixcpp
-/include qcpylesrc/siisfp
-/include qcpylesrc/simfp
+/include qcpylesrc/systemp
 
 //==========================================================================================
 // Procedures
 //==========================================================================================
 
-dcl-proc SICRTMSGF;
-dcl-pi SICRTMSGF;
-  Streamfile like(tSICRTMSGF_Streamfile) const;
+dcl-proc SIEPCSQ01;
+dcl-pi SIEPCSQ01;
+  RetrieveCommandExitInformation like(tSIEPCSQ01_RetrieveCommandExitInformation);
 end-pi;
-dcl-s StmFile like(tSIISF);
-dcl-s Desc like(tDescription);
 
-  StmFile = SIISF_newByFileName(%trim(Streamfile));
-
-  if not SIISF_exist(StmFile);
-    SIXCP_throwWithMessage('Streamfile ' + %trim(Streamfile) + ' not found');
+  if system('DLTF FILE(QTEMP/QSQLPRE)') <> cSystem_Return_Succesful;
   endif;
-  SIISF_close(StmFile);
 
-
+  if system('CRTSRCPF FILE(QTEMP/QSQLPRE) RCDLEN(240) TEXT(''Created with si-ibmi-apis, gmake exit-Programs'')') <> cSystem_Return_Succesful;
+  endif;
 
   return;
 end-proc;
-
-
 
 //------------------------------------------------------------------------------------------

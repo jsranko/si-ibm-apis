@@ -5,3 +5,5 @@
 *.lib
 *.bnddir
 SICTLOPT.RPGLE
+*.exitprogram
+*.command

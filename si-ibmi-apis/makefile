@@ -30,7 +30,8 @@ SRVPGMS=\
 	SIISF.srvpgm \
 	SIDIR.srvpgm \
 	SIJI.srvpgm \
-	SICJ.srvpgm
+	SICJ.srvpgm \
+	SIMF.srvpgm
 
 TESTPGMS=\
 	SICJUT.pgm \
@@ -52,55 +53,65 @@ MSGFS=\
 CMDS=\
 	SICRTMSGF.command
 
+EXITPGMS=\
+	SIEPCSQ01.exitprogram
+	
 # Ensure that intermediate files created by rules chains don't get
 # automatically deleted
-.PRECIOUS: %.srvpgm %.lib %.command %.messagefile
+.PRECIOUS: %.srvpgm %.lib %.command %.messagefile %.pgm
 
 all: build
 
-# build: build-main
-
 build: build-main build-tests
 
-build-main: $(LIBRARY).lib $(LIBRARY).bnddir $(SRVPGMS) $(CMDS) $(MSGFS) RPGINCDIR.envvar
+build-main: $(LIBRARY).lib $(LIBRARY).bnddir build-exitprograms build-srvpgms build-commands build-msgfs RPGINCDIR.envvar
+
+build-msgfs: $(MSGFS)
+
+build-srvpgms: $(SRVPGMS)
+
+build-commands: $(CMDS)
+
+build-exitprograms: $(EXITPGMS)
 
 build-tests: $(TESTPGMS)
 
 %.envvar: 
-	system -q "ADDENVVAR ENVVAR(RPGINCDIR) VALUE('$(ROOT_DIR)') CCSID(*JOB) LEVEL(*SYS) REPLACE(*YES)" && touch $@
+	system -Kp "ADDENVVAR ENVVAR(RPGINCDIR) VALUE('$(ROOT_DIR)') CCSID(*JOB) LEVEL(*SYS) REPLACE(*YES)" && touch $@
 
 %.srvpgm: %.module
-	system -q "CRTSRVPGM SRVPGM($(LIBRARY)/$(@:%.srvpgm=%)) MODULE($(LIBRARY)/$(@:%.srvpgm=%)) EXPORT(*ALL) ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL($(STGMDL))" && touch $@	
-	-system -q "ADDBNDDIRE BNDDIR($(LIBRARY)/$(LIBRARY)) OBJ(($(LIBRARY)/$(@:%.srvpgm=%) *SRVPGM *IMMED))" && touch $@ 
-	system -q "DLTMOD MODULE($(LIBRARY)/$(@:%.srvpgm=%))"
+	system -Kp "CRTSRVPGM SRVPGM($(LIBRARY)/$(@:%.srvpgm=%)) MODULE($(LIBRARY)/$(@:%.srvpgm=%)) EXPORT(*ALL) ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL($(STGMDL))" && touch $@	
+	-system -Kp "ADDBNDDIRE BNDDIR($(LIBRARY)/$(LIBRARY)) OBJ(($(LIBRARY)/$(@:%.srvpgm=%) *SRVPGM *IMMED))" && touch $@ 
+	system -Kp "DLTMOD MODULE($(LIBRARY)/$(@:%.srvpgm=%))"
 
 %.lib: 
-	(system -q "CHKOBJ $* *LIB" || system -q "CRTLIB $* TEXT($(OBJECT_DESC))") && touch $@
+	(system -Kp "CHKOBJ $* *LIB" || system -Kp "CRTLIB $* TEXT($(OBJECT_DESC))") && touch $@
 	touch $(SIIIA_CTLOPT) && printf "**FREE\n\n/if not defined(SICTLOPTP)\n  /define SICTLOPTP\n/else\n  /eof\n/endif\n\nctl-opt bnddir('$(LIBRARY)/SIIIA');" > $(SIIIA_CTLOPT)
 	
 %.module: QRPGLESRC/%.RPGLE
-	system -q "CRTRPGMOD MODULE($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') STGMDL($(STGMDL)) TGTCCSID(*JOB)" && touch $@	
+	system -Kp "CRTRPGMOD MODULE($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') STGMDL($(STGMDL)) TGTCCSID(*JOB) OUTPUT(*NONE)" && touch $@	
 	
 %.module: QRPGLESRC/%.SQLRPGLE
-	system -q "CRTSQLRPGI OBJ($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW($(DBGVIEW)) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') TGTCCSID(*JOB) STGMDL($(STGMDL))')" && touch $@
+	system -Kp "CRTSQLRPGI OBJ($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW($(DBGVIEW)) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL($(STGMDL))')" && touch $@
 	
 %.bnddir: $(LIBRARY).lib
-	(system -q "CHKOBJ OBJ($(LIBRARY)/$*) OBJTYPE(*BNDDIR)" || system -q "CRTBNDDIR BNDDIR($(LIBRARY)/$*) TEXT($(OBJECT_DESC))") && touch $@	
+	(system -Kp "CHKOBJ OBJ($(LIBRARY)/$*) OBJTYPE(*BNDDIR)" || system -Kp "CRTBNDDIR BNDDIR($(LIBRARY)/$*) TEXT($(OBJECT_DESC))") && touch $@	
 	
 %.pgm: QRPGLESRC/%.SQLRPGLE
-	# Create source for sqlprecompiler ... problem exist with RNS9334, if just PPSRCSTMF(*SRCSTMF)
-	(system "CHKOBJ OBJ($(LIBRARY)/QSQLPRE) OBJTYPE(*FILE)" || system "CRTSRCPF FILE($(LIBRARY)/QSQLPRE) RCDLEN(240)")
-	system -q "CRTSQLRPGI OBJ($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*PGM) DBGVIEW($(DBGVIEW)) RPGPPOPT(*LVL2) REPLACE(*YES) TOSRCFILE($(LIBRARY)/QSQLPRE) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') TGTCCSID(*JOB) DFTACTGRP(*NO) ACTGRP(*NEW)')" && touch $@
+	system "CRTSQLRPGI OBJ($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*PGM) DBGVIEW($(DBGVIEW)) RPGPPOPT(*LVL2) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') TGTCCSID(*JOB) DFTACTGRP(*NO) ACTGRP(*NEW) OUTPUT(*NONE)')"  && touch $@
 
 %.pgm: QRPGLESRC/%.RPGLE
-	system -q "CRTBNDRPG PGM($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') TGTCCSID(*JOB)" && touch $@
+	system -Kp "CRTBNDRPG PGM($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') TGTCCSID(*JOB) OUTPUT(*NONE)" && touch $@
 		
 %.messagefile: QMSGFSRC/%.msgf
-	system -q "SICRTMSGF SRCSTMF('$(ROOT_DIR)/$<')" && touch $@
+	system -Kp "$(LIBRARY)/SICRTMSGF SRCSTMF('$(ROOT_DIR)/$<')" && touch $@ || rm $@
 	
 %.command: QCMDSRC/%.cmd %.pgm
-	system -q "CRTCMD CMD($(LIBRARY)/$*) PGM($(LIBRARY)/$<) SRCSTMF($(ROOT_DIR)/$<) REPLACE(*YES)" && touch $@
+	system -Kp "CRTCMD CMD($(LIBRARY)/$*) PGM($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') REPLACE(*YES)" && touch $@
+	
+%.exitprogram: %.pgm
+	system -Kp "ADDEXITPGM EXITPNT(QIBM_QCA_RTV_COMMAND) FORMAT(RTVC0100) PGMNBR(19820622) PGM($(LIBRARY)/$*) PGMDTA(*JOB 30 'CRTSQLRPGIQSYS      *BEFORE   ') REPLACE(*YES)"
 			
 clean:
 	rm -f *.lib *.pgm *.srvpgm *.module *.output *.bnddir
-	system -q 'DLTLIB $(LIBRARY)' || :	
+	system -Kp 'DLTLIB $(LIBRARY)' || :	
