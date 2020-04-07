@@ -31,7 +31,8 @@ SRVPGMS=\
 	SIDIR.srvpgm \
 	SIJI.srvpgm \
 	SICJ.srvpgm \
-	SIMF.srvpgm
+	SIMF.srvpgm \
+	SIRE.srvpgm
 
 TESTPGMS=\
 	SICJUT.pgm \
@@ -45,7 +46,8 @@ TESTPGMS=\
 	SIQSHLOGUT.pgm \
 	SISTRUT.pgm \
 	SIUUIDUT.pgm \
-	SIXCPUT.pgm
+	SIXCPUT.pgm \
+	SIREUT.pgm
 
 MSGFS=\
 	SIMSGF.messagefile
@@ -55,16 +57,26 @@ CMDS=\
 
 EXITPGMS=\
 	SIEPCSQ01.exitprogram
+
+SQLS=\
+	SIRE.query
 	
 # Ensure that intermediate files created by rules chains don't get
 # automatically deleted
-.PRECIOUS: %.srvpgm %.lib %.command %.messagefile %.pgm
+.PRECIOUS: %.srvpgm %.lib %.command %.messagefile %.pgm %.query
 
 all: build
 
 build: build-main build-tests
 
-build-main: $(LIBRARY).lib $(LIBRARY).bnddir build-exitprograms build-srvpgms build-commands build-msgfs RPGINCDIR.envvar
+build-main: $(LIBRARY).lib \
+	        $(LIBRARY).bnddir \
+	        build-exitprograms \
+	        build-srvpgms \
+	        build-commands \
+	        build-msgfs \
+	        build-sqls \
+	        RPGINCDIR.envvar
 
 build-msgfs: $(MSGFS)
 
@@ -74,13 +86,15 @@ build-commands: $(CMDS)
 
 build-exitprograms: $(EXITPGMS)
 
+build-sqls: $(SQLS)
+
 build-tests: $(TESTPGMS)
 
 %.envvar: 
 	system -Kp "ADDENVVAR ENVVAR(RPGINCDIR) VALUE('$(ROOT_DIR)') CCSID(*JOB) LEVEL(*SYS) REPLACE(*YES)" && touch $@
 
 %.srvpgm: %.module
-	system -Kp "CRTSRVPGM SRVPGM($(LIBRARY)/$(@:%.srvpgm=%)) MODULE($(LIBRARY)/$(@:%.srvpgm=%)) EXPORT(*ALL) ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL($(STGMDL))" && touch $@	
+	system -Kp "CRTSRVPGM SRVPGM($(LIBRARY)/$(@:%.srvpgm=%)) MODULE($(LIBRARY)/$(@:%.srvpgm=%)) SRCSTMF('$(ROOT_DIR)/QSRVSRC/$*.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL($(STGMDL))" && touch $@	
 	-system -Kp "ADDBNDDIRE BNDDIR($(LIBRARY)/$(LIBRARY)) OBJ(($(LIBRARY)/$(@:%.srvpgm=%) *SRVPGM *IMMED))" && touch $@ 
 	system -Kp "DLTMOD MODULE($(LIBRARY)/$(@:%.srvpgm=%))"
 
@@ -111,7 +125,11 @@ build-tests: $(TESTPGMS)
 	
 %.exitprogram: %.pgm
 	system -Kp "ADDEXITPGM EXITPNT(QIBM_QCA_RTV_COMMAND) FORMAT(RTVC0100) PGMNBR(19820622) PGM($(LIBRARY)/$*) PGMDTA(*JOB 30 'CRTSQLRPGIQSYS      *BEFORE   ') REPLACE(*YES)"
-			
+
+%.query: QSQLSRC/%.SQL 
+	sed 's/$$(LIBRARY)/$(LIBRARY)/g' $< > $*.query
+	system -Kp "RUNSQLSTM SRCSTMF('$(ROOT_DIR)/$@') COMMIT(*NONE)"	
+
 clean:
 	rm -f *.lib *.pgm *.srvpgm *.module *.output *.bnddir
 	system -Kp 'DLTLIB $(LIBRARY)' || :	
