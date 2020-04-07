@@ -8,3 +8,4 @@ SICTLOPT.RPGLE
 *.exitprogram
 *.command
 *.query
+*.messagefile
