@@ -77,12 +77,15 @@ dcl-pi SIRE_match ind extproc(*dclcase);
 end-pi;
 dcl-s rc like(tSIRE_ReturnCode);
 dcl-ds Match likeds(tSIRE_RegexMatch);
+dcl-s MatchError char(512);
 dcl-ds dsSIRE likeds(tSIRE_Def) based(pSIRE);
 
   pSIRE = %addr(SIRE);
 
   rc = regexec(dsSIRE.Regex:Data:dsSIRE.Regex.re_nsub:%addr(Match) :0) ;
   if rc <> *zeros;
+    rc = regerror(rc:dsSIRE.Regex:%addr(MatchError):%size(MatchError));
+    SIXCP_throwWithMessage(%trim(MatchError));
     return *off;
   endif;
 
