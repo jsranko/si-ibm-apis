@@ -131,5 +131,5 @@ build-tests: $(TESTPGMS)
 	system -Kp "RUNSQLSTM SRCSTMF('$(ROOT_DIR)/$@') COMMIT(*NONE)"	
 
 clean:
-	rm -f *.lib *.pgm *.srvpgm *.module *.output *.bnddir
+	rm -f *.lib *.pgm *.srvpgm *.module *.output *.bnddir *.envvar *.messagefile *.command *.exitprogram *.query
 	system -Kp 'DLTLIB $(LIBRARY)' || :	
