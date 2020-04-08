@@ -24,7 +24,7 @@ dcl-s tSIJI_List like(tSIITR) template;
 dcl-s tSIJI_Jobname char(10) template;
 dcl-s tSIJI_Username char(10) template;
 dcl-s tSIJI_Jobnumber char(6) template;
-dcl-ds tSIJI_QualifiedJobName template;
+dcl-ds tSIJI_QualifiedJobName len(28) template;
    Jobname like(tSIJI_Jobname);
    Username like(tSIJI_Username);
    Jobnumber like(tSIJI_Jobnumber);
