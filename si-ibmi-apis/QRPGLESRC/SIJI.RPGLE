@@ -290,3 +290,21 @@
          return dsSIJI.Data0400.CodedCharacterSetID;
          end-proc;
 
+        //------------------------------------------------------------------------------------------
+
+         dcl-proc SIJI_getUserName export;
+         dcl-pi SIJI_getUserName like(tSIJI_UserName) extproc(*dclcase);
+           SIJI like(tSIJI);
+         end-pi;
+         dcl-ds dsSIJI likeds(tSIJI_Def) based(pSIJI);
+         pSIJI = %addr(SIJI);
+
+         monitor;
+           dsSIJI.Data0150 = getData(dsSIJI:cQUSRJOBI_FORMAT_AdditionalPerformanceInformation);
+         on-error;
+           SIXCP_throwWithMessageId('CPD3CB2':dsSIJI.QualifiedJobName:cSIXCP_QCPFMSG);
+         endmon;
+
+         return dsSIJI.Data0150.UserName;
+         end-proc;
+
