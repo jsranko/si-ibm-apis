@@ -74,9 +74,9 @@ build-main: $(LIBRARY).lib \
 	        build-exitprograms \
 	        build-srvpgms \
 	        build-commands \
-	        build-msgfs \
 	        build-sqls \
-	        RPGINCDIR.envvar
+	        RPGINCDIR.envvar \
+	        build-msgfs	        
 
 build-msgfs: $(MSGFS)
 
