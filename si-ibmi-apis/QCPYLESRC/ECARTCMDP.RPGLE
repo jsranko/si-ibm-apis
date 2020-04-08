@@ -21,7 +21,7 @@ dcl-s tECARTCMD_CommandName char(10) template;
 dcl-s tECARTCMD_LibraryName char(10) template;
 dcl-s tECARTCMD_Reserved2 char(2) template;
 dcl-s tECARTCMD_Reserved1 char(1) template;
-dcl-s tECARTCMD_BeforeOrAfterIndicator char(2) template;
+dcl-s tECARTCMD_BeforeOrAfterIndicator char(1) template;
 dcl-s tECARTCMD_OffsetToOriginalCommandString int(10) template;
 dcl-s tECARTCMD_LengthOfOriginalCommandString int(10) template;
 dcl-s tECARTCMD_OffsetToReplacementCommandString int(10) template;
