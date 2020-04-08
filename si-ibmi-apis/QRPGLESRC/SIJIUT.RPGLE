@@ -46,5 +46,13 @@ dcl-s QualifiedJobName like(tSIJI_QualifiedJobName);
   QualifiedJobName = SIJI_getQualifiedJobName(Job);
   SIJI_close(Job);
 
+  Job = SIJI_new(*omit:*omit:*omit:'021712/CECUSER/QPADEV0004');
+  QualifiedJobName = SIJI_getQualifiedJobName(Job);
+  SIJI_close(Job);
+
+  Job = SIJI_new(*omit:*omit:*omit);
+  QualifiedJobName = SIJI_getQualifiedJobName(Job);
+  SIJI_close(Job);
+
   return;
 end-proc;
