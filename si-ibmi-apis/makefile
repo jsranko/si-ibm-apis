@@ -13,11 +13,13 @@ DIR_RPG=QRPGLESRC
 DIR_SQL=QSQLSRC
 DIR_SRV=QSRVSRC
 DIR_MSGF=QMSGFSRC
+DIR_JAVA=src/java
 EXT_CPYSRC=RPGLE
 EXT_MSGF=MSGF
 EXT_CMD=CMD
 EXT_CL=CLLE
 EXT_SQL=SQL
+EXT_JAVA=java
 
 SRVPGMS=\
 	SIUI.srvpgm \
@@ -88,9 +90,12 @@ SRCFILES=\
 	$(DIR_SRV).srcpf \
 	$(DIR_MSGF).srcpf	
 
+JAVAS=\
+	$(patsubst %.$(EXT_JAVA),%.jar,$(wildcard $(DIR_JAVA)/*.$(EXT_JAVA)))
+	
 # Ensure that intermediate files created by rules chains don't get
 # automatically deleted
-.PRECIOUS: %.srvpgm %.lib %.command %.messagefile %.pgm %.query %.srcpf %.clpgm
+.PRECIOUS: %.srvpgm %.lib %.command %.messagefile %.pgm %.query %.srcpf %.clpgm %.jar
 
 all: build
 
@@ -104,6 +109,7 @@ build-main: $(LIBRARY).lib \
 	        build-cls \
 	        build-tests \
 	        build-commands \
+	        build-java \
 	        build-sqls \
 	        copy-cpysrc \
 	        RPGINCDIR.envvar \
@@ -126,6 +132,8 @@ create-srcfiles: $(SRCFILES)
 build-cls: $(CLS)
 
 copy-cpysrc: $(CPYSRCS)
+
+build-java: $(JAVAS)
 
 %.envvar: 
 	system -Kp "ADDENVVAR ENVVAR(RPGINCDIR) VALUE('$(ROOT_DIR)') CCSID(*JOB) LEVEL(*SYS) REPLACE(*YES)" && \
@@ -181,7 +189,7 @@ copy-cpysrc: $(CPYSRCS)
 	system -Kp "ADDEXITPGM EXITPNT(QIBM_QCA_RTV_COMMAND) FORMAT(RTVC0100) PGMNBR(19820622) PGM($(LIBRARY)/$*) PGMDTA(*JOB 30 'CRTSQLRPGIQSYS      *BEFORE   ') REPLACE(*YES)"
 
 %.query: $(DIR_SQL)/%.$(EXT_SQL) 
-	sed 's/$$(LIBRARY)/$(LIBRARY)/g' $< > $*.query
+	sed 's/$$(LIBRARY)/$(LIBRARY)/g; s/$$(ROOT_DIR)/$(subst /,\/,$(ROOT_DIR))/g' $< > $*.query
 	$(call copy_to_srcpf,$(ROOT_DIR)/$*.query,$(LIBRARY),$(DIR_SQL),$*)
 	system -Kp "RUNSQLSTM SRCSTMF('$(ROOT_DIR)/$@') COMMIT(*NONE)"	
 
@@ -197,8 +205,13 @@ copy-cpysrc: $(CPYSRCS)
 %.cpysrc: $(DIR_CPY)/%.$(EXT_CPYSRC) $(DIR_CPY).srcpf
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_CPY),$*)
 
+%.jar: %.$(EXT_JAVA)
+	javac $< && \
+	jar -cvf $*.jar $*.class && \
+	rm $*.class
+
 clean:
-	rm -f *.lib *.pgm *.srvpgm *.module *.output *.bnddir *.envvar *.messagefile *.command *.exitprogram *.query *.srcpf *.clpgm
+	rm -f *.lib *.pgm *.srvpgm *.module *.output *.bnddir *.envvar *.messagefile *.command *.exitprogram *.query *.srcpf *.clpgm *.jar
 	system -Kp 'DLTLIB $(LIBRARY)' || :	
 
 define copy_to_srcpf
