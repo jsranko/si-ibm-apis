@@ -166,7 +166,7 @@
          ApiReturn = chdir(dsSIDIR.Name);
 
          if ApiReturn = cCHDIR_Return_NotSuccessful;
-           SIXCP_throwWithMessageId('SIE0001':*omit:cSIXCP_MessageFile);
+           SIXCP_throwWithMessageId('SIE0001':*omit:cSIIIA_MSGF);
          endif;
 
          return;
@@ -180,7 +180,7 @@
          dcl-s cwd char(512);
 
          if getcwd(%addr(cwd) : %size(cwd)) = cGETCWD_Return_NotSuccessful;
-           SIXCP_throwWithMessageId('SIE0002':*omit:cSIXCP_MessageFile);
+           SIXCP_throwWithMessageId('SIE0002':*omit:cSIIIA_MSGF);
          endif;
 
          if SIDBGA_isInDebugMode();
@@ -211,7 +211,7 @@
          ApiReturn = chdir(%addr(Path:*data));
 
          if ApiReturn = cCHDIR_Return_NotSuccessful;
-           SIXCP_throwWithMessageId('SIE0001':*omit:cSIXCP_MessageFile);
+           SIXCP_throwWithMessageId('SIE0001':*omit:cSIIIA_MSGF);
          endif;
 
          return;

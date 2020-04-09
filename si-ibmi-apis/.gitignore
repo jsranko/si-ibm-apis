@@ -9,3 +9,5 @@ SICTLOPT.RPGLE
 *.command
 *.query
 *.messagefile
+*.srcpf
+*.clpgm

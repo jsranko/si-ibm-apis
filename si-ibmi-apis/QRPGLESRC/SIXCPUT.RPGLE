@@ -41,7 +41,7 @@ dcl-proc SIXCPUT;
 dcl-pi SIXCPUT;
 end-pi;
 
-  SIXCP_throwWithMessage('Exception Test 1');
+  SIXCP_throwWithMessage('Exception Test 8');
 
   return;
 end-proc;
