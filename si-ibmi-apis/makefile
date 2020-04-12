@@ -94,15 +94,15 @@ build-main: $(LIBRARY).lib \
 			create-srcfiles \
 	        $(LIBRARY).bnddir \
 	        build-exitprograms \
+	        RPGINCDIR.envvar \
 	        build-srvpgms \
+	        build-pgms \	        
 	        build-cls \
-	        build-pgms \
 	        build-commands \
 	        build-java \
 	        build-sqls \
-	        copy-cpysrc \
-	        RPGINCDIR.envvar \
-	        build-msgfs	        
+	        build-msgfs	\	
+	        copy-cpysrc         
 
 build-msgfs: $(MSGFS)
 
@@ -179,7 +179,7 @@ build-java: $(JAVAS)
 
 %.query: %.$(EXT_SQL) 
 	# echo "$$@=$@\n $$%=$%\n $$<=$<\n $$?=$?\n $$^=$^\n $$+=$+\n $$|=$|\n $$*=$*\n" 
-	sed 's/$$(LIBRARY)/$(LIBRARY)/g; s/$$(ROOT_DIR)/$(subst /,\/,$(ROOT_DIR))/g' $< > $@
+	sed 's/$$(LIBRARY)/$(LIBRARY)/g; s/$$(ROOT_DIR)/$(subst /,\/,$(ROOT_DIR))/g; s/$$(DIR_JAVA)/$(subst /,\/,$(DIR_JAVA))/g' $< > $@
 	$(call copy_to_srcpf,$(ROOT_DIR)/$*.query,$(LIBRARY),$(DIR_SQL),$(notdir $*))
 	system -Kp "RUNSQLSTM SRCSTMF('$(ROOT_DIR)/$@') COMMIT(*NONE)"	
 
