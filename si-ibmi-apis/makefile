@@ -5,7 +5,7 @@ STGMDL=*INHERIT
 OBJECT_DESC='(SI) IBM i Apis Framework'
 MAKELOG=makefile.output
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-SIIIA_CTLOPT=QCPYLESRC/SICTLOPT.RPGLE
+SIIIA_CTLOPT=$(DIR_CPY)/SICTLOPT.RPGLE
 DIR_CL=QCLLESRC
 DIR_CMD=QCMDSRC
 DIR_CPY=QCPYLESRC
@@ -20,24 +20,37 @@ EXT_CMD=CMD
 EXT_CL=CLLE
 EXT_SQL=SQL
 EXT_JAVA=java
+EXT_PGM=RPGLE
 
 SRVPGMS=\
-	$(patsubst %.RPGLE,%.srvpgm,$(shell grep -il "nomain" QRPGLESRC/*.*))
+	$(DIR_RPG)/SIUI.srvpgm \
+	$(DIR_RPG)/SIXCP.srvpgm \
+	$(DIR_RPG)/SIHASH.srvpgm \
+	$(DIR_RPG)/SIOD.srvpgm \
+	$(DIR_RPG)/SIITR.srvpgm \
+	$(DIR_RPG)/SIJL.srvpgm \
+	$(DIR_RPG)/SIDT.srvpgm \
+	$(DIR_RPG)/SISQL.srvpgm \
+	$(DIR_RPG)/SIULC.srvpgm \
+	$(DIR_RPG)/SIPATH.srvpgm \
+	$(DIR_RPG)/SIDBGA.srvpgm \
+	$(DIR_RPG)/SIUUID.srvpgm \
+	$(DIR_RPG)/SISTR.srvpgm \
+	$(DIR_RPG)/SIQSH.srvpgm \
+	$(DIR_RPG)/SIQSHLOG.srvpgm \
+	$(DIR_RPG)/SICURL.srvpgm \
+	$(DIR_RPG)/SIIMF.srvpgm \
+	$(DIR_RPG)/SIIOF.srvpgm \
+	$(DIR_RPG)/SINL.srvpgm \
+	$(DIR_RPG)/SIISF.srvpgm \
+	$(DIR_RPG)/SIDIR.srvpgm \
+	$(DIR_RPG)/SIJI.srvpgm \
+	$(DIR_RPG)/SICJ.srvpgm \
+	$(DIR_RPG)/SIMF.srvpgm \
+	$(DIR_RPG)/SIRE.srvpgm
 
-TESTPGMS=\
-	SICJUT.pgm \
-	SICURLUT.pgm \
-	SIDBGAUT.pgm \
-	SIDTUT.pgm \
-	SIHASHUT.pgm \
-	SIISFUT.pgm \
-	SIJIUT.pgm \
-	SIJLUT.pgm \
-	SIQSHLOGUT.pgm \
-	SISTRUT.pgm \
-	SIUUIDUT.pgm \
-	SIXCPUT.pgm \
-	SIREUT.pgm
+PGMS:=\
+	$(patsubst %.RPGLE,%.pgm,$(shell grep -il " main" $(DIR_RPG)/*.*))
 
 MSGFS=\
 	$(patsubst %.$(EXT_MSGF),%.messagefile,$(notdir $(wildcard $(DIR_MSGF)/*.$(EXT_MSGF))))
@@ -75,7 +88,7 @@ JAVAS=\
 
 all: build
 
-build: build-main build-tests
+build: build-main
 
 build-main: $(LIBRARY).lib \
 			create-srcfiles \
@@ -83,7 +96,7 @@ build-main: $(LIBRARY).lib \
 	        build-exitprograms \
 	        build-srvpgms \
 	        build-cls \
-	        build-tests \
+	        build-pgms \
 	        build-commands \
 	        build-java \
 	        build-sqls \
@@ -101,7 +114,7 @@ build-exitprograms: $(EXITPGMS)
 
 build-sqls: $(SQLS)
 
-build-tests: $(TESTPGMS)
+build-pgms: $(PGMS)
 
 create-srcfiles: $(SRCFILES)
 
@@ -116,12 +129,12 @@ build-java: $(JAVAS)
 	touch $@
 
 %.srvpgm: %.module
-	$(call copy_to_srcpf,$(ROOT_DIR)/$(DIR_SRV)/$*.BND,$(LIBRARY),$(DIR_SRV),$*)
-	system -Kp "CRTSRVPGM SRVPGM($(LIBRARY)/$(@:%.srvpgm=%)) MODULE($(LIBRARY)/$(@:%.srvpgm=%)) SRCSTMF('$(ROOT_DIR)/$(DIR_SRV)/$*.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL($(STGMDL))" && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$(DIR_SRV)/$(notdir $*).BND,$(LIBRARY),$(DIR_SRV),$(notdir $*))
+	system -Kp "CRTSRVPGM SRVPGM($(LIBRARY)/$(notdir $*)) MODULE($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$(DIR_SRV)/$(notdir $*).BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL($(STGMDL))" && \
 	touch $@	
-	-system -Kp "ADDBNDDIRE BNDDIR($(LIBRARY)/$(LIBRARY)) OBJ(($(LIBRARY)/$(@:%.srvpgm=%) *SRVPGM *IMMED))" && \
+	-system -Kp "ADDBNDDIRE BNDDIR($(LIBRARY)/$(LIBRARY)) OBJ(($(LIBRARY)/$(notdir $*) *SRVPGM *IMMED))" && \
 	touch $@ 
-	system -Kp "DLTMOD MODULE($(LIBRARY)/$(@:%.srvpgm=%))"
+	system -Kp "DLTMOD MODULE($(LIBRARY)/$(notdir $*))"
 
 %.lib: 
 	(system -Kp "CHKOBJ $* *LIB" || system -Kp "CRTLIB $* TEXT($(OBJECT_DESC))") && \
@@ -129,26 +142,26 @@ build-java: $(JAVAS)
 	touch $(SIIIA_CTLOPT) && printf "**FREE\n\n/if not defined(SICTLOPTP)\n  /define SICTLOPTP\n/else\n  /eof\n/endif\n\nctl-opt bnddir('$(LIBRARY)/SIIIA');" > $(SIIIA_CTLOPT)
 	
 %.module: %.RPGLE
-	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$*)
-	system -Kp "CRTRPGMOD MODULE($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') STGMDL($(STGMDL)) TGTCCSID(*JOB) OUTPUT(*NONE)"  && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$(notdir $*))
+	system -Kp "CRTRPGMOD MODULE($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') STGMDL($(STGMDL)) TGTCCSID(*JOB) OUTPUT(*NONE)"  && \
 	touch $@	
 	
 %.module: %.SQLRPGLE
-	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$*)
-	system -Kp "CRTSQLRPGI OBJ($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW($(DBGVIEW)) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL($(STGMDL))')" && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$(notdir $*))
+	system -Kp "CRTSQLRPGI OBJ($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW($(DBGVIEW)) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL($(STGMDL))')" && \
 	touch $@
 	
 %.bnddir: $(LIBRARY).lib
 	(system -Kp "CHKOBJ OBJ($(LIBRARY)/$*) OBJTYPE(*BNDDIR)" || system -Kp "CRTBNDDIR BNDDIR($(LIBRARY)/$*) TEXT($(OBJECT_DESC))") && touch $@	
 	
 %.pgm: %.SQLRPGLE
-	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$*)
-	system "CRTSQLRPGI OBJ($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*PGM) DBGVIEW($(DBGVIEW)) RPGPPOPT(*LVL2) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') TGTCCSID(*JOB) DFTACTGRP(*NO) ACTGRP(*NEW) OUTPUT(*NONE)')"  && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$(notdir $*))
+	system "CRTSQLRPGI OBJ($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*PGM) DBGVIEW($(DBGVIEW)) RPGPPOPT(*LVL2) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') TGTCCSID(*JOB) DFTACTGRP(*NO) ACTGRP(*NEW) OUTPUT(*NONE)')"  && \
 	touch $@
 
 %.pgm: %.RPGLE
-	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$*)
-	system -Kp "CRTBNDRPG PGM($(LIBRARY)/$*) SRCSTMF('$(ROOT_DIR)/$<') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') TGTCCSID(*JOB) OUTPUT(*NONE)" && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$(notdir $*))
+	system -Kp "CRTBNDRPG PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') TGTCCSID(*JOB) OUTPUT(*NONE)" && \
 	touch $@
 		
 %.messagefile: $(DIR_MSGF)/%.$(EXT_MSGF)
@@ -160,7 +173,7 @@ build-java: $(JAVAS)
 	system -Kp "CRTCMD CMD($(LIBRARY)/$(notdir $*)) PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') REPLACE(*YES)" && \
 	touch $@
 	
-%.exitprogram: %.pgm
+%.exitprogram: $(DIR_RPG)/%.pgm
 	system -Kp "ADDEXITPGM EXITPNT(QIBM_QCA_RTV_COMMAND) FORMAT(RTVC0100) PGMNBR(19820622) PGM($(LIBRARY)/$*) PGMDTA(*JOB 30 'CRTSQLRPGIQSYS      *BEFORE   ') REPLACE(*YES)" && \
 	touch $@
 
@@ -189,7 +202,21 @@ build-java: $(JAVAS)
 	rm $*.class
 
 clean:
-	rm -f *.lib *.pgm *.srvpgm *.module *.output *.bnddir *.envvar *.messagefile *.command *.exitprogram *.query *.srcpf *.clpgm *.jar
+	rm -f *.lib \
+	      $(DIR_RPG)/*.pgm \
+	      $(DIR_RPG)/*.srvpgm \
+	      $(DIR_RPG)/*.module \
+	      *.output \
+	      *.bnddir \
+	      *.envvar \
+	      $(DIR_MSGF)/*.messagefile \
+	      $(DIR_CMD)/*.command \
+	      *.exitprogram \
+	      $(DIR_SQL)/*.query \
+	      *.srcpf \
+	      $(DIR_CL)/*.clpgm \
+	      *.jar \
+	      $(DIR_CPY)/*.cpysrc
 	system -Kp 'DLTLIB $(LIBRARY)' || :	
 
 define copy_to_srcpf
