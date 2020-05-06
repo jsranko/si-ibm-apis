@@ -47,6 +47,7 @@ SRVPGMS=\
 	$(DIR_RPG)/SIJI.srvpgm \
 	$(DIR_RPG)/SICJ.srvpgm \
 	$(DIR_RPG)/SIMF.srvpgm \
+	$(DIR_RPG)/SISRVPGM.srvpgm \
 	$(DIR_RPG)/SIRE.srvpgm
 
 PGMS:=\

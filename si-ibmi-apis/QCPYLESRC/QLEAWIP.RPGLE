@@ -38,6 +38,7 @@ dcl-s tQLEAWI_LengthOfActivationInformation int(10) template;
 dcl-s tQLEAWI_ExportNumber int(10) template;
 dcl-s tQLEAWI_ExportNameLength int(10) template;
 dcl-s tQLEAWI_ExportName char(32767) template;
+dcl-s tQLEAWI_ExportItem pointer(*proc) template;
 dcl-s tQLEAWI_TypeOfExportItem int(10) template;
 
 //==========================================================================================
@@ -56,8 +57,8 @@ dcl-pr GetExport pointer extproc('QleGetExp');
   ActivationMark like(tQLEAWI_ActivationMark) const;
   ExportNumber like(tQLEAWI_ExportNumber) const;
   ExportNameLength like(tQLEAWI_ExportNameLength) const;
-  ExportName like(tQLEAWI_ExportName) const;
-  ExportedItem pointer;
+  ExportName like(tQLEAWI_ExportName) const options(*varsize);
+  ExportedItem like(tQLEAWI_ExportItem);
   TypeOfExportItem like(tQLEAWI_TypeOfExportItem);
   ErrorCode likeds(tQUSEC);
 end-pr;

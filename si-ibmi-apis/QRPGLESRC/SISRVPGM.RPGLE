@@ -15,8 +15,9 @@
 //
 //==========================================================================================
 
- ctl-opt NoMain;
- ctl-opt bnddir('SIIIA/SIIIA');
+ctl-opt NoMain;
+
+/include qcpylesrc/sictlopt
 
 //==========================================================================================
 // Templates
@@ -33,10 +34,8 @@
 /define SISRVPGM
 /include qcpylesrc/sisrvpgmp
 
-/include qcpylesrc/qlicvttpp
-/include qcpylesrc/rslvspp
-/include qcpylesrc/qleawip
-
+/include qcpylesrc/sixcpp
+/include qcpylesrc/sijip
 
 //==========================================================================================
 // Procedures
@@ -49,9 +48,8 @@ dcl-pi SISRVPGM_ like(tSISRVPGM) extproc(*dclcase);
   ServiceProgram like(tSISRVPGM_ServiceProgram) const;
   Library like(tSISRVPGM_Library) const;
 end-pi;
-dcl-ds SISRVPGM likeds(tSISRVPGM);
+dcl-ds SISRVPGM likeds(tSISRVPGM_Def);
 dcl-ds ErrorCode likeds(tQUSEC);
-dcl-s Auth like(tRSLVSP_AuthorityToBeSet) inz(*loval);
 
 SISRVPGM.ServiceProgram = ServiceProgram;
 SISRVPGM.Library = Library;
@@ -63,9 +61,9 @@ ConvertType(cQLICVTTP_TO_HEX
            :ErrorCode);
 
 SISRVPGM.SystemPointer = ResolveSystemPointer(SISRVPGM.HexadecimalObjectType
-                                             :SISRVPGM.ServiceProgram
-                                             :SISRVPGM.Library
-                                             :Auth
+                                             :ServiceProgram
+                                             :Library
+                                             :cRSLVSP_AUTH_NONE
                                              );
 
 return SISRVPGM;
@@ -77,7 +75,7 @@ dcl-proc SISRVPGM_load export;
 dcl-pi SISRVPGM_load ind extproc(*dclcase);
   SISRVPGM like(tSISRVPGM);
 end-pi;
-dcl-ds dsSISRVPGM likeds(tSISRVPGM) based(pSISRVPGM);
+dcl-ds dsSISRVPGM likeds(tSISRVPGM_Def) based(pSISRVPGM);
 dcl-ds ErrorCode likeds(tQUSEC);
 
 pSISRVPGM = %addr(SISRVPGM);
@@ -88,8 +86,11 @@ ActivateBoundProgram(dsSISRVPGM.SystemPointer
                     :%size(dsSISRVPGM.ActivationInformation)
                     :ErrorCode
                     );
+if ErrorCode.ExceptionId <> *blanks;
+  SIXCP_throwWithMessageId('MCH4422':%trim(dsSISRVPGM.ServiceProgram):getCaller());
+endif;
 
-return SISRVPGM;
+return *on;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -99,21 +100,50 @@ dcl-pi SISRVPGM_getProcedurePointerByName like(tSISRVPGM_ProcedurePointer) extpr
   SISRVPGM like(tSISRVPGM);
   Procedure like(tSISRVPGM_Procedure) const options(*string);
 end-pi;
-dcl-ds dsSISRVPGM likeds(tSISRVPGM) based(pSISRVPGM);
+dcl-ds dsSISRVPGM likeds(tSISRVPGM_Def) based(pSISRVPGM);
 dcl-s ProcedurePointer like(tSISRVPGM_ProcedurePointer);
-dcl-s TypeOfExportItem like(tSISRVPGM_ProcedurePointer);
+dcl-s TypeOfExportItem like(tSISRVPGM_TypeOfExportItem);
 dcl-ds ErrorCode likeds(tQUSEC);
 
 pSISRVPGM = %addr(SISRVPGM);
 
 GetExport(dsSISRVPGM.ActivationMark
          :cQLEAWI_Use_export_name
-         :cQLEAWI_Export_name_is_a_null_terminated
-         :%trim(Procedure)
+         :%len(%str(Procedure))
+         :%str(Procedure)
          :ProcedurePointer
          :TypeOfExportItem
          :ErrorCode
          );
+if ErrorCode.ExceptionId <> *blanks;
+  SIXCP_throwWithMessageId('CPFAF19':%str(Procedure):'QCPFMSG':getCaller());
+endif;
 
-return SISRVPGM;
+if TypeOfExportItem <> cQLEAWI_Export_is_a_procedure
+or TypeOfExportItem = cQLEAWI_Export_was_not_found;
+  return *null;
+endif;
+
+return ProcedurePointer;
+end-proc;
+
+// -----------------------------------------------------------------------------
+// getCaller
+// -----------------------------------------------------------------------------
+
+dcl-proc getCaller;
+dcl-pi getCaller like(tSIXCP_CallStackEntryQualification);
+end-pi;
+dcl-s CurrentJob like(tSIJI);
+dcl-ds Caller likeds(tSIJI_CallStackEntry);
+dcl-s output like(tSIXCP_CallStackEntryQualification);
+
+  CurrentJob = SIJI_new('*');
+  Caller = SIJI_getCallStackEntryForCaller(CurrentJob);
+  if Caller.ModuleName = *blanks;
+    Caller.ModuleName = '*NONE';
+  endif;
+  output = Caller.ModuleName + Caller.ProgramName;
+
+return output;
 end-proc;
