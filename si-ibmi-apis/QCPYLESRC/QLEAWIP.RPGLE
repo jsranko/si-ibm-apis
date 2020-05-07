@@ -40,6 +40,13 @@ dcl-s tQLEAWI_ExportNameLength int(10) template;
 dcl-s tQLEAWI_ExportName char(32767) template;
 dcl-s tQLEAWI_ExportItem pointer(*proc) template;
 dcl-s tQLEAWI_TypeOfExportItem int(10) template;
+dcl-s tQLEAWI_Posn int(10) template;
+dcl-s tQLEAWI_DescType int(10) template;
+dcl-s tQLEAWI_DataType int(10) template;
+dcl-s tQLEAWI_DescInf1 int(10) template;
+dcl-s tQLEAWI_DescInf2 int(10) template;
+dcl-s tQLEAWI_DataLen int(10) template;
+dcl-s tQLEAWI_Feedback char(12) template;
 
 //==========================================================================================
 //             Prototypes
@@ -61,4 +68,14 @@ dcl-pr GetExport pointer extproc('QleGetExp');
   ExportedItem like(tQLEAWI_ExportItem);
   TypeOfExportItem like(tQLEAWI_TypeOfExportItem);
   ErrorCode likeds(tQUSEC);
+end-pr;
+
+dcl-pr RetrieveOperationalDescriptorInformation extproc('CEEDOD');
+  Posn like(tQLEAWI_Posn) const;
+  DescType like(tQLEAWI_DescType);
+  DataType like(tQLEAWI_DataType);
+  DescInf1 like(tQLEAWI_DescInf1);
+  DescInf2 like(tQLEAWI_DescInf2);
+  DataLen like(tQLEAWI_DataLen);
+  Feedback like(tQLEAWI_Feedback);
 end-pr;
