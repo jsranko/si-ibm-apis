@@ -6,14 +6,22 @@
   /eof
 /endif
 
-dcl-c cSIROUTER_Payload_Length const(16000000);
+/include qcpylesrc/siiwsp
+
+dcl-c cSIROUTER_Payload_Length const(8000000);
+dcl-c cSIROUTER_ResponseHeaders_Count const(10);
 
 //==========================================================================================
 // Templates
 //==========================================================================================
 
 dcl-s tSIROUTER_Payload char(cSIROUTER_Payload_Length) template;
-dcl-s tSIROUTER_Uri char(276) template;
+dcl-s tSIROUTER_Uri varchar(512) template;
+dcl-s tSIROUTER_HttpStatus like(tSIIWS_HttpStatus) template;
+dcl-s tSIROUTER_HttpHeaderEntry like(tSIIWS_HttpHeaderEntry) template;
+dcl-s tSIROUTER_Library varchar(10) template;
+dcl-s tSIROUTER_Object varchar(10) template;
+dcl-s tSIROUTER_Procedure varchar(1024) template;
 
 dcl-ds tSIROUTER_Payload_Def qualified template;
   Uri like(tSIROUTER_Uri);
@@ -27,4 +35,6 @@ end-ds;
 dcl-pr SIROUTER extpgm('SIROUTER');
   PayloadIn like(tSIROUTER_Payload) options(*varsize);
   PayloadOut like(tSIROUTER_Payload) options(*varsize);
+  ResponseCode like(tSIROUTER_HttpStatus);
+  ResponseHeaders like(tSIROUTER_HttpHeaderEntry) dim(cSIROUTER_ResponseHeaders_Count);
 end-pr;

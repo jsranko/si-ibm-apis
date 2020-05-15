@@ -48,7 +48,8 @@ SRVPGMS=\
 	$(DIR_RPG)/SICJ.srvpgm \
 	$(DIR_RPG)/SIMF.srvpgm \
 	$(DIR_RPG)/SISRVPGM.srvpgm \
-	$(DIR_RPG)/SIRE.srvpgm
+	$(DIR_RPG)/SIRE.srvpgm \
+	$(DIR_RPG)/SIMS02.srvpgm
 
 PGMS:=\
 	$(patsubst %.RPGLE,%.pgm,$(shell grep -il " main" $(DIR_RPG)/*.*))
