@@ -49,6 +49,7 @@ SRVPGMS=\
 	$(DIR_RPG)/SIMF.srvpgm \
 	$(DIR_RPG)/SISRVPGM.srvpgm \
 	$(DIR_RPG)/SIRE.srvpgm \
+	$(DIR_RPG)/SIPFM.srvpgm \
 	$(DIR_RPG)/SIMS02.srvpgm
 
 PGMS:=\
