@@ -3,7 +3,7 @@
 //******************************************************************************************
 //
 //
-// Programname    : SIMS02
+// Programname    : SIQMQRY
 // Programautor   : Sranko Informatik
 // Created on     : 15.05.2020
 //
@@ -33,8 +33,8 @@ ctl-opt NoMain;
 // Prototypes
 //==========================================================================================
 
-/define SIMS02
-/include qcpylesrc/sims02p
+/define SIQMQRY
+///include qcpylesrc/SIQMQRYp
 
 //==========================================================================================
 // Procedures
@@ -44,11 +44,9 @@ ctl-opt NoMain;
 
 dcl-proc getJson export;
 dcl-pi getJson;
-  PayloadIn like(tSIMS02_Payload) options(*varsize);
-  PayloadOut like(tSIMS02_Payload) options(*varsize);
 end-pi;
 
-  PayloadOut = 'ahoj aus SIMS02';
+  dsply 'x';
   return;
 end-proc;
 
