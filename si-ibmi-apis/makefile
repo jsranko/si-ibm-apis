@@ -239,11 +239,5 @@ define run
 endef
 
 define log	
-	(set -x; $(1)) >>$(BUILDFILE) 2>&1 && \
-	sed 's/+ //' ./$(BUILDFILE) > ./$(BUILDFILE) && \
-	sed '/RNS9305:/d' ./$(BUILDFILE) > ./$(BUILDFILE) && \
-	sed '/CPC7301:/d' ./$(BUILDFILE) > ./$(BUILDFILE) && \
-	sed '/CPC2191:/d' ./$(BUILDFILE) > ./$(BUILDFILE) && \
-	sed '/CPC5D05:/d' ./$(BUILDFILE) > ./$(BUILDFILE) && \
-	sed '/RNS9304:/d' ./$(BUILDFILE) > ./$(BUILDFILE)
+	(set -x; $(1)) >>$(BUILDFILE) 2>&1
 endef

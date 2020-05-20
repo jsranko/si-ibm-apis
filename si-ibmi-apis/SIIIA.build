@@ -1,0 +1,612 @@
++ system -Kp CRTLIB SIIIA TEXT('SI: IBM i Apis Framework')
+CPC2102: Library SIIIA created.
++ system -Kp CRTSRCPF FILE(SIIIA/QCLLESRC) RCDLEN(240) MBR(*NONE) TEXT('just for read-only')
+CPC7301: File QCLLESRC created in library SIIIA.
++ system -Kp CRTSRCPF FILE(SIIIA/QCMDSRC) RCDLEN(240) MBR(*NONE) TEXT('just for read-only')
+CPC7301: File QCMDSRC created in library SIIIA.
++ system -Kp CRTSRCPF FILE(SIIIA/QCPYLESRC) RCDLEN(240) MBR(*NONE) TEXT('just for read-only')
+CPC7301: File QCPYLESRC created in library SIIIA.
++ system -Kp CRTSRCPF FILE(SIIIA/QRPGLESRC) RCDLEN(240) MBR(*NONE) TEXT('just for read-only')
+CPC7301: File QRPGLESRC created in library SIIIA.
++ system -Kp CRTSRCPF FILE(SIIIA/QSQLSRC) RCDLEN(240) MBR(*NONE) TEXT('just for read-only')
+CPC7301: File QSQLSRC created in library SIIIA.
++ system -Kp CRTSRCPF FILE(SIIIA/QSRVSRC) RCDLEN(240) MBR(*NONE) TEXT('just for read-only')
+CPC7301: File QSRVSRC created in library SIIIA.
++ system -Kp CRTSRCPF FILE(SIIIA/QMSGFSRC) RCDLEN(240) MBR(*NONE) TEXT('just for read-only')
+CPC7301: File QMSGFSRC created in library SIIIA.
++ system -Kp CRTBNDDIR BNDDIR(SIIIA/SIIIA) TEXT('SI: IBM i Apis Framework')
+CPC5D02: Binding directory SIIIA created in library SIIIA.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIEPCSQ01) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIEPCSQ01.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIEPCSQ01 placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:43:59.
++ system -Kp ADDEXITPGM EXITPNT(QIBM_QCA_RTV_COMMAND) FORMAT(RTVC0100) PGMNBR(19820622) PGM(SIIIA/SIEPCSQ01) PGMDTA(*JOB 30 'CRTSQLRPGIQSYS      *BEFORE   ') REPLACE(*YES)
++ system -Kp ADDENVVAR ENVVAR(RPGINCDIR) VALUE('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') CCSID(*JOB) LEVEL(*SYS) REPLACE(*YES)
+CPCA980: Environment variable added.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIUI) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIUI.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIUI placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:00.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIUI.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIUI.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIUI) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIUI file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIUI) MODULE(SIIIA/SIUI) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIUI.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIUI created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIUI *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIUI)
+CPC2191: Object SIUI in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIXCP) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIXCP.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIXCP placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:02.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIXCP.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIXCP.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIXCP) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIXCP file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIXCP) MODULE(SIIIA/SIXCP) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIXCP.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIXCP created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIXCP *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIXCP)
+CPC2191: Object SIXCP in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIHASH) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIHASH.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIHASH placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:04.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIHASH.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIHASH.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIHASH) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIHASH file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIHASH) MODULE(SIIIA/SIHASH) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIHASH.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIHASH created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIHASH *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIHASH)
+CPC2191: Object SIHASH in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIOD) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIOD.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIOD placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:06.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIOD.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIOD.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIOD) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIOD file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIOD) MODULE(SIIIA/SIOD) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIOD.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIOD created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIOD *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIOD)
+CPC2191: Object SIOD in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIITR) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIITR.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIITR placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:08.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIITR.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIITR.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIITR) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIITR file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIITR) MODULE(SIIIA/SIITR) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIITR.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIITR created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIITR *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIITR)
+CPC2191: Object SIITR in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIJL) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIJL.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIJL placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:10.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIJL.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIJL.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIJL) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIJL file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIJL) MODULE(SIIIA/SIJL) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIJL.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIJL created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIJL *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIJL)
+CPC2191: Object SIJL in SIIIA type *MODULE deleted.
++ system -Kp CRTSQLRPGI OBJ(SIIIA/SIDT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIDT.SQLRPGLE') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW(*SOURCE) REPLACE(*YES) COMPILEOPT('INCDIR(''/home/CECUSER/si-ibmi-apis/si-ibmi-apis'') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL(*INHERIT)')
+RNS9305: Module SIDT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:12.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIDT.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIDT.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIDT) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIDT file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIDT) MODULE(SIIIA/SIDT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIDT.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIDT created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIDT *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIDT)
+CPC2191: Object SIDT in SIIIA type *MODULE deleted.
++ system -Kp CRTSQLRPGI OBJ(SIIIA/SISQL) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SISQL.SQLRPGLE') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW(*SOURCE) REPLACE(*YES) COMPILEOPT('INCDIR(''/home/CECUSER/si-ibmi-apis/si-ibmi-apis'') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL(*INHERIT)')
+RNS9305: Module SISQL placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:13.
+5770ST1 V7R4M0 190621            Create SQL ILE RPG Object         SISQL                       05/20/20 04:44:13          Page     1
+Source type...............RPG
+Object name...............SIIIA/SISQL
+Source file...............QTEMP/QSQLPRE
+Member....................*OBJ
+To source file............QTEMP/QSQLT00240
+Options...................*XREF
+RPG preprocessor options..*LVL2
+Listing option............*NONE
+Target release............V7R4M0
+INCLUDE file..............*LIBL/QRPGLESRC
+Commit....................*CHG
+Allow copy of data........*OPTIMIZE
+Close SQL cursor..........*ENDACTGRP
+Allow blocking............*ALLREAD
+Delay PREPARE.............*NO
+Concurrent access
+  resolution..............*DFT
+Generation level..........10
+Printer file..............*LIBL/QSYSPRT
+Date format...............*JOB
+Date separator............*JOB
+Time format...............*HMS
+Time separator ...........*JOB
+Replace...................*YES
+Relational database.......*LOCAL
+User .....................*CURRENT
+RDB connect method........*DUW
+Default collection........*NONE
+Dynamic default
+  collection..............*NO
+Package name..............*OBJLIB/*OBJ
+Path......................*NAMING
+SQL rules.................*DB2
+Created object type.......*MODULE
+Debugging view............*SOURCE
+Debugging encryption key..*NONE
+User profile .............*NAMING
+Dynamic user profile......*USER
+Sort sequence.............*JOB
+Language ID...............*JOB
+IBM SQL flagging..........*NOFLAG
+ANS flagging..............*NONE
+Text......................*SRCMBRTXT
+Source file CCSID.........37
+Job CCSID.................65535
+Decimal result options:
+  Maximum precision.......31
+  Maximum scale...........31
+  Minimum divide scale....0
+DECFLOAT rounding mode....*HALFEVEN
+Compiler options..........INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL(*INHERIT)
+Source member changed on 05/20/20  04:44:13
+5770ST1 V7R4M0 190621            Create SQL ILE RPG Object         SISQL                       05/20/20 04:44:13          Page     2
+                                             DIAGNOSTIC MESSAGES
+MSG ID  SEV  RECORD  TEXT
+SQL0053  10          No SQL statements found.
+                    Message Summary
+  Total     Info   Warning      Error   Severe  Terminal
+      1        0         1          0        0         0
+10 level severity errors found in source
+   99 Source records processed
+                               * * * * *  E N D  O F  L I S T I N G  * * * * *
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SISQL.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SISQL.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SISQL) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SISQL file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SISQL) MODULE(SIIIA/SISQL) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SISQL.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SISQL created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SISQL *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SISQL)
+CPC2191: Object SISQL in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIULC) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIULC.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIULC placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:15.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIULC.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIULC.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIULC) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIULC file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIULC) MODULE(SIIIA/SIULC) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIULC.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIULC created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIULC *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIULC)
+CPC2191: Object SIULC in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIPATH) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIPATH.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIPATH placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:16.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIPATH.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIPATH.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIPATH) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIPATH file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIPATH) MODULE(SIIIA/SIPATH) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIPATH.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIPATH created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIPATH *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIPATH)
+CPC2191: Object SIPATH in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIDBGA) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIDBGA.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIDBGA placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:18.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIDBGA.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIDBGA.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIDBGA) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIDBGA file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIDBGA) MODULE(SIIIA/SIDBGA) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIDBGA.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIDBGA created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIDBGA *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIDBGA)
+CPC2191: Object SIDBGA in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIUUID) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIUUID.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIUUID placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:20.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIUUID.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIUUID.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIUUID) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIUUID file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIUUID) MODULE(SIIIA/SIUUID) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIUUID.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIUUID created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIUUID *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIUUID)
+CPC2191: Object SIUUID in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SISTR) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SISTR.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SISTR placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:21.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SISTR.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SISTR.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SISTR) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SISTR file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SISTR) MODULE(SIIIA/SISTR) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SISTR.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SISTR created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SISTR *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SISTR)
+CPC2191: Object SISTR in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIQSH) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIQSH.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIQSH placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:23.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIQSH.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIQSH.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIQSH) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIQSH file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIQSH) MODULE(SIIIA/SIQSH) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIQSH.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIQSH created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIQSH *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIQSH)
+CPC2191: Object SIQSH in SIIIA type *MODULE deleted.
++ system -Kp CRTSQLRPGI OBJ(SIIIA/SIQSHLOG) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIQSHLOG.SQLRPGLE') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW(*SOURCE) REPLACE(*YES) COMPILEOPT('INCDIR(''/home/CECUSER/si-ibmi-apis/si-ibmi-apis'') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL(*INHERIT)')
+RNS9305: Module SIQSHLOG placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:26.
+5770ST1 V7R4M0 190621            Create SQL ILE RPG Object         SIQSHLOG                    05/20/20 04:44:25          Page     1
+Source type...............RPG
+Object name...............SIIIA/SIQSHLOG
+Source file...............QTEMP/QSQLPRE
+Member....................*OBJ
+To source file............QTEMP/QSQLT00240
+Options...................*XREF
+RPG preprocessor options..*LVL2
+Listing option............*NONE
+Target release............V7R4M0
+INCLUDE file..............*LIBL/QRPGLESRC
+Commit....................*CHG
+Allow copy of data........*OPTIMIZE
+Close SQL cursor..........*ENDACTGRP
+Allow blocking............*ALLREAD
+Delay PREPARE.............*NO
+Concurrent access
+  resolution..............*DFT
+Generation level..........10
+Printer file..............*LIBL/QSYSPRT
+Date format...............*JOB
+Date separator............*JOB
+Time format...............*HMS
+Time separator ...........*JOB
+Replace...................*YES
+Relational database.......*LOCAL
+User .....................*CURRENT
+RDB connect method........*DUW
+Default collection........*NONE
+Dynamic default
+  collection..............*NO
+Package name..............*OBJLIB/*OBJ
+Path......................*NAMING
+SQL rules.................*DB2
+Created object type.......*MODULE
+Debugging view............*SOURCE
+Debugging encryption key..*NONE
+User profile .............*NAMING
+Dynamic user profile......*USER
+Sort sequence.............*JOB
+Language ID...............*JOB
+IBM SQL flagging..........*NOFLAG
+ANS flagging..............*NONE
+Text......................*SRCMBRTXT
+Source file CCSID.........37
+Job CCSID.................65535
+Decimal result options:
+  Maximum precision.......31
+  Maximum scale...........31
+  Minimum divide scale....0
+DECFLOAT rounding mode....*HALFEVEN
+Compiler options..........INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL(*INHERIT)
+Source member changed on 05/20/20  04:44:25
+5770ST1 V7R4M0 190621            Create SQL ILE RPG Object         SIQSHLOG                    05/20/20 04:44:25          Page     2
+                                             DIAGNOSTIC MESSAGES
+ 2131            exec sql set option commit = *none;                                       000041   05/06/20
+ 2358            ;                                                                         000268   05/06/20
+ 2400            ;                                                                         000310   05/06/20
+ 2167            exec sql drop table session.siqshlog;                                     000077   05/06/20
+ 2230                                       ) as a;                                        000140   05/06/20
+ 2230                                       ) as a;                                        000140   05/06/20
+ 2326              ;                                                                       000236   05/06/20
+ 2326              ;                                                                       000236   05/06/20
+5770ST1 V7R4M0 190621            Create SQL ILE RPG Object         SIQSHLOG                    05/20/20 04:44:25          Page     3
+                                             DIAGNOSTIC MESSAGES
+MSG ID  SEV  RECORD  TEXT
+SQL5066   0    2131  Precompile option COMMIT changed by SET OPTION statement.
+SQL1103  10    2355  Position 34 Column definitions for table SIQSHLOG in
+                     SESSION not found.
+SQL1103  10    2398  Position 34 Column definitions for table SIQSHLOG in
+                     SESSION not found.
+SQL1103  10    2167  Position 38 Column definitions for table SIQSHLOG in
+                     SESSION not found.
+SQL1103  10    2218  Position 38 Column definitions for table SIQSHLOG in
+                     SESSION not found.
+SQL1103  10    2225  Position 46 Column definitions for table SIQSHLOG in
+                     SESSION not found.
+SQL1103  10    2225  Position 46 Column definitions for table SIQSHLOG in
+                     SESSION not found.
+SQL1103  10    2313  Position 33 Column definitions for table SIQSHLOG in
+                     SESSION not found.
+SQL1103  10    2322  Position 42 Column definitions for table SIQSHLOG in
+                     SESSION not found.
+SQL1103  10    2322  Position 42 Column definitions for table SIQSHLOG in
+                     SESSION not found.
+                    Message Summary
+  Total     Info   Warning      Error   Severe  Terminal
+     10        1         9          0        0         0
+10 level severity errors found in source
+ 2421 Source records processed
+                               * * * * *  E N D  O F  L I S T I N G  * * * * *
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIQSHLOG.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIQSHLOG.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIQSHLOG) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIQSHLOG file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIQSHLOG) MODULE(SIIIA/SIQSHLOG) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIQSHLOG.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIQSHLOG created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIQSHLOG *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIQSHLOG)
+CPC2191: Object SIQSHLOG in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SICURL) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SICURL.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SICURL placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:28.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SICURL.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SICURL.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SICURL) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SICURL file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SICURL) MODULE(SIIIA/SICURL) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SICURL.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SICURL created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SICURL *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SICURL)
+CPC2191: Object SICURL in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIIMF) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIIMF.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIIMF placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:29.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIIMF.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIIMF.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIIMF) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIIMF file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIIMF) MODULE(SIIIA/SIIMF) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIIMF.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIIMF created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIIMF *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIIMF)
+CPC2191: Object SIIMF in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIIOF) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIIOF.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIIOF placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:31.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIIOF.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIIOF.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIIOF) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIIOF file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIIOF) MODULE(SIIIA/SIIOF) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIIOF.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIIOF created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIIOF *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIIOF)
+CPC2191: Object SIIOF in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SINL) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SINL.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SINL placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:33.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SINL.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SINL.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SINL) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SINL file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SINL) MODULE(SIIIA/SINL) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SINL.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SINL created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SINL *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SINL)
+CPC2191: Object SINL in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIISF) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIISF.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIISF placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:34.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIISF.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIISF.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIISF) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIISF file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIISF) MODULE(SIIIA/SIISF) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIISF.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIISF created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIISF *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIISF)
+CPC2191: Object SIISF in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIDIR) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIDIR.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIDIR placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:36.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIDIR.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIDIR.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIDIR) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIDIR file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIDIR) MODULE(SIIIA/SIDIR) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIDIR.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIDIR created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIDIR *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIDIR)
+CPC2191: Object SIDIR in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIJI) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIJI.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIJI placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:38.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIJI.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIJI.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIJI) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIJI file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIJI) MODULE(SIIIA/SIJI) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIJI.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIJI created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIJI *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIJI)
+CPC2191: Object SIJI in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SICJ) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SICJ.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SICJ placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:39.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SICJ.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SICJ.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SICJ) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SICJ file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SICJ) MODULE(SIIIA/SICJ) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SICJ.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SICJ created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SICJ *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SICJ)
+CPC2191: Object SICJ in SIIIA type *MODULE deleted.
++ system -Kp CRTSQLRPGI OBJ(SIIIA/SIMF) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIMF.SQLRPGLE') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW(*SOURCE) REPLACE(*YES) COMPILEOPT('INCDIR(''/home/CECUSER/si-ibmi-apis/si-ibmi-apis'') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL(*INHERIT)')
+RNS9305: Module SIMF placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:41.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIMF.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIMF.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIMF) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIMF file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIMF) MODULE(SIIIA/SIMF) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIMF.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIMF created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIMF *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIMF)
+CPC2191: Object SIMF in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SISRVPGM) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SISRVPGM.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SISRVPGM placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:43.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SISRVPGM.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SISRVPGM.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SISRVPGM) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SISRVPGM file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SISRVPGM) MODULE(SIIIA/SISRVPGM) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SISRVPGM.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SISRVPGM created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SISRVPGM *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SISRVPGM)
+CPC2191: Object SISRVPGM in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIRE) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIRE.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIRE placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:44.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIRE.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIRE.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIRE) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIRE file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIRE) MODULE(SIIIA/SIRE) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIRE.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIRE created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIRE *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIRE)
+CPC2191: Object SIRE in SIIIA type *MODULE deleted.
++ system -Kp CRTRPGMOD MODULE(SIIIA/SIPFM) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIPFM.RPGLE') DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') STGMDL(*INHERIT) TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9305: Module SIPFM placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:46.
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIPFM.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIPFM.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIPFM) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIPFM file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIPFM) MODULE(SIIIA/SIPFM) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIPFM.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIPFM created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIPFM *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIPFM)
+CPC2191: Object SIPFM in SIIIA type *MODULE deleted.
++ system -Kp CRTSQLRPGI OBJ(SIIIA/SIMS02) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIMS02.SQLRPGLE') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW(*SOURCE) REPLACE(*YES) COMPILEOPT('INCDIR(''/home/CECUSER/si-ibmi-apis/si-ibmi-apis'') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL(*INHERIT)')
+RNS9305: Module SIMS02 placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:47.
+5770ST1 V7R4M0 190621            Create SQL ILE RPG Object         SIMS02                      05/20/20 04:44:47          Page     1
+Source type...............RPG
+Object name...............SIIIA/SIMS02
+Source file...............QTEMP/QSQLPRE
+Member....................*OBJ
+To source file............QTEMP/QSQLT00240
+Options...................*XREF
+RPG preprocessor options..*LVL2
+Listing option............*NONE
+Target release............V7R4M0
+INCLUDE file..............*LIBL/QRPGLESRC
+Commit....................*CHG
+Allow copy of data........*OPTIMIZE
+Close SQL cursor..........*ENDACTGRP
+Allow blocking............*ALLREAD
+Delay PREPARE.............*NO
+Concurrent access
+  resolution..............*DFT
+Generation level..........10
+Printer file..............*LIBL/QSYSPRT
+Date format...............*JOB
+Date separator............*JOB
+Time format...............*HMS
+Time separator ...........*JOB
+Replace...................*YES
+Relational database.......*LOCAL
+User .....................*CURRENT
+RDB connect method........*DUW
+Default collection........*NONE
+Dynamic default
+  collection..............*NO
+Package name..............*OBJLIB/*OBJ
+Path......................*NAMING
+SQL rules.................*DB2
+Created object type.......*MODULE
+Debugging view............*SOURCE
+Debugging encryption key..*NONE
+User profile .............*NAMING
+Dynamic user profile......*USER
+Sort sequence.............*JOB
+Language ID...............*JOB
+IBM SQL flagging..........*NOFLAG
+ANS flagging..............*NONE
+Text......................*SRCMBRTXT
+Source file CCSID.........37
+Job CCSID.................65535
+Decimal result options:
+  Maximum precision.......31
+  Maximum scale...........31
+  Minimum divide scale....0
+DECFLOAT rounding mode....*HALFEVEN
+Compiler options..........INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL(*INHERIT)
+Source member changed on 05/20/20  04:44:47
+5770ST1 V7R4M0 190621            Create SQL ILE RPG Object         SIMS02                      05/20/20 04:44:47          Page     2
+                                             DIAGNOSTIC MESSAGES
+MSG ID  SEV  RECORD  TEXT
+SQL0053  10          No SQL statements found.
+                    Message Summary
+  Total     Info   Warning      Error   Severe  Terminal
+      1        0         1          0        0         0
+10 level severity errors found in source
+  182 Source records processed
+                               * * * * *  E N D  O F  L I S T I N G  * * * * *
++ system -Kp CPYFRMSTMF FROMSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIMS02.BND') TOMBR('/QSYS.LIB/SIIIA.LIB/QSRVSRC.FILE/SIMS02.MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)
+CPCA081: Stream file copied to object.
++ system -Kp CHGPFM FILE(SIIIA/QSRVSRC) MBR(SIMS02) SRCTYPE(BND) TEXT('just for read-only')
+CPC3201: Member SIMS02 file QSRVSRC in SIIIA changed.
++ system -Kp CRTSRVPGM SRVPGM(SIIIA/SIMS02) MODULE(SIIIA/SIMS02) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QSRVSRC/SIMS02.BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL(*INHERIT)
+CPC5D0B: Service program SIMS02 created in library SIIIA.
++ system -Kp ADDBNDDIRE BNDDIR(SIIIA/SIIIA) OBJ((SIIIA/SIMS02 *SRVPGM *IMMED))
+CPC5D05: 1 entries added, 0 entries not added to Binding directory SIIIA in library SIIIA.
++ system -Kp DLTMOD MODULE(SIIIA/SIMS02)
+CPC2191: Object SIMS02 in SIIIA type *MODULE deleted.
++ system -Kp CRTBNDRPG PGM(SIIIA/JSONPARSE) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/JSONPARSE.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program JSONPARSE placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:49.
++ system -Kp CRTBNDRPG PGM(SIIIA/SICJUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SICJUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SICJUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:50.
++ system -Kp CRTBNDRPG PGM(SIIIA/SICRTMSGF) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SICRTMSGF.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SICRTMSGF placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:50.
++ system -Kp CRTBNDRPG PGM(SIIIA/SICURLUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SICURLUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SICURLUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:51.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIDBGAUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIDBGAUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIDBGAUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:51.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIDTUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIDTUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIDTUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:52.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIHASHUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIHASHUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIHASHUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:53.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIISFUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIISFUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIISFUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:53.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIJIUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIJIUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIJIUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:54.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIJLUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIJLUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIJLUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:55.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIPFMLR) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIPFMLR.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIPFMLR placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:55.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIPFMUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIPFMUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIPFMUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:56.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIQSHLOGUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIQSHLOGUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIQSHLOGUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:57.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIREUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIREUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIREUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:57.
++ system -Kp CRTBNDRPG PGM(SIIIA/SISRVPGMUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SISRVPGMUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SISRVPGMUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:58.
++ system -Kp CRTBNDRPG PGM(SIIIA/SISTRUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SISTRUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SISTRUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:58.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIUUIDUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIUUIDUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIUUIDUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:59.
++ system -Kp CRTBNDRPG PGM(SIIIA/SIXCPUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIXCPUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
+RNS9304: Program SIXCPUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:45:00.
