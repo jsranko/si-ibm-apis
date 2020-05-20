@@ -103,9 +103,6 @@ dcl-s RecordData char(cSIPFM_Buffer_Size);
 
     Member = SIPFM_new(Inp_Libraryname:Inp_Filename:Inp_Membername);
     MembersData = SIPFM_listRecords(Member);
-    if SIITR_isEmpty(MembersData);
-      SQLState = cSIUDTF_State_EOT;
-    endif;  
     
   endsr;
 
