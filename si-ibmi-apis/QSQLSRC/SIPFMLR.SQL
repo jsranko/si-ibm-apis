@@ -9,6 +9,7 @@ Returns Table(
 )
 Language RPGLE
 Parameter Style Sql
+Specific $(LIBRARY)/SIPFMLRS
 Statement Deterministic
 Returns Null On Null Input
 External Name '$(LIBRARY)/SIPFMLR'
