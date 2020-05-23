@@ -103,7 +103,7 @@ dcl-s RecordData char(cSIPFM_Buffer_Size);
 
     Member = SIPFM_new(Inp_Libraryname:Inp_Filename:Inp_Membername);
     MembersData = SIPFM_listRecords(Member);
-
+    
   endsr;
 
   // ..........................................................................
@@ -121,7 +121,8 @@ dcl-s RecordData char(cSIPFM_Buffer_Size);
 
      %len(Out_MemberData) = SIPFM_getRecordLength(Member);
      memcpy(%addr(Out_MemberData:*data):%addr(RecordData):SIPFM_getRecordLength(Member));
-
+   else;
+     SQLState = cSIUDTF_State_EOT;
    endif;
 
   endsr;
