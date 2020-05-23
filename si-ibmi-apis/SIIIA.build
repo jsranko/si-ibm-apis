@@ -610,3 +610,9 @@ RNS9304: Program SISTRUT placed in library SIIIA. 00 highest severity. Created o
 RNS9304: Program SIUUIDUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:44:59.
 + system -Kp CRTBNDRPG PGM(SIIIA/SIXCPUT) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIXCPUT.RPGLE') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW(*SOURCE) REPLACE(*YES) INCDIR('/home/CECUSER/si-ibmi-apis/si-ibmi-apis') TGTCCSID(*JOB) OUTPUT(*NONE)
 RNS9304: Program SIXCPUT placed in library SIIIA. 00 highest severity. Created on 05/20/20 at 04:45:00.
++ system CRTSQLRPGI OBJ(SIIIA/SIROUTER) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIROUTER.SQLRPGLE') OBJTYPE(*PGM) DBGVIEW(*SOURCE) RPGPPOPT(*LVL2) REPLACE(*YES) COMPILEOPT('INCDIR(''/home/CECUSER/si-ibmi-apis/si-ibmi-apis'') TGTCCSID(*JOB) DFTACTGRP(*NO) ACTGRP(*NEW) OUTPUT(*NONE)')
+RNS9308: Compilation stopped. Severity 30 errors found in program.
+RNS9310: Compilation failed. Program SIROUTER not created in library SIIIA.
++ system CRTSQLRPGI OBJ(SIIIA/SIROUTER) SRCSTMF('/home/CECUSER/si-ibmi-apis/si-ibmi-apis/QRPGLESRC/SIROUTER.SQLRPGLE') OBJTYPE(*PGM) DBGVIEW(*SOURCE) RPGPPOPT(*LVL2) REPLACE(*YES) COMPILEOPT('INCDIR(''/home/CECUSER/si-ibmi-apis/si-ibmi-apis'') TGTCCSID(*JOB) DFTACTGRP(*NO) ACTGRP(*NEW) OUTPUT(*NONE)')
+RNS9308: Compilation stopped. Severity 30 errors found in program.
+RNS9310: Compilation failed. Program SIROUTER not created in library SIIIA.

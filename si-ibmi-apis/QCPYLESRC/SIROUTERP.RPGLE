@@ -34,7 +34,7 @@ end-ds;
 
 dcl-pr SIROUTER extpgm('SIROUTER');
   PayloadIn like(tSIROUTER_Payload) options(*varsize);
-  PayloadOut like(tSIROUTER_Payload) options(*varsize);
+  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(1208);
   ResponseCode like(tSIROUTER_HttpStatus);
   ResponseHeaders like(tSIROUTER_HttpHeaderEntry) dim(cSIROUTER_ResponseHeaders_Count);
 end-pr;
