@@ -2,6 +2,7 @@ LIBRARY=SIIIA
 DBGVIEW=*SOURCE
 STGMDL=*INHERIT
 BUILDFILE=SIIIA.build
+JOB_CCSID=819
 
 OBJECT_DESC='SI: IBM i Apis Framework'
 MAKELOG=makefile.output
@@ -92,21 +93,23 @@ JAVAS=\
 
 all: build
 
-build: build-main
+build: job-ccsid \
+		$(LIBRARY).lib \
+		create-srcfiles \
+	    $(LIBRARY).bnddir \
+	    build-exitprograms \
+	    RPGINCDIR.envvar \
+	    build-srvpgms \
+	    build-pgms \
+	    build-cls \
+	    build-commands \
+	    build-java \
+	    build-sqls \
+	    build-msgfs	\
+	    copy-cpysrc
 
-build-main: $(LIBRARY).lib \
-			create-srcfiles \
-	        $(LIBRARY).bnddir \
-	        build-exitprograms \
-	        RPGINCDIR.envvar \
-	        build-srvpgms \
-	        build-pgms \	        
-	        build-cls \
-	        build-commands \
-	        build-java \
-	        build-sqls \
-	        build-msgfs	\	
-	        copy-cpysrc         
+job-ccsid:
+	(system -Kp "QSYS/DSPSYSVAL SYSVAL(QCCSID)" | grep -i 65535 1>&2) || export CCSID=$(JOB_CCSID)
 
 build-msgfs: $(MSGFS)
 
@@ -128,7 +131,17 @@ copy-cpysrc: $(CPYSRCS)
 
 build-java: $(JAVAS)
 
-display-all: $(MSGFS) $(SRVPGMS) $(CMDS) $(EXITPGMS) $(SQLS) $(PGMS) $(SRCFILES) $(CLS) $(CPYSRCS) $(JAVAS)
+display-vars: 
+	$(info    MSGFS is $(MSGFS)) 
+	$(info    SRVPGMS is $(SRVPGMS)) 
+	$(info    CMDS is $(CMDS)) 
+	$(info    EXITPGMS is $(EXITPGMS)) 
+	$(info    SQLS is $(SQLS)) 
+	$(info    PGMS is $(PGMS))
+	$(info    SRCFILES is $(SRCFILES)) 
+	$(info    CLS is $(CLS)) 
+	$(info    CPYSRCS is $(CPYSRCS)) 
+	$(info    JAVAS is $(JAVAS)) 
 
 %.envvar: 
 	system -Kp "ADDENVVAR ENVVAR(RPGINCDIR) VALUE('$(ROOT_DIR)') CCSID(*JOB) LEVEL(*SYS) REPLACE(*YES)" && \
@@ -143,7 +156,7 @@ display-all: $(MSGFS) $(SRVPGMS) $(CMDS) $(EXITPGMS) $(SQLS) $(PGMS) $(SRCFILES)
 	system -Kp "DLTMOD MODULE($(LIBRARY)/$(notdir $*))"
 
 %.lib: 
-	(system -Kp "CHKOBJ $* *LIB" || $(call log_and_run,system -Kp "CRTLIB $* TEXT($(OBJECT_DESC))")) && \
+	(system -Kp "CHKOBJ $* *LIB" || system -Kp "CRTLIB $* TEXT($(OBJECT_DESC))") && \
 	touch $@
 	touch $(SIIIA_CTLOPT) && \
 	printf "**FREE\n\n/if not defined(SICTLOPTP)\n  /define SICTLOPTP\n/else\n  /eof\n/endif\n\nctl-opt bnddir('$(LIBRARY)/SIIIA');" > $(SIIIA_CTLOPT)
@@ -159,7 +172,7 @@ display-all: $(MSGFS) $(SRVPGMS) $(CMDS) $(EXITPGMS) $(SQLS) $(PGMS) $(SRCFILES)
 	touch $@
 	
 %.bnddir: $(LIBRARY).lib
-	(system -Kp "CHKOBJ OBJ($(LIBRARY)/$*) OBJTYPE(*BNDDIR)" || $(call log_and_run,system -Kp "CRTBNDDIR BNDDIR($(LIBRARY)/$*) TEXT($(OBJECT_DESC))")) && touch $@	
+	(system -Kp "CHKOBJ OBJ($(LIBRARY)/$*) OBJTYPE(*BNDDIR)" || system -Kp "CRTBNDDIR BNDDIR($(LIBRARY)/$*) TEXT($(OBJECT_DESC))") && touch $@	
 	
 %.pgm: %.SQLRPGLE
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$(notdir $*))
@@ -173,7 +186,7 @@ display-all: $(MSGFS) $(SRVPGMS) $(CMDS) $(EXITPGMS) $(SQLS) $(PGMS) $(SRCFILES)
 		
 %.messagefile: $(DIR_MSGF)/%.$(EXT_MSGF)
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_MSGF),$*)
-	system -Kp "$(LIBRARY)/SICRTMSGF SRCSTMF('$(ROOT_DIR)/$<')" && touch $@ || rm $@
+	system -Kp "$(LIBRARY)/SICRTMSGF SRCSTMF('$(ROOT_DIR)/$<')" && touch $@
 	
 %.command: %.$(EXT_CMD)
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_CMD),$(notdir $*))
@@ -208,24 +221,60 @@ display-all: $(MSGFS) $(SRVPGMS) $(CMDS) $(EXITPGMS) $(SQLS) $(PGMS) $(SRCFILES)
 	jar -cvf $*.jar $*.class && \
 	rm $*.class
 
-clean:
-	rm -f *.lib \
-	      $(DIR_RPG)/*.pgm \
-	      $(DIR_RPG)/*.srvpgm \
-	      $(DIR_RPG)/*.module \
-	      *.output \
-	      *.bnddir \
-	      *.envvar \
-	      $(DIR_MSGF)/*.messagefile \
-	      $(DIR_CMD)/*.command \
-	      *.exitprogram \
-	      $(DIR_SQL)/*.query \
-	      *.srcpf \
-	      $(DIR_CL)/*.clpgm \
-	      *.jar \
-	      *.build \
-	      $(DIR_CPY)/*.cpysrc
+clean-lib:
+	rm -f $(LIBRARY).lib &&\
 	system -Kp 'DLTLIB $(LIBRARY)' || :	
+
+clean-srcfiles:
+	rm -f *.srcpf
+
+clean-bnddir:
+	rm -f *.bnddir
+
+clean-exitprograms:
+	rm -f *.exitprogram
+
+clean-envvar:
+	rm -f *.envvar
+
+clean-srvpgms:
+	rm -f $(DIR_RPG)/*.srvpgm \
+	      $(DIR_RPG)/*.module
+
+clean-pgms:
+	rm -f $(DIR_RPG)/*.pgm
+
+clean-cls:
+	rm -f $(DIR_CL)/*.clpgm
+
+clean-commands:
+	rm -f $(DIR_CMD)/*.command
+
+clean-java:
+	rm -f *.jar
+
+clean-msgfs:
+	rm -f $(DIR_MSGF)/*.messagefile
+
+clean-cpysrc:
+	rm -f $(DIR_CPY)/*.cpysrc
+
+clean-sqls:
+	rm -f $(DIR_SQL)/*.query
+
+clean: clean-cpysrc \
+			clean-msgfs \
+			clean-sqls \
+			clean-java \
+			clean-commands \
+			clean-cls \
+			clean-pgms \
+			clean-srvpgms \
+			clean-envvar \
+			clean-exitprograms \
+			clean-bnddir \
+			clean-srcfiles \
+			clean-lib
 
 define copy_to_srcpf
 	system -Kp "CPYFRMSTMF FROMSTMF('$(1)') TOMBR('/QSYS.LIB/$(2).LIB/$(3).FILE/$(4).MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)" && \

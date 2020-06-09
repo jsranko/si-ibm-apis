@@ -1,4 +1,0 @@
-+ system -Kp CRTLIB SIIIA TEXT('SI: IBM i Apis Framework')
-CPC2102: Library SIIIA created.
-+ system -Kp CRTBNDDIR BNDDIR(SIIIA/SIIIA) TEXT('SI: IBM i Apis Framework')
-CPC5D02: Binding directory SIIIA created in library SIIIA.
