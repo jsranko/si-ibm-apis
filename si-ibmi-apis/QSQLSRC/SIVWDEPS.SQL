@@ -1,10 +1,10 @@
-Create or Replace Function SI_VIEW_DEPENDENCIES(File Varchar(10), 
-                                                Library Varchar(10))
+Create or Replace Function $(LIBRARY)/SI_VIEW_DEPENDENCIES(File Varchar(10), 
+                                                           Library Varchar(10))
 Returns Table (Level Integer, 
                File Varchar(10),
                Library Varchar(10))
 Language Sql
-Specific SIVWDEPS
+Specific $(LIBRARY)/SIVWDEPS
 Not Deterministic
 No External Action
 Returns Null On Null Input
