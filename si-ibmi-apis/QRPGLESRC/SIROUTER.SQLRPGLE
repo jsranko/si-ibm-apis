@@ -76,6 +76,8 @@ if ResponseCode <> *zeros;
   return;
 endif;
 
+exsr savePayloadToSQLVar;
+
 monitor;
   uri = getUri(%addr(PayloadIn));
 on-error;
@@ -111,6 +113,13 @@ begsr checkParameters;
     ResponseCode = cSIIWS_ResponseCode_InternalServerError;
     PayloadOut = 'teste';
   endif;
+
+endsr;
+
+// .........................................................................................
+begsr savePayloadToSQLVar;
+
+  exec sql set si_payload_in = json_to_bson(:PayloadIn);
 
 endsr;
 
