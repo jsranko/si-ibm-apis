@@ -60,6 +60,7 @@ dcl-s nStdIn ind inz(*off);
 dcl-s nStdOut ind inz(*off);
 dcl-s uri like(tSIROUTER_Uri);
 dcl-s PayloadInLength int(10);
+dcl-s payloadCLOB sqltype(clob:8000000);
 
 if %addr(PayloadIn) = *null;
   nStdIn = *on;
@@ -71,15 +72,16 @@ endif;
 
 exsr prepareParameters;
 
+exsr savePayloadToSQLVar;
+
 exsr checkParameters;
 if ResponseCode <> *zeros;
   return;
 endif;
 
-exsr savePayloadToSQLVar;
-
 monitor;
-  uri = getUri(%addr(PayloadIn));
+  //uri = getUri(%addr(PayloadIn));
+  uri = getUri();
 on-error;
 endmon;
 
@@ -108,8 +110,10 @@ endsr;
 // .........................................................................................
 begsr checkParameters;
 
-  if not existUri(%addr(PayloadIn))
-  or not existPayload(%addr(PayloadIn));
+  //if not existUri(%addr(PayloadIn))
+  //or not existPayload(%addr(PayloadIn));
+  if not existUri()
+  or not existPayload();
     ResponseCode = cSIIWS_ResponseCode_InternalServerError;
     PayloadOut = 'teste';
   endif;
@@ -119,7 +123,10 @@ endsr;
 // .........................................................................................
 begsr savePayloadToSQLVar;
 
-  exec sql set si_payload_in = json_to_bson(:PayloadIn);
+  payloadCLOB_len = %len(%str(%addr(PayloadIn)));
+  memcpy(%addr(payloadCLOB_data):%addr(PayloadIn):payloadCLOB_len);
+
+  exec sql set si_payload_in = json_to_bson(:payloadCLOB);
 
 endsr;
 
@@ -129,11 +136,14 @@ begsr processPayload;
   monitor;
     select;
     when isServiceProgram(uri);
-      doServiceProgramCall(uri:PayloadIn:PayloadOut);
+      //doServiceProgramCall(uri:PayloadIn:PayloadOut);
+      doServiceProgramCall(uri);
     when isProgram(uri);
-      doProgramCall(uri:PayloadIn:PayloadOut);
+      //doProgramCall(uri:PayloadIn:PayloadOut);
+      doProgramCall(uri);
     when isStatement(uri);
-      doStatement(uri:PayloadIn:PayloadOut);
+      //doStatement(uri:PayloadIn:PayloadOut);
+      doStatement(uri);
     endsl;
   on-error;
     ResponseCode = cSIIWS_ResponseCode_InternalServerError;
@@ -145,7 +155,8 @@ endsr;
 begsr processResponseCode;
 
   if %addr(ResponseCode) <> *null;
-    ResponseCode = getResponseCode(%addr(PayloadOut));
+    //ResponseCode = getResponseCode(%addr(PayloadOut));
+    ResponseCode = getResponseCode();
 
    if ResponseCode = *zeros;
     ResponseCode = cSIIWS_ResponseCode_OK;
@@ -158,7 +169,8 @@ endsr;
 // .........................................................................................
 begsr processResponseHeaders;
   if %addr(ResponseHeaders) <> *null;
-    ResponseHeaders = getResponseHeaders(%addr(PayloadOut));
+    //ResponseHeaders = getResponseHeaders(%addr(PayloadOut));
+    ResponseHeaders = getResponseHeaders();
   endif;
 endsr;
 
@@ -168,17 +180,17 @@ end-proc;
 
 dcl-proc getUri;
 dcl-pi getUri like(tSIROUTER_Uri);
-  Payload pointer value;
+  //Payload pointer value;
 end-pi;
 dcl-s uri like(tSIROUTER_Uri);
 dcl-s NullInd int(5);
-dcl-s payloadCLOB sqltype(clob:8000000);
+//dcl-s payloadCLOB sqltype(clob:8000000);
 
-  payloadCLOB_len = %len(%str(Payload));
-  memcpy(%addr(payloadCLOB_data):Payload:payloadCLOB_len);
+//  payloadCLOB_len = %len(%str(Payload));
+//  memcpy(%addr(payloadCLOB_data):Payload:payloadCLOB_len);
 
   exec sql set :uri :NullInd =
-           json_value(:payloadCLOB format json,
+           json_value(si_payload_in,
                       :cJSON_Path_Uri returning char(276)
                       error on error);
   select;
@@ -195,17 +207,17 @@ end-proc;
 
 dcl-proc existUri;
 dcl-pi existUri ind;
-  Payload pointer value;
+  //Payload pointer value;
 end-pi;
 dcl-s uri char(1);
 dcl-s NullInd int(5);
-dcl-s payloadCLOB sqltype(clob:8000000);
+//dcl-s payloadCLOB sqltype(clob:8000000);
 
-  payloadCLOB_len = %len(%str(Payload));
-  memcpy(%addr(payloadCLOB_data):Payload:payloadCLOB_len);
+//  payloadCLOB_len = %len(%str(Payload));
+//  memcpy(%addr(payloadCLOB_data):Payload:payloadCLOB_len);
 
   exec sql set :uri :NullInd =
-           json_value(:payloadCLOB format json,
+           json_value(si_payload_in,
                       :cJSON_Path_Uri returning char(1)
                       error on error);
   select;
@@ -222,17 +234,17 @@ end-proc;
 
 dcl-proc existPayload;
 dcl-pi existPayload ind;
-  Payload pointer value;
+//  Payload pointer value;
 end-pi;
 dcl-s pay char(1);
 dcl-s NullInd int(5);
-dcl-s payloadCLOB sqltype(clob:8000000);
+//dcl-s payloadCLOB sqltype(clob:8000000);
 
-  payloadCLOB_len = %len(%str(Payload));
-  memcpy(%addr(payloadCLOB_data):Payload:payloadCLOB_len);
+//  payloadCLOB_len = %len(%str(Payload));
+//  memcpy(%addr(payloadCLOB_data):Payload:payloadCLOB_len);
 
   exec sql set :pay :NullInd =
-           json_value(:payloadCLOB format json,
+           json_value(si_payload_in,
                       :cJSON_Path_Payload returning char(1)
                       error on error);
   select;
@@ -249,17 +261,17 @@ end-proc;
 
 dcl-proc getResponseCode;
 dcl-pi getResponseCode like(tSIROUTER_HttpStatus);
-  Payload pointer value;
+//  Payload pointer value;
 end-pi;
 dcl-s ResponseCode like(tSIROUTER_HttpStatus);
 dcl-s NullInd int(5);
-dcl-s payloadCLOB sqltype(clob:8000000);
+//dcl-s payloadCLOB sqltype(clob:8000000);
 
-  payloadCLOB_len = %len(%str(Payload));
-  memcpy(%addr(payloadCLOB_data):Payload:payloadCLOB_len);
+//  payloadCLOB_len = %len(%str(Payload));
+//  memcpy(%addr(payloadCLOB_data):Payload:payloadCLOB_len);
 
   exec sql set :ResponseCode :NullInd =
-           json_value(:payloadCLOB format json,
+           json_value(si_payload_out,
                       '$.response_code' returning integer
                       error on error);
   select;
@@ -289,25 +301,25 @@ end-proc;
 
 dcl-proc getResponseHeaders;
 dcl-pi getResponseHeaders like(tSIROUTER_HttpHeaderEntry) dim(cSIROUTER_ResponseHeaders_Count);
-  Payload pointer value;
+//  Payload pointer value;
 end-pi;
 dcl-s ResponseHeaders like(tSIROUTER_HttpHeaderEntry) dim(cSIROUTER_ResponseHeaders_Count);
 dcl-s Key like(tSIROUTER_HttpHeaderEntry);
 dcl-s Value like(tSIROUTER_HttpHeaderEntry);
-dcl-s payloadCLOB sqltype(clob:8000000);
+//dcl-s payloadCLOB sqltype(clob:8000000);
 dcl-s idx int(5);
 dcl-s json_path varchar(50);
 
-  payloadCLOB_len = %len(%str(Payload));
-  memcpy(%addr(payloadCLOB_data):Payload:payloadCLOB_len);
+//  payloadCLOB_len = %len(%str(Payload));
+//  memcpy(%addr(payloadCLOB_data):Payload:payloadCLOB_len);
 
   for idx = 0 to cSIROUTER_ResponseHeaders_Count - 1;
     json_path = 'strict $.headers[' + %char(idx) + '].key';
-    exec sql set :Key = json_value(:payloadCLOB format json,
+    exec sql set :Key = json_value(si_payload_out,
                                   :json_path returning varchar(256)
                                   error on error);
     json_path = 'strict $.headers[' + %char(idx) + '].value';
-    exec sql set :Value = json_value(:payloadCLOB format json,
+    exec sql set :Value = json_value(si_payload_out,
                                      :json_path returning varchar(256)
                                      error on error);
     ResponseHeaders(idx + 1) = %trim(Key) + ':' + %trim(Value);
@@ -371,17 +383,19 @@ end-proc;
 dcl-proc doServiceProgramCall;
 dcl-pi doServiceProgramCall;
   Uri like(tSIROUTER_Uri);
-  PayloadIn like(tSIROUTER_Payload) options(*varsize);
-  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(1208);
+//  PayloadIn like(tSIROUTER_Payload) options(*varsize);
+//  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(*utf8);
 end-pi;
 dcl-s Library like(tSIROUTER_Library);
 dcl-s Object like(tSIROUTER_Object);
 dcl-s Procedure like(tSIROUTER_Procedure);
 dcl-s ServiceProgram like(tSISRVPGM);
 dcl-s procedurePointer like(tSISRVPGM_ProcedurePointer);
+//dcl-pr callProcedure extproc(procedurePointer);
+//  PayloadIn like(tSIROUTER_Payload) options(*varsize);
+//  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(*utf8);
+//end-pr;
 dcl-pr callProcedure extproc(procedurePointer);
-  PayloadIn like(tSIROUTER_Payload) options(*varsize);
-  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(1208);
 end-pr;
 
   Library = getLibrary(Uri);
@@ -394,7 +408,7 @@ end-pr;
   endif;
 
   procedurePointer = SISRVPGM_getProcedurePointerByName(ServiceProgram:Procedure);
-  callProcedure(PayloadIn:PayloadOut);
+  callProcedure();
 
   return;
 end-proc;
@@ -404,21 +418,24 @@ end-proc;
 dcl-proc doProgramCall;
 dcl-pi doProgramCall;
   Uri like(tSIROUTER_Uri);
-  PayloadIn like(tSIROUTER_Payload) options(*varsize);
-  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(1208);
+//  PayloadIn like(tSIROUTER_Payload) options(*varsize);
+//  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(*utf8);
 end-pi;
 dcl-s Library like(tSIROUTER_Library);
 dcl-s Object like(tSIROUTER_Object);
 dcl-s sCallProgram varchar(21);
+//dcl-pr callProgram extpgm(sCallProgram);
+//  PayloadIn like(tSIROUTER_Payload) options(*varsize);
+//  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(*utf8);
+//end-pr;
 dcl-pr callProgram extpgm(sCallProgram);
-  PayloadIn like(tSIROUTER_Payload) options(*varsize);
-  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(1208);
 end-pr;
 
   Library = getLibrary(Uri);
   Object = getObject(Uri);
   sCallProgram = Library + '/' + Object;
-  callProgram(PayloadIn:PayloadOut);
+  //callProgram(PayloadIn:PayloadOut);
+  callProgram();
 
   return;
 end-proc;
@@ -428,8 +445,8 @@ end-proc;
 dcl-proc doStatement;
 dcl-pi doStatement;
   Uri like(tSIROUTER_Uri);
-  PayloadIn like(tSIROUTER_Payload) options(*varsize);
-  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(1208);
+//  PayloadIn like(tSIROUTER_Payload) options(*varsize);
+//  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(*utf8);
 end-pi;
 
   return;

@@ -2,7 +2,9 @@ LIBRARY=SIIIA
 DBGVIEW=*SOURCE
 STGMDL=*INHERIT
 BUILDFILE=SIIIA.build
-JOB_CCSID=819
+JOB_CCSID=37
+
+SHELL=/QOpenSys/usr/bin/qsh
 
 OBJECT_DESC='SI: IBM i Apis Framework'
 MAKELOG=makefile.output
@@ -55,7 +57,8 @@ SRVPGMS=\
 	$(DIR_RPG)/SIMS02.srvpgm
 
 PGMS:=\
-	$(patsubst %.RPGLE,%.pgm,$(shell grep -il " main" $(DIR_RPG)/*.*))
+	$(patsubst %.RPGLE,%.pgm,$(shell grep -il " main" $(DIR_RPG)/*.RPGLE)) \
+	$(patsubst %.SQLRPGLE,%.pgm,$(shell grep -il " main" $(DIR_RPG)/*.SQLRPGLE))
 
 MSGFS=\
 	$(patsubst %.$(EXT_MSGF),%.messagefile,$(notdir $(wildcard $(DIR_MSGF)/*.$(EXT_MSGF))))
@@ -93,8 +96,7 @@ JAVAS=\
 
 all: build
 
-build: job-ccsid \
-		$(LIBRARY).lib \
+build: $(LIBRARY).lib \
 		create-srcfiles \
 	    $(LIBRARY).bnddir \
 	    build-exitprograms \
@@ -107,9 +109,6 @@ build: job-ccsid \
 	    build-sqls \
 	    build-msgfs	\
 	    copy-cpysrc
-
-job-ccsid:
-	(system -Kp "QSYS/DSPSYSVAL SYSVAL(QCCSID)" | grep -i 65535 1>&2) || export CCSID=$(JOB_CCSID)
 
 build-msgfs: $(MSGFS)
 
@@ -149,6 +148,7 @@ display-vars:
 
 %.srvpgm: %.module
 	$(call copy_to_srcpf,$(ROOT_DIR)/$(DIR_SRV)/$(notdir $*).BND,$(LIBRARY),$(DIR_SRV),$(notdir $*))
+	liblist -a $(LIBRARY);\
 	system -Kp "CRTSRVPGM SRVPGM($(LIBRARY)/$(notdir $*)) MODULE($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$(DIR_SRV)/$(notdir $*).BND') ACTGRP(*CALLER) OPTION(*DUPPROC) STGMDL($(STGMDL))" && \
 	touch $@	
 	system -Kp "ADDBNDDIRE BNDDIR($(LIBRARY)/$(LIBRARY)) OBJ(($(LIBRARY)/$(notdir $*) *SRVPGM *IMMED))" && \
@@ -163,33 +163,39 @@ display-vars:
 	
 %.module: %.RPGLE
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$(notdir $*))
+	liblist -a $(LIBRARY);\
 	system -Kp "CRTRPGMOD MODULE($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') STGMDL($(STGMDL)) TGTCCSID(*JOB) OUTPUT(*NONE)"  && \
 	touch $@	
 	
 %.module: %.SQLRPGLE
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$(notdir $*))
+	liblist -a $(LIBRARY);\
 	system -Kp "CRTSQLRPGI OBJ($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW($(DBGVIEW)) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL($(STGMDL))')" && \
 	touch $@
 	
-%.bnddir: $(LIBRARY).lib
-	(system -Kp "CHKOBJ OBJ($(LIBRARY)/$*) OBJTYPE(*BNDDIR)" || system -Kp "CRTBNDDIR BNDDIR($(LIBRARY)/$*) TEXT($(OBJECT_DESC))") && touch $@	
+%.bnddir: $(LIBRARY).lib 
+	(system -Kp "CHKOBJ OBJ($(LIBRARY)/$*) OBJTYPE(*BNDDIR)" || system -iKp "CRTBNDDIR BNDDIR($(LIBRARY)/$*) TEXT($(OBJECT_DESC))") && touch $@	
 	
 %.pgm: %.SQLRPGLE
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$(notdir $*))
+	liblist -a $(LIBRARY);\
 	system "CRTSQLRPGI OBJ($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*PGM) DBGVIEW($(DBGVIEW)) RPGPPOPT(*LVL2) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') TGTCCSID(*JOB) DFTACTGRP(*NO) ACTGRP(*NEW) OUTPUT(*NONE)')" && \
 	touch $@
 
 %.pgm: %.RPGLE
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$(notdir $*))
+	liblist -a $(LIBRARY);\
 	system -Kp "CRTBNDRPG PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') TGTCCSID(*JOB) OUTPUT(*NONE)" && \
 	touch $@
 		
 %.messagefile: $(DIR_MSGF)/%.$(EXT_MSGF)
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_MSGF),$*)
+	liblist -a $(LIBRARY);\
 	system -Kp "$(LIBRARY)/SICRTMSGF SRCSTMF('$(ROOT_DIR)/$<')" && touch $@
 	
 %.command: %.$(EXT_CMD)
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_CMD),$(notdir $*))
+	liblist -a $(LIBRARY);\
 	system -Kp "CRTCMD CMD($(LIBRARY)/$(notdir $*)) PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') REPLACE(*YES)" && \
 	touch $@
 	
@@ -197,10 +203,11 @@ display-vars:
 	system -Kp "ADDEXITPGM EXITPNT(QIBM_QCA_RTV_COMMAND) FORMAT(RTVC0100) PGMNBR(19820622) PGM($(LIBRARY)/$*) PGMDTA(*JOB 30 'CRTSQLRPGIQSYS      *BEFORE   ') REPLACE(*YES)" && \
 	touch $@
 
-%.query: %.$(EXT_SQL) 
+%.query: %.$(EXT_SQL)
 	# echo "$$@=$@\n $$%=$%\n $$<=$<\n $$?=$?\n $$^=$^\n $$+=$+\n $$|=$|\n $$*=$*\n" 
-	sed 's/$$(LIBRARY)/$(LIBRARY)/g; s/$$(ROOT_DIR)/$(subst /,\/,$(ROOT_DIR))/g; s/$$(DIR_JAVA)/$(subst /,\/,$(DIR_JAVA))/g' $< > $@
-	$(call copy_to_srcpf,$(ROOT_DIR)/$*.query,$(LIBRARY),$(DIR_SQL),$(notdir $*))
+	sed 's/$$(LIBRARY)/$(LIBRARY)/g; s/$$(ROOT_DIR)/$(subst /,\/,$(ROOT_DIR))/g; s/$$(DIR_JAVA)/$(subst /,\/,$(DIR_JAVA))/g' $< > $@ && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$*.query,$(LIBRARY),$(DIR_SQL),$(notdir $*)) && \
+	liblist -a $(LIBRARY);\
 	system -Kp "RUNSQLSTM SRCSTMF('$(ROOT_DIR)/$@') COMMIT(*NONE)"	
 
 %.srcpf: $(LIBRARY).lib
@@ -209,6 +216,7 @@ display-vars:
 	
 %.clpgm: %.$(EXT_CL)
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_CL),$(notdir $*))
+	liblist -a $(LIBRARY);\
 	system -kp "CRTBNDCL PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') DFTACTGRP(*NO) ACTGRP(*STGMDL) STGMDL(*SNGLVL) OUTPUT(*NONE) REPLACE(*YES) DBGVIEW($(DBGVIEW))" && \
 	touch $@      
 
@@ -263,18 +271,18 @@ clean-sqls:
 	rm -f $(DIR_SQL)/*.query
 
 clean: clean-cpysrc \
-			clean-msgfs \
-			clean-sqls \
-			clean-java \
-			clean-commands \
-			clean-cls \
-			clean-pgms \
-			clean-srvpgms \
-			clean-envvar \
-			clean-exitprograms \
-			clean-bnddir \
-			clean-srcfiles \
-			clean-lib
+		clean-msgfs \
+		clean-sqls \
+		clean-java \
+		clean-commands \
+		clean-cls \
+		clean-pgms \
+		clean-srvpgms \
+		clean-envvar \
+		clean-exitprograms \
+		clean-bnddir \
+		clean-srcfiles \
+		clean-lib
 
 define copy_to_srcpf
 	system -Kp "CPYFRMSTMF FROMSTMF('$(1)') TOMBR('/QSYS.LIB/$(2).LIB/$(3).FILE/$(4).MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)" && \
@@ -291,4 +299,8 @@ endef
 
 define log	
 	(set -x; $(1)) >>$(BUILDFILE) 2>&1
+endef
+
+define setJobCCSID
+	(system -Kp "QSYS/DSPSYSVAL SYSVAL(QCCSID)" | grep -i 65535 1>&2) || system -Kp "QSYS/CHGJOB CCSID($(JOB_CCSID))"
 endef
