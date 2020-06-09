@@ -51,8 +51,8 @@ dcl-s cJSON_Path_Payload like(tSIROUTER_Uri) inz('$.payload');
 
 dcl-proc SIROUTER;
 dcl-pi SIROUTER;
-  PayloadIn like(tSIROUTER_Payload) options(*varsize);
-  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(1208);
+  PayloadIn like(tSIROUTER_Payload) options(*varsize) ccsid(*utf8);
+  PayloadOut like(tSIROUTER_Payload) options(*varsize) ccsid(*utf8);
   ResponseCode like(tSIROUTER_HttpStatus);
   ResponseHeaders like(tSIROUTER_HttpHeaderEntry) dim(cSIROUTER_ResponseHeaders_Count);
 end-pi;
