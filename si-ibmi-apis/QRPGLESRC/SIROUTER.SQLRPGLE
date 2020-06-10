@@ -60,7 +60,7 @@ dcl-s nStdIn ind inz(*off);
 dcl-s nStdOut ind inz(*off);
 dcl-s uri like(tSIROUTER_Uri);
 dcl-s PayloadInLength int(10);
-dcl-s payloadCLOB sqltype(clob:8000000);
+dcl-s payloadCLOB sqltype(clob:8000000) ccsid(*utf8);
 
 if %addr(PayloadIn) = *null;
   nStdIn = *on;
@@ -87,9 +87,7 @@ endmon;
 
 exsr processPayload;
 
-exsr processResponseCode;
-
-exsr processResponseHeaders;
+exsr processResponse;
 
 return;
 
@@ -97,7 +95,8 @@ return;
 begsr prepareParameters;
 
   if %addr(PayloadIn) <> *null;
-    PayloadInLength = %len(%trim(PayloadIn));
+    //PayloadInLength = %len(%trim(PayloadIn));
+    PayloadInLength = getEndOfData(PayloadIn);
     memset(%addr(PayloadIn) + PayloadInLength:cNull:%size(PayloadOut) - PayloadInLength);
   endif;
 
@@ -123,7 +122,7 @@ endsr;
 // .........................................................................................
 begsr savePayloadToSQLVar;
 
-  payloadCLOB_len = %len(%str(%addr(PayloadIn)));
+  payloadCLOB_len = PayloadInLength;
   memcpy(%addr(payloadCLOB_data):%addr(PayloadIn):payloadCLOB_len);
 
   exec sql set si_payload_in = json_to_bson(:payloadCLOB);
@@ -152,15 +151,35 @@ begsr processPayload;
 endsr;
 
 // .........................................................................................
+begsr processResponse;
+
+  exsr processResponseCode;
+
+  exsr setPayloadFromSQLVar;
+
+  exsr processResponseHeaders;
+
+endsr;
+
+// .........................................................................................
+begsr setPayloadFromSQLVar;
+
+  exec sql set :payloadCLOB = json_query(si_payload_out, 'strict $.response') ;
+
+  memcpy(%addr(PayloadOut):%addr(payloadCLOB_data):payloadCLOB_len);
+
+endsr;
+
+// .........................................................................................
 begsr processResponseCode;
 
   if %addr(ResponseCode) <> *null;
     //ResponseCode = getResponseCode(%addr(PayloadOut));
     ResponseCode = getResponseCode();
 
-   if ResponseCode = *zeros;
-    ResponseCode = cSIIWS_ResponseCode_OK;
-   endif;
+    if ResponseCode = *zeros;
+      ResponseCode = cSIIWS_ResponseCode_OK;
+    endif;
 
   endif;
 
@@ -309,25 +328,44 @@ dcl-s Value like(tSIROUTER_HttpHeaderEntry);
 //dcl-s payloadCLOB sqltype(clob:8000000);
 dcl-s idx int(5);
 dcl-s json_path varchar(50);
+dcl-s existHeaders ind;
 
 //  payloadCLOB_len = %len(%str(Payload));
 //  memcpy(%addr(payloadCLOB_data):Payload:payloadCLOB_len);
+  exec sql set :existHeaders =
+           case
+           when json_exists(si_payload_out, 'strict $.headers' false on error) then '1'
+           else '0' end;
+
+  if not existHeaders;
+    return *blanks;
+  endif;
 
   for idx = 0 to cSIROUTER_ResponseHeaders_Count - 1;
     json_path = 'strict $.headers[' + %char(idx) + '].key';
+
+    exec sql set :existHeaders =
+             case
+             when json_exists(si_payload_out, :json_path false on error) then '1'
+             else '0' end;
+
+    if not existHeaders;
+      leave;
+    endif;
+
     exec sql set :Key = json_value(si_payload_out,
                                   :json_path returning varchar(256)
                                   error on error);
+    if SISQL_isError(sqlca);
+      leave;
+    endif;
+
     json_path = 'strict $.headers[' + %char(idx) + '].value';
     exec sql set :Value = json_value(si_payload_out,
                                      :json_path returning varchar(256)
                                      error on error);
     ResponseHeaders(idx + 1) = %trim(Key) + ':' + %trim(Value);
   endfor;
-
-  if SISQL_isError(sqlca);
-    return *zeros;
-  endif;
 
   return ResponseHeaders;
 end-proc;
@@ -525,4 +563,31 @@ dcl-s Procedure like(tSIROUTER_Procedure);
   Procedure = %subst(Uri:strPos + 1:endPos - strPos);
 
   return Procedure;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc getEndOfData;
+dcl-pi getEndOfData int(10);
+  PayloadIn like(tSIROUTER_Payload)  ccsid(*utf8);
+end-pi;
+dcl-c cBlankEBCDIC const(x'40');
+dcl-c cBlankASCII const(x'20');
+dcl-s index int(10);
+dcl-s lastDataIndex int(10) inz(0);
+dcl-s length int(10);
+dcl-s symbol char(1) based(pSymbol);
+
+  length = %size(PayloadIn);
+  pSymbol = %addr(PayloadIn);
+  for index = 1 to length;
+    if symbol <> cNull
+    and symbol <> cBlankEBCDIC
+    and symbol <> cBlankASCII;
+      lastDataIndex = index;
+    endif;
+    pSymbol = pSymbol + 1;
+  endfor;
+
+  return lastDataIndex;
 end-proc;

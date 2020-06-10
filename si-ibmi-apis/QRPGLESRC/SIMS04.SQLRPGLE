@@ -3,9 +3,9 @@
 //******************************************************************************************
 //
 //
-// Programname    : SIQMQRY
+// Programname    : SIMS04
 // Programautor   : Sranko Informatik
-// Created on     : 15.05.2020
+// Created on     : 10.06.2020
 //
 //==========================================================================================
 //             Program-Compiling
@@ -33,8 +33,8 @@ ctl-opt NoMain;
 // Prototypes
 //==========================================================================================
 
-/define SIQMQRY
-///include qcpylesrc/SIQMQRYp
+/define SIMS04
+/include qcpylesrc/sims04p
 
 //==========================================================================================
 // Procedures
@@ -42,11 +42,11 @@ ctl-opt NoMain;
 
 //------------------------------------------------------------------------------------------
 
-dcl-proc getJson export;
-dcl-pi getJson;
+dcl-proc SIMS04_getJson export;
+dcl-pi SIMS04_getJson;
 end-pi;
 
-  dsply 'x';
+  exec sql set si_payload_out = json_to_bson('{"response":"hujuuu","response_code":"200","headers":[{"key":"KeyX","value":"ValueForX"}]}');
   return;
 end-proc;
 

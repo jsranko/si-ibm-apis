@@ -18,6 +18,7 @@ DIR_SQL=QSQLSRC
 DIR_SRV=QSRVSRC
 DIR_MSGF=QMSGFSRC
 DIR_JAVA=src/java
+DIR_SHELL=QSHSRC
 EXT_CPYSRC=RPGLE
 EXT_MSGF=MSGF
 EXT_CMD=CMD
@@ -25,8 +26,9 @@ EXT_CL=CLLE
 EXT_SQL=SQL
 EXT_JAVA=java
 EXT_PGM=RPGLE
+EXT_SHELL=sh
 
-SRVPGMS=\
+SIAPIS=\
 	$(DIR_RPG)/SIUI.srvpgm \
 	$(DIR_RPG)/SIXCP.srvpgm \
 	$(DIR_RPG)/SIHASH.srvpgm \
@@ -53,12 +55,18 @@ SRVPGMS=\
 	$(DIR_RPG)/SIMF.srvpgm \
 	$(DIR_RPG)/SISRVPGM.srvpgm \
 	$(DIR_RPG)/SIRE.srvpgm \
-	$(DIR_RPG)/SIPFM.srvpgm \
-	$(DIR_RPG)/SIMS02.srvpgm
+	$(DIR_RPG)/SIPFM.srvpgm
 
 PGMS:=\
 	$(patsubst %.RPGLE,%.pgm,$(shell grep -il " main" $(DIR_RPG)/*.RPGLE)) \
 	$(patsubst %.SQLRPGLE,%.pgm,$(shell grep -il " main" $(DIR_RPG)/*.SQLRPGLE))
+
+SRVPGMS_ALL:=\
+	$(patsubst %.RPGLE,%.srvpgm,$(shell grep -il " NoMain" $(DIR_RPG)/*.RPGLE)) \
+	$(patsubst %.SQLRPGLE,%.srvpgm,$(shell grep -il " NoMain" $(DIR_RPG)/*.SQLRPGLE))
+
+SRVPGMS:=\
+	$(filter-out $(SIAPIS), $(SRVPGMS_ALL))
 
 MSGFS=\
 	$(patsubst %.$(EXT_MSGF),%.messagefile,$(notdir $(wildcard $(DIR_MSGF)/*.$(EXT_MSGF))))
@@ -89,6 +97,9 @@ SRCFILES=\
 
 JAVAS=\
 	$(patsubst %.$(EXT_JAVA),%.jar,$(wildcard $(DIR_JAVA)/*.$(EXT_JAVA)))
+
+SHELLS=\
+	$(patsubst %.$(EXT_SHELL),%.shell,$(wildcard $(DIR_SHELL)/i*.$(EXT_SHELL)))
 	
 # Ensure that intermediate files created by rules chains don't get
 # automatically deleted
@@ -101,16 +112,20 @@ build: $(LIBRARY).lib \
 	    $(LIBRARY).bnddir \
 	    build-exitprograms \
 	    RPGINCDIR.envvar \
-	    build-srvpgms \
+	    build-siapis \
 	    build-pgms \
+	    build-srvpgms \
 	    build-cls \
 	    build-commands \
+	    run-shells \
 	    build-java \
-	    build-sqls \
 	    build-msgfs	\
-	    copy-cpysrc
+	    copy-cpysrc \
+	    build-sqls 
 
 build-msgfs: $(MSGFS)
+
+build-siapis: $(SIAPIS)
 
 build-srvpgms: $(SRVPGMS)
 
@@ -130,8 +145,11 @@ copy-cpysrc: $(CPYSRCS)
 
 build-java: $(JAVAS)
 
+run-shells: $(SHELLS)
+
 display-vars: 
 	$(info    MSGFS is $(MSGFS)) 
+	$(info    SIAPIS is $(SIAPIS)) 
 	$(info    SRVPGMS is $(SRVPGMS)) 
 	$(info    CMDS is $(CMDS)) 
 	$(info    EXITPGMS is $(EXITPGMS)) 
@@ -141,6 +159,7 @@ display-vars:
 	$(info    CLS is $(CLS)) 
 	$(info    CPYSRCS is $(CPYSRCS)) 
 	$(info    JAVAS is $(JAVAS)) 
+	$(info    SHELLS is $(SHELLS)) 
 
 %.envvar: 
 	system -Kp "ADDENVVAR ENVVAR(RPGINCDIR) VALUE('$(ROOT_DIR)') CCSID(*JOB) LEVEL(*SYS) REPLACE(*YES)" && \
@@ -204,11 +223,11 @@ display-vars:
 	touch $@
 
 %.query: %.$(EXT_SQL)
-	# echo "$$@=$@\n $$%=$%\n $$<=$<\n $$?=$?\n $$^=$^\n $$+=$+\n $$|=$|\n $$*=$*\n" 
 	sed 's/$$(LIBRARY)/$(LIBRARY)/g; s/$$(ROOT_DIR)/$(subst /,\/,$(ROOT_DIR))/g; s/$$(DIR_JAVA)/$(subst /,\/,$(DIR_JAVA))/g' $< > $@ && \
 	$(call copy_to_srcpf,$(ROOT_DIR)/$*.query,$(LIBRARY),$(DIR_SQL),$(notdir $*)) && \
 	liblist -a $(LIBRARY);\
-	system -Kp "RUNSQLSTM SRCSTMF('$(ROOT_DIR)/$@') COMMIT(*NONE)"	
+	system -iKp "CHGJOB CCSID($(JOB_CCSID))";\
+	system -iKp "RUNSQLSTM SRCSTMF('$(ROOT_DIR)/$@') COMMIT(*NONE)"	
 
 %.srcpf: $(LIBRARY).lib
 	system -Kp "CRTSRCPF FILE($(LIBRARY)/$*) RCDLEN(240) MBR(*NONE) TEXT('just for read-only')" && \
@@ -228,6 +247,10 @@ display-vars:
 	javac $< && \
 	jar -cvf $*.jar $*.class && \
 	rm $*.class
+
+%.shell: %.$(EXT_SHELL)
+	# @echo "$$@=$@\n $$%=$%\n $$<=$<\n $$?=$?\n $$^=$^\n $$+=$+\n $$|=$|\n $$*=$*\n"
+	bash ./$< && touch $@	
 
 clean-lib:
 	rm -f $(LIBRARY).lib &&\
@@ -270,6 +293,10 @@ clean-cpysrc:
 clean-sqls:
 	rm -f $(DIR_SQL)/*.query
 
+clean-shells:
+	bash ./$(DIR_SHELL)/clean.sh &&\
+	rm -f $(DIR_SHELL)/*.shell
+
 clean: clean-cpysrc \
 		clean-msgfs \
 		clean-sqls \
@@ -282,6 +309,7 @@ clean: clean-cpysrc \
 		clean-exitprograms \
 		clean-bnddir \
 		clean-srcfiles \
+		clean-shells \
 		clean-lib
 
 define copy_to_srcpf
