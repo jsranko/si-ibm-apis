@@ -1,33 +1,40 @@
-         /if not defined(SISQLP)
-         /define SISQLP
-         /else
-         /eof
-         /endif
+**FREE
+/if not defined(SISQLP)
+ /define SISQLP
+/else
+ /eof
+/endif
 
-        //==========================================================================================
-        // Constant
-        //==========================================================================================
+//==========================================================================================
+// Constant
+//==========================================================================================
 
-        //==========================================================================================
-        // Templates
-        //==========================================================================================
+//==========================================================================================
+// Templates
+//==========================================================================================
 
-         /if defined(SISQL)
-         /eof
-         /endif
+dcl-s tSISQL_Diagnostics_Message_Text varchar(32740) template;
 
-        //==========================================================================================
-        // Prototypes
-        //==========================================================================================
+/if defined(SISQL)
+  /eof
+/endif
 
-         dcl-pr SISQL_isWarning ind extproc(*dclcase);
-           SQLCommArea likeds(SQLCA);
-         end-pr;
+//==========================================================================================
+// Prototypes
+//==========================================================================================
 
-         dcl-pr SISQL_noData ind extproc(*dclcase);
-           SQLCommArea likeds(SQLCA);
-         end-pr;
+dcl-pr SISQL_isWarning ind extproc(*dclcase);
+  SQLCommArea likeds(SQLCA);
+end-pr;
 
-         dcl-pr SISQL_isError ind extproc(*dclcase);
-           SQLCommArea likeds(SQLCA);
-         end-pr;
+dcl-pr SISQL_noData ind extproc(*dclcase);
+  SQLCommArea likeds(SQLCA);
+end-pr;
+
+dcl-pr SISQL_isError ind extproc(*dclcase);
+  SQLCommArea likeds(SQLCA);
+end-pr;
+
+dcl-pr SISQL_getLastDiagnosticsMessageText like(tSISQL_Diagnostics_Message_Text) extproc(*dclcase);
+  SQLCommArea likeds(SQLCA);
+end-pr;
