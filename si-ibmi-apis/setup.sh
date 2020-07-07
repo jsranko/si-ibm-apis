@@ -29,7 +29,7 @@ exist_directory()
 install_yum_dependencies()
 
 {	
-        yum -y install 'git' 'curl' 'make-gnu'      
+        yum -y install 'git' 'curl' 'make-gnu' 'jq'     
 
 }
 
