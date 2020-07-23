@@ -23,10 +23,10 @@ dcl-s tSIOD_Library char(10) template;
 dcl-s tSIOD_Object char(10) template;
 dcl-s tSIOD_Type char(10) template;
 dcl-s tSIOD_FormatNubmer uns(5) template;
-dcl-s tSIOD_ObjectType like(tQUSROBJD_OBJD0400.ObjectType) template;
-dcl-s tSIOD_ReturnLibrary like(tQUSROBJD_OBJD0400.ReturnLibrary) template;
+dcl-s tSIOD_ObjectType varchar(10) template;
+dcl-s tSIOD_ReturnLibrary varchar(10) template;
 
-dcl-s tSIOD_CreationDateAndTime like(tQUSROBJD_CreationDateAndTime) template;
+dcl-s tSIOD_CreationDateAndTime char(13) template;
 
 dcl-ds tSIOD_Def qualified;
   Data likeds(tQUSROBJD_OBJD0400);
