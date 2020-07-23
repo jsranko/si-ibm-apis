@@ -6,7 +6,7 @@
   /eof
 /endif
 
-/include qcpylesrc/siobjtypp
+
 /include qcpylesrc/qusrobjdp
 
 //==========================================================================================
