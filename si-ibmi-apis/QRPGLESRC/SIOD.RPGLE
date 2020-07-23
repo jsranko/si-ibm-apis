@@ -33,6 +33,7 @@ ctl-opt NoMain bnddir('SIIIA/SIIIA');
 /include qcpylesrc/siodp
 
 /include qcpylesrc/sixcpp
+/include qcpylesrc/siobjtypp
 
 //==========================================================================================
 // Procedures
