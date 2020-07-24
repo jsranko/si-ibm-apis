@@ -13,3 +13,5 @@ SICTLOPT.RPGLE
 *.clpgm
 *.jar
 *.cpysrc
+*.shell
+*.iwssconf

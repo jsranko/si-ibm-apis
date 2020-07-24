@@ -26,7 +26,7 @@ EXT_CL=CLLE
 EXT_SQL=SQL
 EXT_JAVA=java
 EXT_PGM=RPGLE
-EXT_SHELL=sh
+EXT_IWSS=iwss
 
 SIAPIS=\
 	$(DIR_RPG)/SIUI.srvpgm \
@@ -98,8 +98,8 @@ SRCFILES=\
 JAVAS=\
 	$(patsubst %.$(EXT_JAVA),%.jar,$(wildcard $(DIR_JAVA)/*.$(EXT_JAVA)))
 
-SHELLS=\
-	$(patsubst %.$(EXT_SHELL),%.shell,$(wildcard $(DIR_SHELL)/i*.$(EXT_SHELL)))
+IWSS=\
+	$(patsubst %.$(EXT_SHELL),%.iwssconf,$(wildcard $(DIR_SHELL)/*.$(EXT_IWSS)))
 	
 # Ensure that intermediate files created by rules chains don't get
 # automatically deleted
@@ -117,7 +117,7 @@ build: $(LIBRARY).lib \
 	    build-srvpgms \
 	    build-cls \
 	    build-commands \
-	    run-shells \
+	    install-iwss \
 	    build-java \
 	    build-msgfs	\
 	    copy-cpysrc \
@@ -145,7 +145,7 @@ copy-cpysrc: $(CPYSRCS)
 
 build-java: $(JAVAS)
 
-run-shells: $(SHELLS)
+install-iwss: $(IWSS)
 
 display-vars: 
 	$(info    MSGFS is $(MSGFS)) 
@@ -159,7 +159,7 @@ display-vars:
 	$(info    CLS is $(CLS)) 
 	$(info    CPYSRCS is $(CPYSRCS)) 
 	$(info    JAVAS is $(JAVAS)) 
-	$(info    SHELLS is $(SHELLS)) 
+	$(info    IWSS is $(IWSS)) 
 
 %.envvar: 
 	system -Kp "ADDENVVAR ENVVAR(RPGINCDIR) VALUE('$(ROOT_DIR)') CCSID(*JOB) LEVEL(*SYS) REPLACE(*YES)" && \
@@ -249,9 +249,13 @@ display-vars:
 	rm $*.class
 
 %.shell: %.$(EXT_SHELL)
-	# @echo "$$@=$@\n $$%=$%\n $$<=$<\n $$?=$?\n $$^=$^\n $$+=$+\n $$|=$|\n $$*=$*\n"
+	# @echo "$$@=$@ $$%=$% $$<=$< $$?=$? $$^=$^ $$+=$+ $$|=$| $$*=$*"
 	bash ./$< && touch $@	
 
+%.iwssconf: %.$(EXT_IWSS)
+	# @echo "$$@=$@ $$%=$% $$<=$< $$?=$? $$^=$^ $$+=$+ $$|=$| $$*=$*"
+	bash ./install_iwss.sh ./$< && touch $@	
+	
 clean-lib:
 	rm -f $(LIBRARY).lib &&\
 	system -Kp 'DLTLIB $(LIBRARY)' || :	
@@ -309,8 +313,8 @@ clean: clean-cpysrc \
 		clean-exitprograms \
 		clean-bnddir \
 		clean-srcfiles \
-		clean-shells \
-		clean-lib
+		clean-lib \
+		clean-shells
 
 define copy_to_srcpf
 	system -Kp "CPYFRMSTMF FROMSTMF('$(1)') TOMBR('/QSYS.LIB/$(2).LIB/$(3).FILE/$(4).MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)" && \
