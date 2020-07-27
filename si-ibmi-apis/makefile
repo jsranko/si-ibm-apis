@@ -2,8 +2,10 @@ LIBRARY=SIIIA
 DBGVIEW=*SOURCE
 STGMDL=*INHERIT
 BUILDFILE=SIIIA.build
+SHELL_CCSID=1208
 JOB_CCSID=37
 
+# Jetzt kann LIBLIST verwendet werden
 SHELL=/QOpenSys/usr/bin/qsh
 
 OBJECT_DESC='SI: IBM i Apis Framework'
@@ -19,6 +21,7 @@ DIR_SRV=QSRVSRC
 DIR_MSGF=QMSGFSRC
 DIR_JAVA=src/java
 DIR_SHELL=QSHSRC
+DIR_IWSS=QIWSSSRC
 EXT_CPYSRC=RPGLE
 EXT_MSGF=MSGF
 EXT_CMD=CMD
@@ -27,6 +30,7 @@ EXT_SQL=SQL
 EXT_JAVA=java
 EXT_PGM=RPGLE
 EXT_IWSS=iwss
+EXT_IWSSCONF=iwssconf
 
 SIAPIS=\
 	$(DIR_RPG)/SIUI.srvpgm \
@@ -83,23 +87,30 @@ SQLS=\
 CLS:=\
 	$(patsubst %.$(EXT_CL),%.clpgm,$(wildcard $(DIR_CL)/*.$(EXT_CL)))
 
-CPYSRCS:=\
-	$(patsubst %.$(EXT_CPYSRC),%.cpysrc,$(wildcard $(DIR_CPY)/*.$(EXT_CPYSRC)))
+SRCFILES_0=\
+	$(DIR_CL) \
+	$(DIR_CMD) \
+	$(DIR_CPY) \
+	$(DIR_RPG) \
+	$(DIR_SQL) \
+	$(DIR_SRV) \
+	$(DIR_IWSS) \
+	$(DIR_MSGF)	
 
 SRCFILES=\
-	$(DIR_CL).srcpf \
-	$(DIR_CMD).srcpf \
-	$(DIR_CPY).srcpf \
-	$(DIR_RPG).srcpf \
-	$(DIR_SQL).srcpf \
-	$(DIR_SRV).srcpf \
-	$(DIR_MSGF).srcpf	
+	$(SRCFILES_0:=.srcpf)
+
+CPYSRCS:=\
+	$(patsubst %.$(EXT_CPYSRC),%.cpysrc,$(wildcard $(DIR_CPY)/*.$(EXT_CPYSRC)))
 
 JAVAS=\
 	$(patsubst %.$(EXT_JAVA),%.jar,$(wildcard $(DIR_JAVA)/*.$(EXT_JAVA)))
 
 IWSS=\
-	$(patsubst %.$(EXT_SHELL),%.iwssconf,$(wildcard $(DIR_SHELL)/*.$(EXT_IWSS)))
+	$(patsubst %.$(EXT_IWSS),%.iwssconf,$(wildcard $(DIR_IWSS)/*.$(EXT_IWSS)))
+
+IWSSCONF=\
+	$(patsubst %.$(EXT_IWSSCONF),%.iwssdelete,$(wildcard $(DIR_IWSS)/*.$(EXT_IWSSCONF)))
 	
 # Ensure that intermediate files created by rules chains don't get
 # automatically deleted
@@ -113,14 +124,14 @@ build: $(LIBRARY).lib \
 	    build-exitprograms \
 	    RPGINCDIR.envvar \
 	    build-siapis \
-	    build-pgms \
 	    build-srvpgms \
+	    build-pgms \
 	    build-cls \
 	    build-commands \
 	    install-iwss \
 	    build-java \
 	    build-msgfs	\
-	    copy-cpysrc \
+	    copy-srcfiles \
 	    build-sqls 
 
 build-msgfs: $(MSGFS)
@@ -141,7 +152,7 @@ create-srcfiles: $(SRCFILES)
 
 build-cls: $(CLS)
 
-copy-cpysrc: $(CPYSRCS)
+copy-srcfiles: $(CPYSRCS)
 
 build-java: $(JAVAS)
 
@@ -160,6 +171,15 @@ display-vars:
 	$(info    CPYSRCS is $(CPYSRCS)) 
 	$(info    JAVAS is $(JAVAS)) 
 	$(info    IWSS is $(IWSS)) 
+	$(info    IWSSCONF is $(IWSSCONF))
+	
+setup:
+	bash ./$(DIR_SHELL)/setup.sh && \
+	echo "Setup wurde erfolgreich durchgeführt."
+
+update:
+	$(shell git pull) && \
+	build
 
 %.envvar: 
 	system -Kp "ADDENVVAR ENVVAR(RPGINCDIR) VALUE('$(ROOT_DIR)') CCSID(*JOB) LEVEL(*SYS) REPLACE(*YES)" && \
@@ -223,7 +243,7 @@ display-vars:
 	touch $@
 
 %.query: %.$(EXT_SQL)
-	sed 's/$$(LIBRARY)/$(LIBRARY)/g; s/$$(ROOT_DIR)/$(subst /,\/,$(ROOT_DIR))/g; s/$$(DIR_JAVA)/$(subst /,\/,$(DIR_JAVA))/g' $< > $@ && \
+	$(call substitute,$<,$@) && \
 	$(call copy_to_srcpf,$(ROOT_DIR)/$*.query,$(LIBRARY),$(DIR_SQL),$(notdir $*)) && \
 	liblist -a $(LIBRARY);\
 	system -iKp "CHGJOB CCSID($(JOB_CCSID))";\
@@ -254,7 +274,9 @@ display-vars:
 
 %.iwssconf: %.$(EXT_IWSS)
 	# @echo "$$@=$@ $$%=$% $$<=$< $$?=$? $$^=$^ $$+=$+ $$|=$| $$*=$*"
-	bash ./install_iwss.sh ./$< && touch $@	
+	$(call substitute,$<,$@) && \
+	bash ./$(DIR_SHELL)/install_iwss.sh ./$@ && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$@,$(LIBRARY),$(DIR_IWSS),$(notdir $*))
 	
 clean-lib:
 	rm -f $(LIBRARY).lib &&\
@@ -296,10 +318,12 @@ clean-cpysrc:
 
 clean-sqls:
 	rm -f $(DIR_SQL)/*.query
-
-clean-shells:
-	bash ./$(DIR_SHELL)/clean.sh &&\
-	rm -f $(DIR_SHELL)/*.shell
+ 
+clean-iwss: $(IWSSCONF)
+	
+%.iwssdelete: %.$(EXT_IWSSCONF)
+	-bash ./$(DIR_SHELL)/remove_iwss.sh ./$<  && \
+	-rm ./$<
 
 clean: clean-cpysrc \
 		clean-msgfs \
@@ -313,8 +337,9 @@ clean: clean-cpysrc \
 		clean-exitprograms \
 		clean-bnddir \
 		clean-srcfiles \
-		clean-lib \
-		clean-shells
+		clean-iwss \
+		clean-lib
+		
 
 define copy_to_srcpf
 	system -Kp "CPYFRMSTMF FROMSTMF('$(1)') TOMBR('/QSYS.LIB/$(2).LIB/$(3).FILE/$(4).MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)" && \
@@ -335,4 +360,10 @@ endef
 
 define setJobCCSID
 	(system -Kp "QSYS/DSPSYSVAL SYSVAL(QCCSID)" | grep -i 65535 1>&2) || system -Kp "QSYS/CHGJOB CCSID($(JOB_CCSID))"
+endef
+
+define substitute
+	-rm $(2)
+	export QIBM_CCSID=$(SHELL_CCSID) && touch $(2) && \
+	sed 's/$$(LIBRARY)/$(LIBRARY)/g; s/$$(ROOT_DIR)/$(subst /,\/,$(ROOT_DIR))/g; s/$$(DIR_JAVA)/$(subst /,\/,$(DIR_JAVA))/g' $(1) >> $(2)
 endef

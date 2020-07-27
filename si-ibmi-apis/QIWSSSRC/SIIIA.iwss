@@ -9,7 +9,7 @@
 	"services": [
 		{
 			"name": "SIROUTER",
-			"programObject": "/QSYS.LIB/SIIIA.LIB/SIROUTER.PGM",
+			"programObject": "/QSYS.LIB/$(LIBRARY).LIB/SIROUTER.PGM",
 			"userId": "*SERVER",
 			"detectFieldLengths": true,
 			"serviceType": "*REST",
@@ -36,6 +36,12 @@
 					"SIROUTER.RESPONSECODE.usage": "output",
 					"SIROUTER.RESPONSEHEADERS.usage": "output"
 				}
+			],
+			"script" : [
+				{
+					"description": "Description",
+					"script": "./xxxx.sh"
+				}	
 			]
 		}
 	]

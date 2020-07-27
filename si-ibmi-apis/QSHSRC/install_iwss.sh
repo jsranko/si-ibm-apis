@@ -11,24 +11,17 @@ CONFIGURATION_FILE=
 
 createWebServicesServer()
 {
-	echo "" && echo "Der Server $1 wird gestoppt ..."
-	if ! qsh ${INSTALL_DIR}/stopWebServicesServer.sh -server $1 $5 > ${LOG_FILE} 2>&1; then
-		echo "" && echo "Der Server $1 könnte nicht gestoppt werden oder existiert nicht."
-	else
-		echo "" && echo "Der Server $1 wird geloescht ..."
-		if ! qsh ${INSTALL_DIR}/deleteWebServicesServer.sh -server $1 $5> ${LOG_FILE} 2>&1; then
-			echo "" && echo "Der Server $1 könnte nicht geloescht werden."
-		fi
-	fi
+	echo "Der Server $1 wird initialisiert ..."
+	bash ./$(dirname "$0")/remove_iwss.sh $5
 	
-	echo "" && echo "Der Server $1:$2 fur User:$4 in Version:$3 wird erstellt ..."
-	if ! qsh ${INSTALL_DIR}/createWebServicesServer.sh -server $1 -startingPort $2 -userid $4 -version $3 $5> ${LOG_FILE} 2>&1; then
-		echo "" && echo "Der Server $1:$2 fur User:$4 in Version:$3 könnte nicht erstellt werden."
+	echo "Der Server $1:$2 fur User:$4 in Version:$3 wird erstellt ..."
+	if ! qsh ${INSTALL_DIR}/createWebServicesServer.sh -server $1 -startingPort $2 -userid $4 -version $3 $6> ${LOG_FILE} 2>&1; then
+		echo "Der Server $1:$2 fur User:$4 in Version:$3 könnte nicht erstellt werden."
 		return 1
 	else
-		echo "" && echo "Der Server $1 wird gestartet ..."
-		if ! qsh ${INSTALL_DIR}/startWebServicesServer.sh -server $1 $5> ${LOG_FILE} 2>&1; then
-			echo "" && echo "Der Server $1 könnte nicht gestartet werden."
+		echo "Der Server $1 wird gestartet ..."
+		if ! qsh ${INSTALL_DIR}/startWebServicesServer.sh -server $1 $6> ${LOG_FILE} 2>&1; then
+			echo "Der Server $1 könnte nicht gestartet werden."
 			return 1
 		fi	
 	fi
@@ -133,16 +126,16 @@ installWebService()
 		SERVICE_USE_PARAM_AS_ELEMENT_NAME=''
 	fi
 
-	echo "" && echo "Die propertiesFiles:$3 wird erstellt ..."
+	echo "Die propertiesFiles:$3 wird erstellt ..."
 	for j in $(jq '.methods | keys | .[]' -r <<< "$2"); do
 		methode=$(jq ".methods[${j}]" -r <<< "$2");
 		createPropertiesFile "${methode}" $3;
 	done
 
-	echo "" && echo "Die Service ${SERVICE_NAME} (${SERVICE_PGM_OBJECT}) wird installiert ..."
+	echo "Die Service ${SERVICE_NAME} (${SERVICE_PGM_OBJECT}) wird installiert ..."
 	echo "	${INSTALL_DIR}/installWebService.sh -server $1 ${SERVICE_PGM_OBJECT} ${SERVICE_NAME} ${SERVICE_PCML} ${SERVICE_USER} ${SERVICE_FIELD_LENGTH_DETECT} ${SERVICE_SERVICE_TYPE} ${SERVICE_HOST} ${SERVICE_TARGET_NAMESPACE} ${SERVICE_PROPERTIES_FILE} ${SERVICE_LIBRARY_LIST} ${SERVICE_LIBRARY_LIST_POSITION} ${SERVICE_TRANSPORT_METADATA} ${SERVICE_USE_PARAM_AS_ELEMENT_NAME} ${SERVICE_TRANSPORT_HEADERS} ${SERVER_PRINT_ERROR_DETAILS}"
 	if ! qsh ${INSTALL_DIR}/installWebService.sh -server $1 ${SERVICE_PGM_OBJECT} ${SERVICE_NAME} ${SERVICE_PCML} ${SERVICE_USER} ${SERVICE_FIELD_LENGTH_DETECT} ${SERVICE_SERVICE_TYPE} ${SERVICE_HOST} ${SERVICE_TARGET_NAMESPACE} ${SERVICE_PROPERTIES_FILE} ${SERVICE_LIBRARY_LIST} ${SERVICE_LIBRARY_LIST_POSITION} ${SERVICE_TRANSPORT_METADATA} ${SERVICE_USE_PARAM_AS_ELEMENT_NAME} ${SERVICE_TRANSPORT_HEADERS} ${SERVER_PRINT_ERROR_DETAILS} > ${LOG_FILE} 2>&1; then
-		echo "" && echo "Die Service ${SERVICE_NAME} (${SERVICE_PGM_OBJECT}) könnte nicht installiert werden."
+		echo "Die Service ${SERVICE_NAME} (${SERVICE_PGM_OBJECT}) könnte nicht installiert werden."
 		return 1
 	fi	
 	
@@ -162,7 +155,7 @@ createPropertiesFile()
 
 loadConfiguration()
 {
-	echo "" && echo "Die Konfiguration-Datei:$1 wird geladen ..."
+	echo "Die Konfiguration-Datei:$1 wird geladen ..."
 	CONFIGURATION_FILE=$(jq '.' -r $1) && echo "Die Konfiguration-Datei:$1 wurde erfolgreich geladen" || { echo "Die Konfiguration-Datei:$1 nicht gefunden!"; exit 1; }
 }
 
@@ -183,16 +176,16 @@ SERVER_PRINT_ERROR_DETAILS=$(jq '.server.printErrorDetails' -r <<< "${CONFIGURAT
 if [ ${SERVER_PRINT_ERROR_DETAILS} == "true" ]; then
 	SERVER_PRINT_ERROR_DETAILS='-printErrorDetails'
 else
-	SERVER_PRINT_ERROR_DETAILS=''
+	SERVER_PRINT_ERROR_DETAILS=' '
 fi
 PROPERTIES_FILE=/tmp/${SERVER_NAME}.propertiesFile
 LOG_FILE=/tmp/${SERVER_NAME}.log
 
-if ! createWebServicesServer ${SERVER_NAME} ${SERVER_PORT} ${SERVER_VERSION} ${SERVER_USER} ${SERVER_OPTIONS}; then
+if ! createWebServicesServer ${SERVER_NAME} ${SERVER_PORT} ${SERVER_VERSION} ${SERVER_USER} $1 ${SERVER_PRINT_ERROR_DETAILS}; then
 	exit 1
 fi
 
-echo "" && echo "Die Services werden installiert ..."
+echo "Die Services werden installiert ..."
 rm ${PROPERTIES_FILE}
 for i in $(jq '.services | keys | .[]' -r <<< "${CONFIGURATION_FILE}"); do
 	service=$(jq ".services[${i}]" -r <<< "${CONFIGURATION_FILE}");
