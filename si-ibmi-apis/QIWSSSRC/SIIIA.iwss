@@ -15,7 +15,7 @@
 			"serviceType": "*REST",
 			"host": "localhost",
 			"targetNamespace": null,
-			"propertiesFile": "x.ini",
+			"propertiesFile": "/tmp/SIROUTER.propertiesFile",
 			"libraryList": "SIIIA:QTEMP",
 			"libraryListPosition": "*FIRST",
 			"transportMetadata": "REMOTE_ADDR:REMOTE_USER:REQUEST_METHOD:REQUEST_URL:REQUEST_URI:QUERY_STRING:SERVER_NAME:SERVER_PORT",

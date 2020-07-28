@@ -85,8 +85,9 @@ installWebService()
 	fi
 
 	SERVICE_PROPERTIES_FILE=$(jq '.propertiesFile' -r <<< "$2")
+	PROPERTIES_FILE=${SERVICE_PROPERTIES_FILE}
 	if [ \( ${SERVICE_PROPERTIES_FILE} != "" \) -a \( ${SERVICE_PROPERTIES_FILE} != "null" \) ]; then
-		SERVICE_PROPERTIES_FILE="-propertiesFile $3"
+		SERVICE_PROPERTIES_FILE="-propertiesFile ${SERVICE_PROPERTIES_FILE}"
 	else
 		SERVICE_PROPERTIES_FILE=''
 	fi
@@ -126,10 +127,10 @@ installWebService()
 		SERVICE_USE_PARAM_AS_ELEMENT_NAME=''
 	fi
 
-	echo "Die propertiesFiles:$3 wird erstellt ..."
+	echo "Die propertiesFiles:${PROPERTIES_FILE} wird erstellt ..."
 	for j in $(jq '.methods | keys | .[]' -r <<< "$2"); do
 		methode=$(jq ".methods[${j}]" -r <<< "$2");
-		createPropertiesFile "${methode}" $3;
+		createPropertiesFile "${methode}" ${PROPERTIES_FILE};
 	done
 
 	echo "Die Service ${SERVICE_NAME} (${SERVICE_PGM_OBJECT}) wird installiert ..."
@@ -178,7 +179,7 @@ if [ ${SERVER_PRINT_ERROR_DETAILS} == "true" ]; then
 else
 	SERVER_PRINT_ERROR_DETAILS=' '
 fi
-PROPERTIES_FILE=/tmp/${SERVER_NAME}.propertiesFile
+
 LOG_FILE=/tmp/${SERVER_NAME}.log
 
 if ! createWebServicesServer ${SERVER_NAME} ${SERVER_PORT} ${SERVER_VERSION} ${SERVER_USER} $1 ${SERVER_PRINT_ERROR_DETAILS}; then
@@ -186,10 +187,9 @@ if ! createWebServicesServer ${SERVER_NAME} ${SERVER_PORT} ${SERVER_VERSION} ${S
 fi
 
 echo "Die Services werden installiert ..."
-rm ${PROPERTIES_FILE}
 for i in $(jq '.services | keys | .[]' -r <<< "${CONFIGURATION_FILE}"); do
 	service=$(jq ".services[${i}]" -r <<< "${CONFIGURATION_FILE}");
-	if ! installWebService ${SERVER_NAME} "${service}" ${PROPERTIES_FILE}; then
+	if ! installWebService ${SERVER_NAME} "${service}"; then
 		exit 1
 	fi
 done
