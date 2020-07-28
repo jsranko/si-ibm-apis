@@ -1,7 +1,8 @@
 #!/bin/bash
 
-INSTALL_DIR=/QIBM/ProdData/OS/WebServices/bin
-CONFIGURATION_FILE=
+DIR="$(dirname "$0")"
+source "$DIR/iws_config.sh"
+source "$DIR/iws_loadConfiguration.sh"
 
 ################################################################################
 #
@@ -12,7 +13,7 @@ CONFIGURATION_FILE=
 createWebServicesServer()
 {
 	echo "Der Server $1 wird initialisiert ..."
-	bash ./$(dirname "$0")/remove_iwss.sh $5
+	bash ./$(dirname "$0")/iws_remove.sh $5
 	
 	echo "Der Server $1:$2 fur User:$4 in Version:$3 wird erstellt ..."
 	if ! qsh ${INSTALL_DIR}/createWebServicesServer.sh -server $1 -startingPort $2 -userid $4 -version $3 $6> ${LOG_FILE} 2>&1; then
@@ -154,20 +155,19 @@ createPropertiesFile()
 	echo "" >> $2
 }
 
-loadConfiguration()
-{
-	echo "Die Konfiguration-Datei:$1 wird geladen ..."
-	CONFIGURATION_FILE=$(jq '.' -r $1) && echo "Die Konfiguration-Datei:$1 wurde erfolgreich geladen" || { echo "Die Konfiguration-Datei:$1 nicht gefunden!"; exit 1; }
-}
-
-
 ################################################################################
 #
 #                               Main
 #
 ################################################################################
 
-loadConfiguration $1
+if loadConfiguration $1;  then
+    echo "Die Konfiguration-Datei:$1 erfolgreich geladen."
+else 
+    echo "Fehler bei laden der Konfiguration-Datei:$1."
+    exit 1
+fi
+
 
 SERVER_NAME=$(jq '.server.name' -r <<< "${CONFIGURATION_FILE}")
 SERVER_PORT=$(jq '.server.port' -r <<< "${CONFIGURATION_FILE}")

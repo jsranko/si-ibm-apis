@@ -275,7 +275,7 @@ update:
 %.iwssconf: %.$(EXT_IWSS)
 	# @echo "$$@=$@ $$%=$% $$<=$< $$?=$? $$^=$^ $$+=$+ $$|=$| $$*=$*"
 	$(call substitute,$<,$@) && \
-	bash ./$(DIR_SHELL)/install_iwss.sh ./$@ && \
+	bash ./$(DIR_SHELL)/iws_install.sh ./$@ && \
 	$(call copy_to_srcpf,$(ROOT_DIR)/$@,$(LIBRARY),$(DIR_IWSS),$(notdir $*))
 	
 clean-lib:
@@ -322,7 +322,7 @@ clean-sqls:
 clean-iwss: $(IWSSCONF)
 	
 %.iwssdelete: %.$(EXT_IWSSCONF)
-	-bash ./$(DIR_SHELL)/remove_iwss.sh ./$<  && \
+	-bash ./$(DIR_SHELL)/iws_remove.sh ./$<  && \
 	-rm ./$<
 
 clean: clean-cpysrc \

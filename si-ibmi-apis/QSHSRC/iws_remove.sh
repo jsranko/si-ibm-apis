@@ -1,19 +1,8 @@
 #!/bin/bash
 
-INSTALL_DIR=/QIBM/ProdData/OS/WebServices/bin
-CONFIGURATION_FILE=
-
-################################################################################
-#
-#                               Procedures.
-#
-################################################################################
-
-loadConfiguration()
-{
-	echo "Die Konfiguration-Datei:$1 wird geladen ..."
-	CONFIGURATION_FILE=$(jq '.' -r $1) && echo "Die Konfiguration-Datei:$1 wurde erfolgreich geladen" || { echo "Die Konfiguration-Datei:$1 nicht gefunden!"; exit 1; }
-}
+DIR="$(dirname "$0")"
+source "$DIR/iws_config.sh"
+source "$DIR/iws_loadConfiguration.sh"
 
 ################################################################################
 #
@@ -21,7 +10,12 @@ loadConfiguration()
 #
 ################################################################################
 
-loadConfiguration $1
+if loadConfiguration $1;  then
+    echo "Die Konfiguration-Datei:$1 erfolgreich geladen."
+else 
+    echo "Fehler bei laden der Konfiguration-Datei:$1."
+    exit 1
+fi
 
 SERVER_NAME=$(jq '.server.name' -r <<< "${CONFIGURATION_FILE}")
 SERVER_PRINT_ERROR_DETAILS=$(jq '.server.printErrorDetails' -r <<< "${CONFIGURATION_FILE}")
