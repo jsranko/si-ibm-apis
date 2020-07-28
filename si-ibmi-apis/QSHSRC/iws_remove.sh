@@ -10,6 +10,8 @@ source "$DIR/iws_loadConfiguration.sh"
 #
 ################################################################################
 
+echo "Der Server wird gelöchst."
+
 if loadConfiguration $1;  then
     echo "Die Konfiguration-Datei:$1 erfolgreich geladen."
 else 

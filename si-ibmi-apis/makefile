@@ -1,9 +1,10 @@
-LIBRARY=SIIIA
+LIBRARY:=$(shell jq '.library' -r ./config.json)
 DBGVIEW=*SOURCE
 STGMDL=*INHERIT
 BUILDFILE=SIIIA.build
-SHELL_CCSID=1208
-JOB_CCSID=37
+SHELL_CCSID:=$(shell jq '.pase_ccsid' -r ./config.json)
+JOB_CCSID:=$(shell jq '.job_ccsid' -r ./config.json)
+
 
 # Jetzt kann LIBLIST verwendet werden
 SHELL=/QOpenSys/usr/bin/qsh
@@ -172,6 +173,7 @@ display-vars:
 	$(info    JAVAS is $(JAVAS)) 
 	$(info    IWSS is $(IWSS)) 
 	$(info    IWSSCONF is $(IWSSCONF))
+	$(info    Library is $(LIBRARY))
 	
 setup:
 	bash ./$(DIR_SHELL)/setup.sh && \
@@ -322,8 +324,8 @@ clean-sqls:
 clean-iwss: $(IWSSCONF)
 	
 %.iwssdelete: %.$(EXT_IWSSCONF)
-	-bash ./$(DIR_SHELL)/iws_remove.sh ./$<  && \
-	-rm ./$<
+	-bash ./$(DIR_SHELL)/iws_remove.sh ./$<
+	rm ./$<
 
 clean: clean-cpysrc \
 		clean-msgfs \
