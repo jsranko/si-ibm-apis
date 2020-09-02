@@ -66,3 +66,7 @@ end-pr;
 dcl-pr SIOD_getObjectType like(tSIOD_ObjectType) extproc(*dclcase);
   SIOD like(tSIOD);
 end-pr;
+
+dcl-pr SIOD_close extproc(*dclcase);
+  SIOD like(tSIOD);
+end-pr;

@@ -290,7 +290,21 @@ dcl-ds ErrorCode likeds(tQUSEC);
     dsSIOD.exist = *on;
   endif;
 
-  dsSIOD = %subst(rv:1:rvl);
+  dsSIOD.Data = %subst(rv:1:rvl);
+
+return;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc SIOD_close export;
+dcl-pi SIOD_close extproc(*dclcase);
+  SIOD like(tSIOD);
+end-pi;
+dcl-ds dsSIOD likeds(tSIOD_Def) based(pSIOD);
+
+  pSIOD = %addr(SIOD);
+  clear dsSIOD;
 
 return;
 end-proc;
