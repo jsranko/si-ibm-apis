@@ -21,7 +21,7 @@ A step by step series of examples that tell you how to get a development env run
 Say what the step will be
 
 ```
-Give the example
+/QOpenSys/pkgs/bin/wget https://raw.githubusercontent.com/jsranko/si-ibm-apis/master/si-ibmi-apis/QSHSRC/setup.sh --no-check-certificate
 ```
 
 And repeat
