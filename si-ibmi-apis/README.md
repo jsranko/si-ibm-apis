@@ -41,13 +41,15 @@ Go to project directory
 cd si-ibm-apis/si-ibmi-apis/
 ```
 
+### Configuration
+
 Make the project
 
 ```
 gmake
 ```
 
-## Running the tests
+## Build
 
 Explain how to run the automated tests for this system
 
