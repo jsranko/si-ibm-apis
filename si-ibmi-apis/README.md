@@ -43,10 +43,14 @@ cd si-ibm-apis/si-ibmi-apis/
 
 ### Configuration
 
-Make the project
+Configure project before it is created 
 
 ```
-gmake
+{
+	"library": "SIIIA",
+	"job_ccsid": "037",
+	"pase_ccsid": "1208"
+}
 ```
 
 ## Build
