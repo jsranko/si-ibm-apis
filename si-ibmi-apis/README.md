@@ -55,7 +55,10 @@ Configure project before it is created
 
 ## Build
 
-Explain how to run the automated tests for this system
+Build with GNU Make
+```
+gmake
+```
 
 ### Break down into end to end tests
 
