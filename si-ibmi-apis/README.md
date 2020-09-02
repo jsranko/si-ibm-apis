@@ -36,6 +36,11 @@ Clone the project repository
 git -c http.sslVerify=false clone https://github.com/jsranko/si-ibm-apis.git
 ```
 
+Go to project directory
+```
+cd si-ibm-apis/si-ibmi-apis/
+```
+
 Make the project
 
 ```
