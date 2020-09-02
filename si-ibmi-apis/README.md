@@ -30,6 +30,12 @@ Run setup script
 bash setup.sh
 ```
 
+Clone the project repository
+
+```
+git clone https://github.com/jsranko/si-ibm-apis.git
+```
+
 Make the project
 
 ```
