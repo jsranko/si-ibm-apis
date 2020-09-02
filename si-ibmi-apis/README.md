@@ -1,4 +1,4 @@
-# SI - IBM i Apis
+# SI - IBM i Apis Framework
 
 SIIIA Framework tries to reduce the complexity of the system apis to capsule and thereby provide a simple usable modules/serviceprograms. 
 
