@@ -1,4 +1,4 @@
-# SI - IBM i Apis
+# SI - IBM i Apis Framework
 
 SIIIA Framework tries to reduce the complexity of the system apis to capsule and thereby provide a simple usable modules/serviceprograms. 
 
@@ -33,18 +33,32 @@ bash setup.sh
 Clone the project repository
 
 ```
-git clone https://github.com/jsranko/si-ibm-apis.git
+git -c http.sslVerify=false clone https://github.com/jsranko/si-ibm-apis.git
 ```
 
-Make the project
+Go to project directory
+```
+cd si-ibm-apis/si-ibmi-apis/
+```
 
+### Configuration
+
+Configure project before it is created 
+
+```
+{
+	"library": "SIIIA",
+	"job_ccsid": "037",
+	"pase_ccsid": "1208"
+}
+```
+
+## Build
+
+Build with GNU Make
 ```
 gmake
 ```
-
-## Running the tests
-
-Explain how to run the automated tests for this system
 
 ### Break down into end to end tests
 
