@@ -18,19 +18,23 @@ Give examples
 
 A step by step series of examples that tell you how to get a development env running
 
-Say what the step will be
+Get a setup script
 
 ```
 /QOpenSys/pkgs/bin/wget https://raw.githubusercontent.com/jsranko/si-ibm-apis/master/si-ibmi-apis/QSHSRC/setup.sh --no-check-certificate
 ```
 
-And repeat
+Run setup script
 
 ```
-until finished
+bash setup.sh
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+Make the project
+
+```
+gmake
+```
 
 ## Running the tests
 
