@@ -33,7 +33,8 @@ bash setup.sh
 Clone the project repository
 
 ```
-git -c http.sslVerify=false clone https://github.com/jsranko/si-ibm-apis.git
+git config --global http.sslVerify false
+git clone https://github.com/jsranko/si-ibm-apis.git
 ```
 
 Go to project directory
