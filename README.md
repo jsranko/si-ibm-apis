@@ -38,9 +38,9 @@ Configure project before it is created
 
 ```
 {
-	"library": "SIIIA",
-	"job_ccsid": "037",
-	"pase_ccsid": "1208"
+   "library":"SIIIA",
+   "job_ccsid":"037",
+   "pase_ccsid":"1208"
 }
 ```
 **library** - Describe
