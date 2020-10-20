@@ -28,7 +28,7 @@ git clone https://github.com/jsranko/si-ibm-apis.git
 ### Build project
 
 ```
-cd si-iws-builder
+cd si-ibm-apis
 bash setup.sh
 ```
 
@@ -43,4 +43,6 @@ Configure project before it is created
 	"pase_ccsid": "1208"
 }
 ```
-
+**library** - Describe
+**job_ccsid** - Describe
+**pase_ccsid** - Describe
