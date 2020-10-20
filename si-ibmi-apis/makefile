@@ -32,6 +32,8 @@ EXT_JAVA=java
 EXT_PGM=RPGLE
 EXT_IWSS=iwss
 EXT_IWSSCONF=iwssconf
+EXT_UDF_JAVA=UDFJ
+EXT_UDF_JAVA_OBJ=query_java
 
 SIAPIS=\
 	$(DIR_RPG)/SIUI.srvpgm \
@@ -107,6 +109,9 @@ CPYSRCS:=\
 JAVAS=\
 	$(patsubst %.$(EXT_JAVA),%.jar,$(wildcard $(DIR_JAVA)/*.$(EXT_JAVA)))
 
+UDF_JAVA=\
+	$(patsubst %.$(EXT_UDF_JAVA),%.$(EXT_UDF_JAVA_OBJ),$(wildcard $(DIR_SQL)/*.$(EXT_UDF_JAVA)))
+
 IWSS=\
 	$(patsubst %.$(EXT_IWSS),%.iwssconf,$(wildcard $(DIR_IWSS)/*.$(EXT_IWSS)))
 
@@ -117,9 +122,13 @@ IWSSCONF=\
 # automatically deleted
 .PRECIOUS: %.srvpgm %.lib %.command %.messagefile %.pgm %.query %.srcpf %.clpgm %.jar
 
-all: build
+all: build-core \
+	 install-iwss \
+	 build-java \
+	 build-msgfs \
+	 build-udf
 
-build: $(LIBRARY).lib \
+build-core: $(LIBRARY).lib \
 		create-srcfiles \
 	    $(LIBRARY).bnddir \
 	    build-exitprograms \
@@ -129,11 +138,10 @@ build: $(LIBRARY).lib \
 	    build-pgms \
 	    build-cls \
 	    build-commands \
-	    install-iwss \
-	    build-java \
-	    build-msgfs	\
-	    copy-srcfiles \
-	    build-sqls 
+	    copy-srcfiles
+
+build-udf: build-sqls  \
+	 build-udf-java
 
 build-msgfs: $(MSGFS)
 
@@ -157,6 +165,8 @@ copy-srcfiles: $(CPYSRCS)
 
 build-java: $(JAVAS)
 
+build-udf-java: $(UDF_JAVA)
+
 install-iwss: $(IWSS)
 
 display-vars: 
@@ -171,13 +181,14 @@ display-vars:
 	$(info    CLS is $(CLS)) 
 	$(info    CPYSRCS is $(CPYSRCS)) 
 	$(info    JAVAS is $(JAVAS)) 
+	$(info    UDF_JAVA is $(UDF_JAVA)) 
 	$(info    IWSS is $(IWSS)) 
 	$(info    IWSSCONF is $(IWSSCONF))
 	$(info    Library is $(LIBRARY))
 	
 setup:
 	bash ./$(DIR_SHELL)/setup.sh && \
-	echo "Setup wurde erfolgreich durchgeführt."
+	echo "Setup wurde erfolgreich durchgef??."
 
 update:
 	$(shell git pull) && \
@@ -279,7 +290,12 @@ update:
 	$(call substitute,$<,$@) && \
 	bash ./$(DIR_SHELL)/iws_install.sh ./$@ && \
 	$(call copy_to_srcpf,$(ROOT_DIR)/$@,$(LIBRARY),$(DIR_IWSS),$(notdir $*))
-	
+
+%.$(EXT_UDF_JAVA_OBJ): %.$(EXT_UDF_JAVA)
+	$(call substitute,$<,$@)
+	system -iKp "RUNSQLSTM SRCSTMF('$(ROOT_DIR)/$@') COMMIT(*NONE)"	|| \
+	-rm $@
+
 clean-lib:
 	rm -f $(LIBRARY).lib &&\
 	system -Kp 'DLTLIB $(LIBRARY)' || :	

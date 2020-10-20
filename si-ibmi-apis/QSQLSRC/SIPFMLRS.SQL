@@ -16,5 +16,5 @@ External Name '$(LIBRARY)/SIPFMLR'
 Program Type Main
 Not Fenced
 ;
-Label On Function $(LIBRARY)/SIPFM_ListData Is 'UDF: Get Member Data'
+Label On Function $(LIBRARY)/SIPFM_ListData Is 'UDF: List Member Data'
 ;

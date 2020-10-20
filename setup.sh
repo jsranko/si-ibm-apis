@@ -29,9 +29,23 @@ exist_directory()
 install_yum_dependencies()
 
 {	
-        yum -y install 'git' 'curl' 'make-gnu' 'jq'     
-
+		yum -y install 'git' 'curl' 'make-gnu' 'jq'     
 }
+
+#
+#       build_project
+#
+
+
+build_project()
+
+{
+		git pull
+		cd ./si-ibmi-apis		
+        gmake build-core
+		cd ..
+}
+
 
 ################################################################################
 #
@@ -41,21 +55,22 @@ install_yum_dependencies()
 
 
 if exist_directory "${OPENSRC_DIR}";  then
-    echo "5733-OPS product is installed ..."
+    echo "5733-OPS product is installed ...\e[0m"
 else 
-    echo "Please install 5733-OPS product first."
+    echo -e "\e[32mPlease install 5733-OPS product first.\e[0m"
 fi
 
 # set path to OpenSource
-echo "setting path to OpenSource ..."
+echo -e "\e[32msetting path to OpenSource ...\e[0m"
 export PATH=${OPENSRC_DIR}:$PATH
 
-echo "installing dependencies for si-ibm-apis ..."
+echo -e "\e[32minstalling dependencies for si-ibm-apis ...\e[0m"
 install_yum_dependencies
 
-echo "Done. "
-echo "Everything is now prepared for the installation. It will be installed in the library SIIIA. The library can be changed, open makefile and change the variable LIBRARY."
-echo "The build process can now be started."
-echo ""
-echo "       gmake or gmake -f makefile"
-echo ""
+
+echo -e "\e[32m build si-iws-builder ...\e[0m"
+build_project
+
+
+echo -e "\e[32mDone. \e[0m"
+
