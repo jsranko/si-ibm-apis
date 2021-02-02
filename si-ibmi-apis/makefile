@@ -161,7 +161,8 @@ create-srcfiles: $(SRCFILES)
 
 build-cls: $(CLS)
 
-copy-srcfiles: $(CPYSRCS)
+copy-srcfiles: $(LIBRARY).lib \
+           $(CPYSRCS)
 
 build-java: $(JAVAS)
 
