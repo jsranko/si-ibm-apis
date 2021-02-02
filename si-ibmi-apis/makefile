@@ -140,6 +140,16 @@ build-core: $(LIBRARY).lib \
 	    build-commands \
 	    copy-srcfiles
 
+build-core-2: $(LIBRARY).lib \
+		create-srcfiles \
+	    $(LIBRARY).bnddir \
+	    build-siapis \
+	    build-srvpgms \
+	    build-pgms \
+	    build-cls \
+	    build-commands \
+	    copy-srcfiles
+
 build-udf: build-sqls  \
 	 build-udf-java
 
