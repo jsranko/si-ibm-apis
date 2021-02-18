@@ -95,6 +95,12 @@ end-ds;
 
 dcl-pr SIEMAIL_new like(tSIEMAIL) extproc(*dclcase);
   From like(tSIEMAIL_EmailAddress) const options(*omit:*nopass);
+  Subject like(tSIEMAIL_Subject) const options(*omit:*nopass);
+end-pr;
+
+dcl-pr SIEMAIL_setFrom ind extproc(*dclcase);
+  SIEMAIL like(tSIEMAIL);
+  From like(tSIEMAIL_EmailAddress) const;
 end-pr;
 
 dcl-pr SIEMAIL_addTo ind extproc(*dclcase);
@@ -130,4 +136,9 @@ end-pr;
 
 dcl-pr SIEMAIL_send ind extproc(*dclcase);
   SIEMAIL like(tSIEMAIL);
+end-pr;
+
+dcl-pr SIEMAIL_toString like(tSIEMAIL_Command) extproc(*dclcase);
+  SIEMAIL like(tSIEMAIL);
+  Engine like(tSIEMAIL_Engine) const options(*omit:*nopass);
 end-pr;

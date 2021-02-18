@@ -49,16 +49,40 @@ dcl-s tTypeOfContentType varchar(10) template;
 dcl-proc SIEMAIL_new export;
 dcl-pi SIEMAIL_new like(tSIEMAIL) extproc(*dclcase);
   From like(tSIEMAIL_EmailAddress) const options(*omit:*nopass);
+  Subject like(tSIEMAIL_Subject) const options(*omit:*nopass);
 end-pi;
 dcl-ds dsSIEMAIL likeds(tSIEMAIL_Def) inz;
 
   if %parms() >= %parmnum(From);
     if %addr(From) <> *null;
       dsSIEMAIL.From = From;
+      SIEMAIL_setFrom(dsSIEMAIL:From);
+    endif;
+  endif;
+
+  if %parms() >= %parmnum(Subject);
+    if %addr(Subject) <> *null;
+      SIEMAIL_setSubject(dsSIEMAIL:Subject);
     endif;
   endif;
 
   return dsSIEMAIL;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc SIEMAIL_setFrom export;
+dcl-pi SIEMAIL_setFrom ind extproc(*dclcase);
+  SIEMAIL like(tSIEMAIL);
+  From like(tSIEMAIL_EmailAddress) const;
+end-pi;
+dcl-ds dsSIEMAIL likeds(tSIEMAIL_Def) based(pSIEMAIL);
+
+  pSIEMAIL = %addr(SIEMAIL);
+
+  dsSIEMAIL.From = From;
+
+  return *on;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -194,30 +218,40 @@ dcl-pi SIEMAIL_send ind extproc(*dclcase);
 end-pi;
 dcl-s sEngine like(tSIEMAIL_Engine);
 dcl-s sCmd like(tSIEMAIL_Command);
-dcl-ds dsSIEMAIL likeds(tSIEMAIL_Def) based(pSIEMAIL);
-
-  pSIEMAIL = %addr(SIEMAIL);
 
   if %parms() >= %parmnum(Engine);
     if %addr(Engine) <> *null;
-      sEngine = Engine;
+      sCmd = getCMD(SIEMAIL:Engine);
     endif;
+  else;
+    sCmd = getCMD(SIEMAIL);
   endif;
-
-  select;
-  when sEngine = cSIEMAIL_CURL;
-    sCMD = getCURL(SIEMAIL);
-  when sEngine = cSIEMAIL_SNDSMTPEMM;
-    sCMD = getSNDSMTPEMM(SIEMAIL);
-  other;
-    sCMD = getSNDSMTPEMM(SIEMAIL);
-  endsl;
 
   if system(sCMD) <> cSystem_Return_Succesful;
     return *off;
   endif;
 
 return *on;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc SIEMAIL_toString export;
+dcl-pi SIEMAIL_toString like(tSIEMAIL_Command) extproc(*dclcase);
+  SIEMAIL like(tSIEMAIL);
+  Engine like(tSIEMAIL_Engine) const options(*omit:*nopass);
+end-pi;
+dcl-s sCmd like(tSIEMAIL_Command);
+
+  if %parms() >= %parmnum(Engine);
+    if %addr(Engine) <> *null;
+      sCmd = getCMD(SIEMAIL:Engine);
+    endif;
+  else;
+    sCmd = getCMD(SIEMAIL);
+  endif;
+
+  return sCMD;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -235,26 +269,26 @@ dcl-ds dsSIEMAIL likeds(tSIEMAIL_Def) based(pSIEMAIL);
   pSIEMAIL = %addr(SIEMAIL);
 
   for idx = 1 to dsSIEMAIL.To.Count;
-    output = '(' + dsSIEMAIL.To.Data(idx) + '*PRI'+ ') ';
+    output = '(''' + dsSIEMAIL.To.Data(idx) + ''' *PRI'+ ') ';
   endfor;
 
   for idx = 1 to dsSIEMAIL.Cc.Count;
-    output = output + '(' + dsSIEMAIL.Cc.Data(idx) + '*CC'+ ') ';
+    output = output + '(''' + dsSIEMAIL.Cc.Data(idx) + ''' *CC'+ ') ';
   endfor;
 
   for idx = 1 to dsSIEMAIL.Bcc.Count;
-    output = output + '(' + dsSIEMAIL.Bcc.Data(idx) + '*BCC'+ ') ';
+    output = output + '(''' + dsSIEMAIL.Bcc.Data(idx) + ''' *BCC'+ ') ';
   endfor;
 
   for idx = 1 to dsSIEMAIL.Attachments.Count;
-    sAtts = sAtts + '(' + dsSIEMAIL.Attachments.File(idx).Path + ' ' +
+    sAtts = sAtts + '(''' + dsSIEMAIL.Attachments.File(idx).Path + ''' ' +
             dsSIEMAIL.Attachments.File(idx).ContentType + ' ' +
             '*BIN) ';
   endfor;
 
   output = 'QSYS/SNDSMTPEMM RCP(' + output + ') ' +
-              'SUBJECT(' + dsSIEMAIL.Subject + ') ' +
-              'NOTE(' + dsSIEMAIL.Body.Data + ') ' +
+              'SUBJECT(''' + dsSIEMAIL.Subject + ''') ' +
+              'NOTE(''' + dsSIEMAIL.Body.Data + ''') ' +
               'CHARSET(*UTF8 *DFT) ' +
               'SMIME(*NONE) ' +
               'ATTACH(' + sAtts + ') ' +
@@ -343,4 +377,32 @@ dcl-s output ind inz(*off);
     endif;
 
   endsr;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc getCMD;
+dcl-pi getCMD like(tSIEMAIL_Command) extproc(*dclcase);
+  SIEMAIL like(tSIEMAIL);
+  Engine like(tSIEMAIL_Engine) const options(*omit:*nopass);
+end-pi;
+dcl-s output like(tSIEMAIL_Command);
+dcl-s sEngine like(tSIEMAIL_Engine);
+
+  if %parms() >= %parmnum(Engine);
+    if %addr(Engine) <> *null;
+      sEngine = Engine;
+    endif;
+  endif;
+
+  select;
+  when sEngine = cSIEMAIL_CURL;
+    output = getCURL(SIEMAIL);
+  when sEngine = cSIEMAIL_SNDSMTPEMM;
+    output = getSNDSMTPEMM(SIEMAIL);
+  other;
+    output = getSNDSMTPEMM(SIEMAIL);
+  endsl;
+
+  return output;
 end-proc;
