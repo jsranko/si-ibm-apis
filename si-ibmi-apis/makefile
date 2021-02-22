@@ -63,7 +63,8 @@ SIAPIS=\
 	$(DIR_RPG)/SISRVPGM.srvpgm \
 	$(DIR_RPG)/SIRE.srvpgm \
 	$(DIR_RPG)/SIPFM.srvpgm \
-	$(DIR_RPG)/SIEMAIL.srvpgm
+	$(DIR_RPG)/SIEMAIL.srvpgm \
+	$(DIR_RPG)/SIRIO.srvpgm
 
 PGMS:=\
 	$(patsubst %.RPGLE,%.pgm,$(shell grep -il " main" $(DIR_RPG)/*.RPGLE)) \
