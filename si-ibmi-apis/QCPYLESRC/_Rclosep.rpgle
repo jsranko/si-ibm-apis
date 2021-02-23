@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rlocate)
-  /define Rlocate
+/if not defined(Rclosep)
+  /define Rclosep
 /else
   /eof
 /endif
@@ -9,21 +9,23 @@
 /include qcpylesrc,reciop
 
 //==========================================================================================
+// Constants
+//==========================================================================================
+
+dcl-c cRclose_Success const(0);
+
+//==========================================================================================
 // Templates
 //==========================================================================================
 
-dcl-s tRlocate_KeyLen int(10) template;
-dcl-s tRlocate_Opts int(10) template;
+dcl-s tRclose_Return int(10) template;
 
 //==========================================================================================
 // Prototypes
 //==========================================================================================
 
-// _Rlocate()  Position a Record
+// _Rclose()  Close a File
 
-dcl-pr Rlocate like(tRECIO_RIOFB) extproc('_Rlocate');
+dcl-pr Rclose like(tRclose_Return) extproc('_Rclose');
   fp like(tRECIO_RFile) value;
-  key pointer value options(*string);
-  keyLenOrRrn like(tRlocate_KeyLen) value;
-  opts like(tRlocate_KeyLen) value;
 end-pr;

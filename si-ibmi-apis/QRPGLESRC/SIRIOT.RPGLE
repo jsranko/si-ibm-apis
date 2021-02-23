@@ -40,6 +40,8 @@ end-pi;
 dcl-s sysdummy1 like(tSIRIO);
 
   sysdummy1 = SIRIO_open('SYSDUMMY1':'SYSIBM');
+  SIRIO_readNext(sysdummy1);
+  SIRIO_close(sysdummy1);
 
   return;
 end-proc;
