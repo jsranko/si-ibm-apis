@@ -21,5 +21,5 @@ dcl-ds tRiofbk_Return likeds(tRECIO_XXIOFB) template;
 // _Riofbk()  Obtain I/O Feedback Information
 
 dcl-pr Riofbk pointer extproc('_Riofbk');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
 end-pr;

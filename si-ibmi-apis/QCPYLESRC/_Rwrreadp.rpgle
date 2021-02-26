@@ -27,7 +27,7 @@ dcl-ds tRwrread_Return likeds(tRECIO_RIOFB) template;
 // _Rwrread()  Write and Read a Record (separate buffers)
 
 dcl-pr Rwrread pointer extproc('_Rwrread');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   inBuf pointer value;
   inBufSize like(tRwrread_Size) value;
   outBuf pointer value;

@@ -38,8 +38,8 @@ dcl-ds tSIRIO_Error qualified template;
 end-ds;
 
 dcl-ds tSIRIO_Def qualified template;
-  fp like(tRECIO_RFile);
-  fb like(tRECIO_RIOFB);
+  fp pointer;
+  fb pointer;
   error likeds(tSIRIO_Error);
 end-ds;
 
@@ -129,4 +129,8 @@ end-pr;
 
 dcl-pr SIRIO_isOpen ind extproc(*dclcase);
   dsSIRIO likeds(tSIRIO_Def);
+end-pr;
+
+dcl-pr SIRIO_isEOF ind extproc(*dclcase);
+  SIRIO like(tSIRIO);
 end-pr;

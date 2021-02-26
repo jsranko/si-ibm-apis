@@ -26,5 +26,5 @@ dcl-s tRfeod_Return int(10) template;
 // _Rfeod()  Force the End-of-Data
 
 dcl-pr Rfeod like(Rfeod_Return) extproc('_Rfeod');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
 end-pr;

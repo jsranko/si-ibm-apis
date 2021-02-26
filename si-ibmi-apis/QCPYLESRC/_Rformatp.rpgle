@@ -24,6 +24,6 @@
 // _Rfeov()  Force the End-of-File
 
 dcl-pr Rformat extproc('_Rformat');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   fmt pointer value options(*string);
 end-pr;

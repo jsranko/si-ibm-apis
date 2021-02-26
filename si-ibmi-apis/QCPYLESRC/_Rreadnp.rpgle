@@ -28,7 +28,7 @@ dcl-ds tRreadn_Return likeds(tRECIO_RIOFB) template;
 // _Rreadn()  Read the Next Record
 
 dcl-pr Rreadn pointer extproc('_Rreadn');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   buf pointer value;
   size like(tRreadn_Size) value;
   opts like(tRreadn_Opts) value;

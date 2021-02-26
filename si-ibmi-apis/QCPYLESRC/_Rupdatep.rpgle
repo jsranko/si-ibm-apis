@@ -27,7 +27,7 @@ dcl-ds tRupdate_Return likeds(tRECIO_RIOFB) template;
 // _Rupdate()  Update a Record
 
 dcl-pr Rupdate pointer extproc('_Rupdate');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   buf pointer value;
   size like(tRupdate_Size) value;
 end-pr;

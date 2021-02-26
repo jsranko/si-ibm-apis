@@ -28,7 +28,7 @@ dcl-ds tRreadnc_Return likeds(tRECIO_RIOFB) template;
 // _Rreadnc()  Read the Next Changed Record in a Subfile
 
 dcl-pr Rreadnc pointer extproc('_Rreadnc');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   buf pointer value;
   size like(tRreadnc_Size) value;
   opts like(tRreadnc_Opts) value;

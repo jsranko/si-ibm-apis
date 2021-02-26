@@ -28,7 +28,7 @@ dcl-ds tRreadf_Return likeds(tRECIO_RIOFB) template;
 // _Rreadf()  Read the First Record
 
 dcl-pr Rreadf pointer extproc('_Rreadf');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   buf pointer value;
   size like(tRreadf_Size) value;
   opts like(tRreadf_Opts) value;

@@ -25,6 +25,6 @@
 // _Rindara()  Set Separate Indicator Area
 
 dcl-pr Rindara extproc('_Rindara');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   indic_buf like(tRECIO_SYSindara) value;
 end-pr;

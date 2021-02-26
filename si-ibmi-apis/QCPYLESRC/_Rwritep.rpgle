@@ -27,7 +27,7 @@ dcl-ds tRwrite_Return likeds(tRECIO_RIOFB) template;
 // _Rwrite()  Write the Next Record
 
 dcl-pr Rwrite pointer extproc('_Rwrite');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   buf pointer value;
   size like(tRwrite_Size) value;
 end-pr;

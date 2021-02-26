@@ -52,6 +52,11 @@ end-ds;
   keyMyEmp.EmpId = 10;
   SIRIO_setLL(myEmp:%addr(keyMyEmp):%size(keyMyEmp));
   SIRIO_readNextWithLock(myEmp:%addr(inMyEmp):%size(inMyEmp));
+
+  SIRIO_setBOF(myEmp);
+  dou SIRIO_isEOF(myEmp);
+    SIRIO_readNextNoLock(myEmp:%addr(inMyEmp):%size(inMyEmp));
+  enddo;
   SIRIO_close(myEmp);
 
   return;

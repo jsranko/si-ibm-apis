@@ -28,5 +28,5 @@ dcl-s tRrlslck_Return int(10) template;
 // _Rrlslck()  Release a Record Lock
 
 dcl-pr Rrlslck like(tRrlslck_Return) extproc('_Rrlslck');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
 end-pr;

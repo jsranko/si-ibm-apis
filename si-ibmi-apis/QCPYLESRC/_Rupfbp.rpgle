@@ -21,5 +21,5 @@ dcl-ds tRupfb_Return likeds(tRECIO_RIOFB) template;
 // _Rupfb()  Provide Information on Last I/O Operation
 
 dcl-pr Rupfb pointer extproc('_Rupfb');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
 end-pr;

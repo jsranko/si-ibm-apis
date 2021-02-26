@@ -22,6 +22,6 @@ dcl-s tRpgmdev_Return int(10) template;
 // _Rfeod()  Force the End-of-Data
 
 dcl-pr Rpgmdev like(tRpgmdev_Return) extproc('_Rpgmdev');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   dev pointer value options(*string);
 end-pr;

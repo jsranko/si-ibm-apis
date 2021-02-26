@@ -29,6 +29,6 @@ dcl-s tRrelease_Return int(10) template;
 // _Rrelease()  Release a Program Device
 
 dcl-pr Rrelease like(tRrelease_Return) extproc('_Rrelease');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   dev like(tRrelease_Dev) value;
 end-pr;

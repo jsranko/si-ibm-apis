@@ -27,5 +27,5 @@ dcl-s tRclose_Return int(10) template;
 // _Rclose()  Close a File
 
 dcl-pr Rclose like(tRclose_Return) extproc('_Rclose');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
 end-pr;

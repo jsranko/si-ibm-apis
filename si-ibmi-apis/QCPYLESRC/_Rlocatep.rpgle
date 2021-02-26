@@ -23,7 +23,7 @@ dcl-ds tRlocate_Return likeds(tRECIO_RIOFB) template;
 // _Rlocate()  Position a Record
 
 dcl-pr Rlocate pointer extproc('_Rlocate');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   key pointer value options(*string);
   keyLenOrRrn like(tRlocate_KeyLen) value;
   opts like(tRlocate_Opts) value;

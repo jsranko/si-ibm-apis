@@ -21,5 +21,5 @@ dcl-ds tRopnfbk_Return likeds(tRECIO_XXOPFB) template;
 // _Ropnfbk()  Obtain Open Feedback Information
 
 dcl-pr Ropnfbk pointer extproc('_Ropnfbk');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
 end-pr;

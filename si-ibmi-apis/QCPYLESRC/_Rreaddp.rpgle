@@ -24,7 +24,7 @@ dcl-ds tRreadd_Return likeds(tRECIO_RIOFB) template;
 // _Rreadd()  Read a Record by Relative Record Number
 
 dcl-pr Rreadd pointer extproc('_Rreadd');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   buf pointer value;
   size like(tRreadd_Size) value;
   opts like(tRreadd_Opts) value;

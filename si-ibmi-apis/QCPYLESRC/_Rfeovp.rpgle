@@ -26,5 +26,5 @@ dcl-s tRfeov_Return int(10) template;
 // _Rfeov()  Force the End-of-File
 
 dcl-pr Rfeov like(tRfeov_Return) extproc('_Rfeov');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
 end-pr;

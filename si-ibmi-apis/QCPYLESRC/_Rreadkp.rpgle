@@ -29,7 +29,7 @@ dcl-ds tRreadk_Return likeds(tRECIO_RIOFB) template;
 // _Rreadk()  Read a Record by Key
 
 dcl-pr Rreadk pointer extproc('_Rreadk');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   buf pointer value;
   size like(tRreadk_Size) value;
   opts like(tRreadk_Opts) value;

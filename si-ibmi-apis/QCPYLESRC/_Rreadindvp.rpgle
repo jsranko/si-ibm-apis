@@ -28,7 +28,7 @@ dcl-ds tRreadindv_Return likeds(tRECIO_RIOFB) template;
 // _Rreadindv()  Read from an Invited Device
 
 dcl-pr Rreadindv pointer extproc('_Rreadindv');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   buf pointer value;
   size like(tRreadindv_Size) value;
   opts like(tRreadindv_Opts) value;

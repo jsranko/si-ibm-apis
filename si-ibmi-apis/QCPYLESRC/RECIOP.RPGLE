@@ -10,6 +10,9 @@
 // Constants
 //==========================================================================================
 
+//
+dcl-c cRECIO_EOF const(-1);
+
 // Default to __KEY_EQ and lock the record for update if the file is open for updating.
 dcl-c cRECIO_DFT const(x'0B000100');
 

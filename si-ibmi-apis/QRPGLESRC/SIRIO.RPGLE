@@ -333,11 +333,13 @@ dcl-proc SIRIO_isEOF export;
 dcl-pi SIRIO_isEOF ind extproc(*dclcase);
   SIRIO like(tSIRIO);
 end-pi;
+dcl-ds ioFeedBack likeds(tRECIO_RIOFB) based(pIoFeedBack);
 dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
 
   pSIRIO = %addr(SIRIO);
 
-  if dsSIRIO.fp <> *null;
+  pIoFeedBack = dsSIRIO.fb;
+  if ioFeedBack.num_bytes = cRECIO_EOF;
     return *on;
   endif;
 

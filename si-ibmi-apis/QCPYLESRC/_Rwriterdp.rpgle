@@ -27,7 +27,7 @@ dcl-ds tRwriterd_Return likeds(tRECIO_RIOFB) template;
 // _Rwriterd()  Write and Read a Record
 
 dcl-pr Rwriterd pointer extproc('_Rwriterd');
-  fp like(tRECIO_RFile) value;
+  fp pointer value;
   buf pointer value;
   size like(tRwriterd_Size) value;
 end-pr;
