@@ -312,6 +312,23 @@ end-proc;
 
 //------------------------------------------------------------------------------------------
 
+dcl-proc SIRIO_isOpen export;
+dcl-pi SIRIO_isOpen ind extproc(*dclcase);
+  SIRIO like(tSIRIO);
+end-pi;
+dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
+
+  pSIRIO = %addr(SIRIO);
+
+  if dsSIRIO.fp <> *null;
+    return *on;
+  endif;
+
+  return *off;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
 dcl-proc init;
 dcl-pi init;
   dsSIRIO likeds(tSIRIO_Def);

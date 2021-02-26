@@ -126,3 +126,7 @@ dcl-pr SIRIO_readPreviousNoLock ind extproc(*dclcase);
   Buffer like(tSIRIO_Buffer) const;
   BufferLength like(tSIRIO_BufferLength) const;
 end-pr;
+
+dcl-pr SIRIO_isOpen ind extproc(*dclcase);
+  dsSIRIO likeds(tSIRIO_Def);
+end-pr;
