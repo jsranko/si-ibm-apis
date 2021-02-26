@@ -93,12 +93,25 @@ dcl-c cRECIO_READ_WRITE_AND_APPEND const('ar+');
 // Templates
 //==========================================================================================
 
-dcl-s tRECIO_RFile pointer template;
-
 dcl-s tRECIO_SYSindara char(99) template;
 
-dcl-s tRECIO_XXOPFB pointer template;
+dcl-s tRECIO_XXIOPFB pointer template;
 
-dcl-s tRECIO_RIOFB pointer template;
+dcl-ds tRECIO_RIOFB qualified template;
+  key pointer;
+  sysparm pointer;
+  rrn uns(10);
+  num_bytes int(10);
+  blkCount int(5);
+  blkFilledBy char(1);
+  dupKey char(1);
+  reserved2 char(20);
+end-ds;
 
+dcl-ds tRECIO_RFile qualified template;
+  reserved1 pointer;
+  in_buf pointer;
+  out_buf pointer;
+  reserved2 pointer;
+end-ds;
 

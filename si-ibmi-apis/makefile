@@ -23,6 +23,7 @@ DIR_MSGF=QMSGFSRC
 DIR_JAVA=src/java
 DIR_SHELL=QSHSRC
 DIR_IWSS=QIWSSSRC
+DIR_C=QCSRC
 EXT_CPYSRC=RPGLE
 EXT_MSGF=MSGF
 EXT_CMD=CMD
@@ -100,6 +101,7 @@ SRCFILES_0=\
 	$(DIR_SQL) \
 	$(DIR_SRV) \
 	$(DIR_IWSS) \
+	$(DIR_C) \
 	$(DIR_MSGF)	
 
 SRCFILES=\
@@ -107,6 +109,9 @@ SRCFILES=\
 
 CPYSRCS:=\
 	$(patsubst %.$(EXT_CPYSRC),%.cpysrc,$(wildcard $(DIR_CPY)/*.$(EXT_CPYSRC)))
+
+CSRCS:=\
+	$(patsubst %.c,%.cpyc,$(wildcard $(DIR_C)/*.c)) \
 
 JAVAS=\
 	$(patsubst %.$(EXT_JAVA),%.jar,$(wildcard $(DIR_JAVA)/*.$(EXT_JAVA)))
@@ -140,7 +145,8 @@ build-core: $(LIBRARY).lib \
 	    build-pgms \
 	    build-cls \
 	    build-commands \
-	    copy-srcfiles
+	    copy-srcfiles \
+	    copy-cfiles
 
 build-core-2: $(LIBRARY).lib \
 		create-srcfiles \
@@ -150,7 +156,8 @@ build-core-2: $(LIBRARY).lib \
 	    build-pgms \
 	    build-cls \
 	    build-commands \
-	    copy-srcfiles
+	    copy-srcfiles \
+	    copy-cfiles
 
 build-udf: build-sqls  \
 	 build-udf-java
@@ -176,6 +183,9 @@ build-cls: $(CLS)
 copy-srcfiles: $(LIBRARY).lib \
            $(CPYSRCS)
 
+copy-cfiles: $(LIBRARY).lib \
+           $(CSRCS)
+
 build-java: $(JAVAS)
 
 build-udf-java: $(UDF_JAVA)
@@ -198,6 +208,7 @@ display-vars:
 	$(info    IWSS is $(IWSS)) 
 	$(info    IWSSCONF is $(IWSSCONF))
 	$(info    Library is $(LIBRARY))
+	$(info    C-Sources is $(CSRCS))
 	
 setup:
 	bash ./$(DIR_SHELL)/setup.sh && \
@@ -290,6 +301,11 @@ update:
 
 %.cpysrc: %.$(EXT_CPYSRC) $(DIR_CPY).srcpf
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_CPY),$(notdir $*)) && \
+	touch $@
+
+%.cpyc: %.c $(DIR_C).srcpf
+	$(call substitute,$<,$@) && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$*.cpyc,$(LIBRARY),$(DIR_C),$(notdir $*)) && \
 	touch $@
 
 %.jar: %.$(EXT_JAVA)

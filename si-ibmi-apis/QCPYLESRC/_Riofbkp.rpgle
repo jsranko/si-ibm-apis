@@ -9,11 +9,17 @@
 /include qcpylesrc,reciop
 
 //==========================================================================================
+// Templates
+//==========================================================================================
+
+dcl-ds tRiofbk_Return likeds(tRECIO_XXIOFB) template;
+
+//==========================================================================================
 // Prototypes
 //==========================================================================================
 
 // _Riofbk()  Obtain I/O Feedback Information
 
-dcl-pr Riofbk extproc('_Riofbk');
+dcl-pr Riofbk pointer extproc('_Riofbk');
   fp like(tRECIO_RFile) value;
 end-pr;

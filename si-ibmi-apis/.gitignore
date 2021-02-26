@@ -15,3 +15,4 @@ SICTLOPT.RPGLE
 *.cpysrc
 *.shell
 *.iwssconf
+*.cpyc
