@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rreadindv)
-  /define Rreadindv
+/if not defined(Rreadindvp)
+  /define Rreadindvp
 /else
   /eof
 /endif
@@ -19,6 +19,7 @@
 
 dcl-s tRreadindv_Size int(10) template;
 dcl-s tRreadindv_Opts int(10) template;
+dcl-ds tRreadindv_Return likeds(tRECIO_RIOFB) template;
 
 //==========================================================================================
 // Prototypes
@@ -26,7 +27,7 @@ dcl-s tRreadindv_Opts int(10) template;
 
 // _Rreadindv()  Read from an Invited Device
 
-dcl-pr Rreadindv like(tRECIO_RIOFB) extproc('_Rreadindv');
+dcl-pr Rreadindv pointer extproc('_Rreadindv');
   fp like(tRECIO_RFile) value;
   buf pointer value;
   size like(tRreadindv_Size) value;

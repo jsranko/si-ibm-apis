@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rreadk)
-  /define Rreadk
+/if not defined(Rreadkp)
+  /define Rreadkp
 /else
   /eof
 /endif
@@ -20,6 +20,7 @@
 dcl-s tRreadk_Size int(10) template;
 dcl-s tRreadk_Opts int(10) template;
 dcl-s tRreadk_KeyLen uns(10) template;
+dcl-ds tRreadk_Return likeds(tRECIO_RIOFB) template;
 
 //==========================================================================================
 // Prototypes
@@ -27,7 +28,7 @@ dcl-s tRreadk_KeyLen uns(10) template;
 
 // _Rreadk()  Read a Record by Key
 
-dcl-pr Rreadk like(tRECIO_RIOFB) extproc('_Rreadk');
+dcl-pr Rreadk pointer extproc('_Rreadk');
   fp like(tRECIO_RFile) value;
   buf pointer value;
   size like(tRreadk_Size) value;

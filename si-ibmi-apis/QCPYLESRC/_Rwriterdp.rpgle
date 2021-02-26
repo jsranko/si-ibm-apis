@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rwriterd)
-  /define Rwriterd
+/if not defined(Rwriterdp)
+  /define Rwriterdp
 /else
   /eof
 /endif
@@ -18,6 +18,7 @@
 //==========================================================================================
 
 dcl-s tRwriterd_Size int(10) template;
+dcl-ds tRwriterd_Return likeds(tRECIO_RIOFB) template;
 
 //==========================================================================================
 // Prototypes
@@ -25,7 +26,7 @@ dcl-s tRwriterd_Size int(10) template;
 
 // _Rwriterd()  Write and Read a Record
 
-dcl-pr Rwriterd like(tRECIO_RIOFB) extproc('_Rwriterd');
+dcl-pr Rwriterd pointer extproc('_Rwriterd');
   fp like(tRECIO_RFile) value;
   buf pointer value;
   size like(tRwriterd_Size) value;

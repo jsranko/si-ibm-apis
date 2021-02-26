@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rupdate)
-  /define Rupdate
+/if not defined(Rupdatep)
+  /define Rupdatep
 /else
   /eof
 /endif
@@ -18,6 +18,7 @@
 //==========================================================================================
 
 dcl-s tRupdate_Size int(10) template;
+dcl-ds tRupdate_Return likeds(tRECIO_RIOFB) template;
 
 //==========================================================================================
 // Prototypes
@@ -25,7 +26,7 @@ dcl-s tRupdate_Size int(10) template;
 
 // _Rupdate()  Update a Record
 
-dcl-pr Rupdate like(tRECIO_RIOFB) extproc('_Rupdate');
+dcl-pr Rupdate pointer extproc('_Rupdate');
   fp like(tRECIO_RFile) value;
   buf pointer value;
   size like(tRupdate_Size) value;

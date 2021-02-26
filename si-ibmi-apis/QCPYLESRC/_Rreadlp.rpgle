@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(RFEODP)
-  /define RFEODP
+/if not defined(Rreadlp)
+  /define Rreadlp
 /else
   /eof
 /endif
@@ -19,6 +19,7 @@
 
 dcl-s tRreadl_Size int(10) template;
 dcl-s tRreadl_Opts int(10) template;
+dcl-ds tRreadl_Return likeds(tRECIO_RIOFB) template;
 
 //==========================================================================================
 // Prototypes
@@ -26,7 +27,7 @@ dcl-s tRreadl_Opts int(10) template;
 
 // _Rreadl()  Read the Last Record
 
-dcl-pr Rreadl like(tRECIO_RIOFB) extproc('_Rreadl');
+dcl-pr Rreadl pointer extproc('_Rreadl');
   fp like(tRECIO_RFile) value;
   buf pointer value;
   size like(tRreadl_Size) value;

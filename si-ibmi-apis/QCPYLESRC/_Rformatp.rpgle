@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(RFORMAT)
-  /define RFORMAT
+/if not defined(Rformatp)
+  /define Rformatp
 /else
   /eof
 /endif

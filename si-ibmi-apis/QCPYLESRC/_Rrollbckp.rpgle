@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rrollbck)
-  /define Rrollbck
+/if not defined(Rrollbckp)
+  /define Rrollbckp
 /else
   /eof
 /endif

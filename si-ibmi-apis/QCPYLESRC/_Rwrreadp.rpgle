@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rwrread)
-  /define Rwrread
+/if not defined(Rwrreadp)
+  /define Rwrreadp
 /else
   /eof
 /endif
@@ -18,6 +18,7 @@
 //==========================================================================================
 
 dcl-s tRwrread_Size int(10) template;
+dcl-ds tRwrread_Return likeds(tRECIO_RIOFB) template;
 
 //==========================================================================================
 // Prototypes
@@ -25,7 +26,7 @@ dcl-s tRwrread_Size int(10) template;
 
 // _Rwrread()  Write and Read a Record (separate buffers)
 
-dcl-pr Rwrread like(tRECIO_RIOFB) extproc('_Rwrread');
+dcl-pr Rwrread pointer extproc('_Rwrread');
   fp like(tRECIO_RFile) value;
   inBuf pointer value;
   inBufSize like(tRwrread_Size) value;

@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(RIOFBKP)
-  /define RIOFBKP
+/if not defined(Riofbkp)
+  /define Riofbkp
 /else
   /eof
 /endif

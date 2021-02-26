@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rrlslck)
-  /define Rrlslck
+/if not defined(Rrlslckp)
+  /define Rrlslckp
 /else
   /eof
 /endif

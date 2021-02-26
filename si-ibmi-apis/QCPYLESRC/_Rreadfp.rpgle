@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rreadf)
-  /define Rreadf
+/if not defined(Rreadfp)
+  /define Rreadfp
 /else
   /eof
 /endif
@@ -19,6 +19,7 @@
 
 dcl-s tRreadf_Size int(10) template;
 dcl-s tRreadf_Opts int(10) template;
+dcl-ds tRreadf_Return likeds(tRECIO_RIOFB) template;
 
 //==========================================================================================
 // Prototypes
@@ -26,7 +27,7 @@ dcl-s tRreadf_Opts int(10) template;
 
 // _Rreadf()  Read the First Record
 
-dcl-pr Rreadf like(tRECIO_RIOFB) extproc('_Rreadf');
+dcl-pr Rreadf pointer extproc('_Rreadf');
   fp like(tRECIO_RFile) value;
   buf pointer value;
   size like(tRreadf_Size) value;

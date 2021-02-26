@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rupfb)
-  /define Rupfb
+/if not defined(Rupfbp)
+  /define Rupfbp
 /else
   /eof
 /endif
@@ -9,11 +9,17 @@
 /include qcpylesrc,reciop
 
 //==========================================================================================
+// Templates
+//==========================================================================================
+
+dcl-ds tRupfb_Return likeds(tRECIO_RIOFB) template;
+
+//==========================================================================================
 // Prototypes
 //==========================================================================================
 
 // _Rupfb()  Provide Information on Last I/O Operation
 
-dcl-pr Rupfb like(tRECIO_RIOFB) extproc('_Rupfb');
+dcl-pr Rupfb pointer extproc('_Rupfb');
   fp like(tRECIO_RFile) value;
 end-pr;

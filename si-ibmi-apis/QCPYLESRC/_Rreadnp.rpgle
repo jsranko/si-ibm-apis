@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rreadn)
-  /define Rreadn
+/if not defined(Rreadnp)
+  /define Rreadnp
 /else
   /eof
 /endif
@@ -19,6 +19,7 @@
 
 dcl-s tRreadn_Size int(10) template;
 dcl-s tRreadn_Opts int(10) template;
+dcl-ds tRreadn_Return likeds(tRECIO_RIOFB) template;
 
 //==========================================================================================
 // Prototypes
@@ -26,7 +27,7 @@ dcl-s tRreadn_Opts int(10) template;
 
 // _Rreadn()  Read the Next Record
 
-dcl-pr Rreadn like(tRECIO_RIOFB) extproc('_Rreadn');
+dcl-pr Rreadn pointer extproc('_Rreadn');
   fp like(tRECIO_RFile) value;
   buf pointer value;
   size like(tRreadn_Size) value;

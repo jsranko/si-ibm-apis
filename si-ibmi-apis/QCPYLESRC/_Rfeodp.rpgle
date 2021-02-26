@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(RFEODP)
-  /define RFEODP
+/if not defined(Rfeodp)
+  /define Rfeodp
 /else
   /eof
 /endif

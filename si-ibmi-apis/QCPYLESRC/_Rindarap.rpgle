@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(RINDARA)
-  /define RINDARA
+/if not defined(Rindarap)
+  /define Rindarap
 /else
   /eof
 /endif

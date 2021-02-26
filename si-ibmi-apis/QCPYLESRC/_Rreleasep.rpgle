@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rrelease)
-  /define Rrelease
+/if not defined(Rreleasep)
+  /define Rreleasep
 /else
   /eof
 /endif

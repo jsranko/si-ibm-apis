@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rreads)
-  /define Rreads
+/if not defined(Rreadsp)
+  /define Rreadsp
 /else
   /eof
 /endif
@@ -19,6 +19,7 @@
 
 dcl-s tRreads_Size int(10) template;
 dcl-s tRreads_Opts int(10) template;
+dcl-ds tRreads_Return likeds(tRECIO_RIOFB) template;
 
 //==========================================================================================
 // Prototypes
@@ -26,7 +27,7 @@ dcl-s tRreads_Opts int(10) template;
 
 // _Rreads()  Read the Same Record
 
-dcl-pr Rreads like(tRECIO_RIOFB) extproc('_Rreads');
+dcl-pr Rreads pointer extproc('_Rreads');
   fp like(tRECIO_RFile) value;
   buf pointer value;
   size like(tRreads_Size) value;

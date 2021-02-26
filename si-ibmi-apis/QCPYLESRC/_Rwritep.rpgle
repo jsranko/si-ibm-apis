@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(Rwrite)
-  /define Rwrite
+/if not defined(Rwritep)
+  /define Rwritep
 /else
   /eof
 /endif
@@ -18,6 +18,7 @@
 //==========================================================================================
 
 dcl-s tRwrite_Size int(10) template;
+dcl-ds tRwrite_Return likeds(tRECIO_RIOFB) template;
 
 //==========================================================================================
 // Prototypes
@@ -25,7 +26,7 @@ dcl-s tRwrite_Size int(10) template;
 
 // _Rwrite()  Write the Next Record
 
-dcl-pr Rwrite like(tRECIO_RIOFB) extproc('_Rwrite');
+dcl-pr Rwrite pointer extproc('_Rwrite');
   fp like(tRECIO_RFile) value;
   buf pointer value;
   size like(tRwrite_Size) value;

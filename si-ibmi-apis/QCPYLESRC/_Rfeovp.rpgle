@@ -1,7 +1,7 @@
 **FREE
 
-/if not defined(RFEOVP)
-  /define RFEOVP
+/if not defined(Rfeovp)
+  /define Rfeovp
 /else
   /eof
 /endif
