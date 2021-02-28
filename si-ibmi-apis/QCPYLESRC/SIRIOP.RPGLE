@@ -31,6 +31,7 @@ dcl-s tSIRIO_Buffer pointer template;
 dcl-s tSIRIO_BufferLength int(10) template;
 dcl-s tSIRIO_Key pointer template;
 dcl-s tSIRIO_KeyLength int(10) template;
+dcl-s tSIRIO_Rrn uns(10) template;
 
 dcl-ds tSIRIO_Error qualified template;
   Nummer like(tSIRIO_ErrorNummer);
@@ -132,5 +133,21 @@ dcl-pr SIRIO_isOpen ind extproc(*dclcase);
 end-pr;
 
 dcl-pr SIRIO_isEOF ind extproc(*dclcase);
+  SIRIO like(tSIRIO);
+end-pr;
+
+dcl-pr SIRIO_update ind extproc(*dclcase);
+  SIRIO like(tSIRIO);
+  Buffer like(tSIRIO_Buffer) const;
+  BufferLength like(tSIRIO_BufferLength) const;
+end-pr;
+
+dcl-pr SIRIO_write ind extproc(*dclcase);
+  SIRIO like(tSIRIO);
+  Buffer like(tSIRIO_Buffer) const;
+  BufferLength like(tSIRIO_BufferLength) const;
+end-pr;
+
+dcl-pr SIRIO_delete ind extproc(*dclcase);
   SIRIO like(tSIRIO);
 end-pr;

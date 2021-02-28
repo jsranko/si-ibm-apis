@@ -12,7 +12,7 @@
 // Templates
 //==========================================================================================
 
-dcl-ds tRiofbk_Return likeds(tRECIO_XXIOFB) template;
+dcl-ds tRiofbk_Return likeds(tRECIO_XXIOPFB) template;
 
 //==========================================================================================
 // Prototypes

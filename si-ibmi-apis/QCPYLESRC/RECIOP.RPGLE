@@ -98,7 +98,42 @@ dcl-c cRECIO_READ_WRITE_AND_APPEND const('ar+');
 
 dcl-s tRECIO_SYSindara char(99) template;
 
-dcl-s tRECIO_XXIOPFB pointer template;
+dcl-ds tRECIO_XXIOPFB qualified template;
+  file_dep_fb_offset int(5);
+  write_count int(10);
+  read_count int(10);
+  write_read_count int(10);
+  other_io_count int(10);
+  reserved1 char(1);
+  cur_operation char(1);
+  rec_format char(10);
+  dev_class char(2);
+  dev_name char(10);
+  last_io_rec_len int(10);
+  reserved2 char(80);
+  num_recs_retrieved int(5);
+  last_io_rec_len2 int(5);
+  reserved3 char(2);
+  cur_blk_count int(10);
+  reserved4 char(8);
+end-ds;
+
+dcl-ds tRECIO_XXIOFB_DB qualified template;
+  db_fdbk_size uns(10);
+  join_default_flags char(4);
+  reserved1 char(2);
+  num_locked_recs int(5);
+  fields_in_fmt int(5);
+  reserved2 char(4);
+  reserved3 char(1);
+  deleted_rec_ind char(1);
+  num_key_fields int(5);
+  reserved4 char(4);
+  key_len int(5);
+  data_mbr_num int(5);
+  data_mbr_RRN uns(10);
+  key_value char(32768);
+end-ds;
 
 dcl-ds tRECIO_RIOFB qualified template;
   key pointer;
