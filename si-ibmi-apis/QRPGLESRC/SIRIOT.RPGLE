@@ -37,6 +37,7 @@ ctl-opt main(SIRIOT) dftactgrp(*no) actgrp(*new) bnddir('SIIIA/SIIIA');
 dcl-proc SIRIOT;
 dcl-pi SIRIOT;
 end-pi;
+dcl-s disp varchar(52);
 dcl-s myEmp like(tSIRIO);
 dcl-ds inMyEmp extname('$(LIBRARY)/MY_EMP':*input) qualified inz;
 end-ds;
@@ -61,38 +62,75 @@ end-ds;
   enddo;
   SIRIO_close(myEmp);
 
-  // Test write
-  myEmp = SIRIO_open('MY_EMP':'$(LIBRARY)':*omit:cRECIO_READ_WRITE_AND_APPEND);
-  outMyEmp.EmpID = 22;
-  outMyEmp.Name = 'J Sranko';
-  outMyEmp.Salary = 450;
-  outMyEmp.Mgrid = 17;
-  if not SIRIO_write(myEmp:%addr(outMyEmp):%size(outMyEmp));
-    dsply ('not writed');
-  endif;
-
-  // Test update
-  keyMyEmp.EmpId = 22;
-  SIRIO_setLL(myEmp:%addr(keyMyEmp):%size(keyMyEmp));
-  if not SIRIO_readNextWithLock(myEmp:%addr(inMyEmp):%size(inMyEmp));
-    dsply ('not readed');
-  endif;
-  if not SIRIO_update(myEmp:%addr(outMyEmp):%size(outMyEmp));
-    dsply ('not updated');
-  endif;
-
-  // Test delete
-  keyMyEmp.EmpId = 22;
-  SIRIO_setLL(myEmp:%addr(keyMyEmp):%size(keyMyEmp));
-  if not SIRIO_readNextWithLock(myEmp:%addr(inMyEmp):%size(inMyEmp));
-    dsply ('not readed');
-  endif;
-  if not SIRIO_delete(myEmp);
-    dsply ('not readed');
-  endif;
-  SIRIO_close(myEmp);
+  exsr testWrite;
+  //exsr testUpdate;
+  //exsr testDelete;
 
   return;
+
+  // -------------------------------------------------------
+  begsr testWrite;
+
+    myEmp = SIRIO_open('MY_EMP':'$(LIBRARY)':*omit:cRECIO_READ_WRITE_AND_APPEND);
+    //myEmp = SIRIO_open('MY_EMP':'$(LIBRARY)':*omit:cRECIO_READ_WRITE_AND_UPDATE);
+    outMyEmp.EmpID = 22;
+    outMyEmp.Name = 'J Sranko';
+    outMyEmp.Salary = 450;
+    outMyEmp.Mgrid = 17;
+    if not SIRIO_write(myEmp:%addr(outMyEmp):%size(outMyEmp));
+      disp = SIRIO_getErrorAsText(myEmp);
+      dsply (disp);
+      SIRIO_close(myEmp);
+      leavesr;
+    endif;
+     SIRIO_close(myEmp);
+  endsr;
+
+  // -------------------------------------------------------
+  begsr testDelete;
+
+    myEmp = SIRIO_open('MY_EMP':'$(LIBRARY)':*omit:cRECIO_READ_WRITE_AND_UPDATE);
+    keyMyEmp.EmpId = 13;
+    SIRIO_setLL(myEmp:%addr(keyMyEmp):%size(keyMyEmp));
+    if not SIRIO_readNextWithLock(myEmp:%addr(inMyEmp):%size(inMyEmp));
+      disp = SIRIO_getErrorAsText(myEmp);
+      dsply (disp);
+      SIRIO_close(myEmp);
+      leavesr;
+    endif;
+    if not SIRIO_delete(myEmp);
+      disp = SIRIO_getErrorAsText(myEmp);
+      dsply (disp);
+      SIRIO_close(myEmp);
+      leavesr;
+    endif;
+    SIRIO_close(myEmp);
+
+  endsr;
+
+  // -------------------------------------------------------
+  begsr testUpdate;
+
+    myEmp = SIRIO_open('MY_EMP':'$(LIBRARY)':*omit:cRECIO_READ_WRITE_AND_UPDATE);
+    keyMyEmp.EmpId = 11;
+    SIRIO_setLL(myEmp:%addr(keyMyEmp):%size(keyMyEmp));
+    if not SIRIO_readNextWithLock(myEmp:%addr(inMyEmp):%size(inMyEmp));
+      disp = SIRIO_getErrorAsText(myEmp);
+      dsply (disp);
+      SIRIO_close(myEmp);
+      leavesr;
+    endif;
+    outMyEmp = inMyEmp;
+    outMyEmp.Name = 'P Sranko';
+    if not SIRIO_update(myEmp:%addr(outMyEmp):%size(outMyEmp));
+      disp = SIRIO_getErrorAsText(myEmp);
+      dsply (disp);
+      SIRIO_close(myEmp);
+      leavesr;
+    endif;
+    SIRIO_close(myEmp);
+
+  endsr;
 end-proc;
 
 //------------------------------------------------------------------------------------------

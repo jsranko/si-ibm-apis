@@ -1,9 +1,9 @@
 
 Create Or Replace Table $(LIBRARY)/MY_EMP(
    EmpID Integer Not Null Primary Key,
-   Name  Varchar(10),
-   Salary Decimal(9, 2),
-   Mgrid Integer
+   Name  Varchar(10) Not Null,
+   Salary Decimal(9, 2) Not Null,
+   Mgrid Integer Not Null
 );
 
 Insert Into $(LIBRARY)/MY_EMP Values ( 1, 'Jones', 30000, 10);

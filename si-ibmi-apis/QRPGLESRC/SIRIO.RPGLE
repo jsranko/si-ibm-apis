@@ -43,6 +43,7 @@ dcl-c cFIRST const('*FIRST');
  /include qcpylesrc/_rreadpp
  /include qcpylesrc/_rupdatep
  /include qcpylesrc/_rwritedp
+ /include qcpylesrc/_rwritep
  /include qcpylesrc/_rdeletep
  /include qcpylesrc/_riofbkp
  /include qcpylesrc/_rreadlp
@@ -63,7 +64,7 @@ end-pi;
 dcl-s sFile like(tSIRIO_File);
 dcl-s sLibrary like(tSIRIO_Library);
 dcl-s sFormat like(tSIRIO_Format);
-dcl-s sMode like(tSIRIO_Mode);
+dcl-s sMode char(256);
 dcl-s filename char(33);
 dcl-ds dsSIRIO likeds(tSIRIO_Def);
 
@@ -98,9 +99,10 @@ dcl-ds dsSIRIO likeds(tSIRIO_Def);
   else;
     sMode = cRECIO_READ_ONLY;
   endif;
+  sMode = %trim(sMode) + ', nullcap=Y, arrseq=N';
   filename = sLibrary + '/' + sFile + '(' + sFormat + ')';
 
-  dsSIRIO.fp = Ropen(filename:sMode);
+  dsSIRIO.fp = Ropen(%trim(filename):%trim(sMode));
   if dsSIRIO.fp = *null;
     dsSIRIO.error = getError(dsSIRIO);
   endif;
@@ -138,14 +140,21 @@ dcl-pi SIRIO_readNext ind extproc(*dclcase);
   BufferLength like(tSIRIO_BufferLength) const;
   Options like(tSIRIO_Options) const;
 end-pi;
+dcl-ds ioFeedBack likeds(tRECIO_RIOFB) based(pIoFeedBack);
 dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
 
   pSIRIO = %addr(SIRIO);
   init(dsSIRIO);
 
   dsSIRIO.fb = Rreadn(dsSIRIO.fp:Buffer:BufferLength:Options);
+  pIoFeedBack = dsSIRIO.fb;
+  if ioFeedBack.num_bytes = BufferLength;
+    dsSIRIO.found = *on;
+    return *on;
+  endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
-  return isError(dsSIRIO);
+  return *off;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -178,14 +187,21 @@ dcl-proc SIRIO_setBOF export;
 dcl-pi SIRIO_setBOF ind extproc(*dclcase);
   SIRIO like(tSIRIO);
 end-pi;
+dcl-ds ioFeedBack likeds(tRECIO_RIOFB) based(pIoFeedBack);
 dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
 
   pSIRIO = %addr(SIRIO);
   init(dsSIRIO);
 
   dsSIRIO.fb = Rlocate(dsSIRIO.fp:*null:0:cRECIO_START);
+  pIoFeedBack = dsSIRIO.fb;
+  if ioFeedBack.num_bytes = tRlocate_Successful;
+    dsSIRIO.found = *on;
+    return *on;
+  endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
-  return isError(dsSIRIO);
+  return *off;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -196,14 +212,21 @@ dcl-pi SIRIO_setGT ind extproc(*dclcase);
   Key like(tSIRIO_Key) const;
   KeyLength like(tSIRIO_KeyLength) const;
 end-pi;
+dcl-ds ioFeedBack likeds(tRECIO_RIOFB) based(pIoFeedBack);
 dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
 
   pSIRIO = %addr(SIRIO);
   init(dsSIRIO);
 
   dsSIRIO.fb = Rlocate(dsSIRIO.fp:Key:KeyLength:cRECIO_KEY_GT);
+  pIoFeedBack = dsSIRIO.fb;
+  if ioFeedBack.num_bytes = tRlocate_Successful;
+    dsSIRIO.found = *on;
+    return *on;
+  endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
-  return isError(dsSIRIO);
+  return *off;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -214,14 +237,21 @@ dcl-pi SIRIO_setLL ind extproc(*dclcase);
   Key like(tSIRIO_Key) const;
   KeyLength like(tSIRIO_KeyLength) const;
 end-pi;
+dcl-ds ioFeedBack likeds(tRECIO_RIOFB) based(pIoFeedBack);
 dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
 
   pSIRIO = %addr(SIRIO);
   init(dsSIRIO);
 
   dsSIRIO.fb = Rlocate(dsSIRIO.fp:Key:KeyLength:cRECIO_KEY_LT );
+  pIoFeedBack = dsSIRIO.fb;
+  if ioFeedBack.num_bytes = tRlocate_Successful;
+    dsSIRIO.found = *on;
+    return *on;
+  endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
-  return isError(dsSIRIO);
+  return *off;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -230,14 +260,21 @@ dcl-proc SIRIO_setEOF export;
 dcl-pi SIRIO_setEOF ind extproc(*dclcase);
   SIRIO like(tSIRIO);
 end-pi;
+dcl-ds ioFeedBack likeds(tRECIO_RIOFB) based(pIoFeedBack);
 dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
 
   pSIRIO = %addr(SIRIO);
   init(dsSIRIO);
 
   dsSIRIO.fb = Rlocate(dsSIRIO.fp:*null:0:cRECIO_END);
+  pIoFeedBack = dsSIRIO.fb;
+  if ioFeedBack.num_bytes = tRlocate_Successful;
+    dsSIRIO.found = *on;
+    return *on;
+  endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
-  return isError(dsSIRIO);
+  return *off;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -246,14 +283,21 @@ dcl-proc SIRIO_setFIRST export;
 dcl-pi SIRIO_setFIRST ind extproc(*dclcase);
   SIRIO like(tSIRIO);
 end-pi;
+dcl-ds ioFeedBack likeds(tRECIO_RIOFB) based(pIoFeedBack);
 dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
 
   pSIRIO = %addr(SIRIO);
   init(dsSIRIO);
 
   dsSIRIO.fb = Rlocate(dsSIRIO.fp:*null:0:cRECIO_FIRST);
+  pIoFeedBack = dsSIRIO.fb;
+  if ioFeedBack.num_bytes = tRlocate_Successful;
+    dsSIRIO.found = *on;
+    return *on;
+  endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
-  return isError(dsSIRIO);
+  return *off;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -262,14 +306,21 @@ dcl-proc SIRIO_setLAST export;
 dcl-pi SIRIO_setLAST ind extproc(*dclcase);
   SIRIO like(tSIRIO);
 end-pi;
+dcl-ds ioFeedBack likeds(tRECIO_RIOFB) based(pIoFeedBack);
 dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
 
   pSIRIO = %addr(SIRIO);
   init(dsSIRIO);
 
   dsSIRIO.fb = Rlocate(dsSIRIO.fp:*null:0:cRECIO_LAST);
+  pIoFeedBack = dsSIRIO.fb;
+  if ioFeedBack.num_bytes = tRlocate_Successful;
+    dsSIRIO.found = *on;
+    return *on;
+  endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
-  return isError(dsSIRIO);
+  return *off;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -281,14 +332,21 @@ dcl-pi SIRIO_readPrevious ind extproc(*dclcase);
   BufferLength like(tSIRIO_BufferLength) const;
   Options like(tSIRIO_Options) const;
 end-pi;
+dcl-ds ioFeedBack likeds(tRECIO_RIOFB) based(pIoFeedBack);
 dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
 
   pSIRIO = %addr(SIRIO);
   init(dsSIRIO);
 
   dsSIRIO.fb = Rreadp(dsSIRIO.fp:Buffer:BufferLength:Options);
+  pIoFeedBack = dsSIRIO.fb;
+  if ioFeedBack.num_bytes = BufferLength;
+    dsSIRIO.found = *on;
+    return *on;
+  endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
-  return isError(dsSIRIO);
+  return *off;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -328,6 +386,7 @@ dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
   if dsSIRIO.fp <> *null;
     return *on;
   endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
   return *off;
 end-proc;
@@ -347,6 +406,7 @@ dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
   if ioFeedBack.num_bytes = cRECIO_EOF;
     return *on;
   endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
   return *off;
 end-proc;
@@ -365,9 +425,11 @@ dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
   pSIRIO = %addr(SIRIO);
 
   dsSIRIO.fb = Rupdate(dsSIRIO.fp : Buffer : BufferLength);
+  pIoFeedBack = dsSIRIO.fb;
   if ioFeedBack.num_bytes = BufferLength;
     return *on;
   endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
   return *off;
 end-proc;
@@ -387,11 +449,13 @@ dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
   pSIRIO = %addr(SIRIO);
 
   rrn = getNextRRN(dsSIRIO);
-  dsSIRIO.fb = Rwrited(dsSIRIO.fp : Buffer : BufferLength: rrn);
+  //dsSIRIO.fb = Rwrited(dsSIRIO.fp : Buffer : BufferLength: rrn);
+  dsSIRIO.fb = Rwrite(dsSIRIO.fp : Buffer : BufferLength);
   pIoFeedBack = dsSIRIO.fb;
   if ioFeedBack.num_bytes = BufferLength;
     return *on;
   endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
   return *off;
 end-proc;
@@ -408,11 +472,43 @@ dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
   pSIRIO = %addr(SIRIO);
 
   dsSIRIO.fb = Rdelete(dsSIRIO.fp);
-  if ioFeedBack.num_bytes = 1;
+  pIoFeedBack = dsSIRIO.fb;
+  if ioFeedBack.num_bytes = cRdelete_Success;
     return *on;
   endif;
+  dsSIRIO.error = getError(dsSIRIO);
 
   return *off;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc SIRIO_getErrorAsText export;
+dcl-pi SIRIO_getErrorAsText like(tSIRIO_ErrorAsText) extproc(*dclcase);
+  SIRIO like(tSIRIO);
+end-pi;
+dcl-s output like(tSIRIO_ErrorAsText);
+dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
+
+  pSIRIO = %addr(SIRIO);
+
+  output = %char(dsSIRIO.error.Nummer) + ': ' +
+           %trim(dsSIRIO.error.Text);
+
+  return output;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc SIRIO_found export;
+dcl-pi SIRIO_found ind extproc(*dclcase);
+  SIRIO like(tSIRIO);
+end-pi;
+dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
+
+  pSIRIO = %addr(SIRIO);
+
+  return dsSIRIO.found;
 end-proc;
 
 //------------------------------------------------------------------------------------------
@@ -473,6 +569,7 @@ dcl-s output like(tSIRIO_Rrn);
 
   pIoFeedBack = Rreadl(dsSIRIO.fp:*null:0:cRECIO_NO_LOCK);
   if pIoFeedBack = *null;
+    dsSIRIO.error = getError(dsSIRIO);
     return *zeros;
   endif;
 

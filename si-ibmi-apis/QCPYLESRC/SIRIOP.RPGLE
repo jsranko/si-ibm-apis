@@ -32,6 +32,7 @@ dcl-s tSIRIO_BufferLength int(10) template;
 dcl-s tSIRIO_Key pointer template;
 dcl-s tSIRIO_KeyLength int(10) template;
 dcl-s tSIRIO_Rrn uns(10) template;
+dcl-s tSIRIO_ErrorAsText varchar(270) template;
 
 dcl-ds tSIRIO_Error qualified template;
   Nummer like(tSIRIO_ErrorNummer);
@@ -42,6 +43,7 @@ dcl-ds tSIRIO_Def qualified template;
   fp pointer;
   fb pointer;
   error likeds(tSIRIO_Error);
+  found ind;
 end-ds;
 
 //==========================================================================================
@@ -149,5 +151,13 @@ dcl-pr SIRIO_write ind extproc(*dclcase);
 end-pr;
 
 dcl-pr SIRIO_delete ind extproc(*dclcase);
+  SIRIO like(tSIRIO);
+end-pr;
+
+dcl-pr SIRIO_getErrorAsText like(tSIRIO_ErrorAsText) extproc(*dclcase);
+  SIRIO like(tSIRIO);
+end-pr;
+
+dcl-pr SIRIO_found ind extproc(*dclcase);
   SIRIO like(tSIRIO);
 end-pr;

@@ -6,7 +6,7 @@
   /eof
 /endif
 
-/include qcpylesrc,reciop
+/include qcpylesrc/reciop
 
 //==========================================================================================
 // Constants
