@@ -1,21 +1,28 @@
 **FREE
 
-/if not defined(GETENVP)
-  /define GETENVP
+/if not defined(PUTENVP)
+  /define PUTENVP
 /else
   /eof
 /endif
 
 //==========================================================================================
+// Consts
+//==========================================================================================
+
+dcl-c cPUTENV_Successful const(0);
+dcl-c cPUTENV_Error const(1);
+
+//==========================================================================================
 // Templates
 //==========================================================================================
 
-dcl-s tGETENV_Return pointer template;
+dcl-s tPUTENV_Return uns(10) template;
 
 //==========================================================================================
 // Prototypes
 //==========================================================================================
 
-dcl-pr getenv like(tGETENV_Return) extproc(*dclcase);
+dcl-pr putenv like(tPUTENV_Return) extproc(*dclcase);
   Name pointer options(*string) value;
 end-pr;

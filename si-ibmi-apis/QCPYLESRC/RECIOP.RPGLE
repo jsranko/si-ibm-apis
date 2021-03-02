@@ -85,11 +85,22 @@ dcl-c cRECIO_NO_POSITION const(x'00100000');
 // Positions to just before the requested record.
 dcl-c cRECIO_PRIOR const(x'00001000');
 
+// Open an existing file for reading records.
 dcl-c cRECIO_READ_ONLY const('rr');
+
+// Open an existing file for writing records. If the file contains data, the content is cleared unless the file is a logical file.
 dcl-c cRECIO_CLEAR_AND_WRITE const('wr');
+
+// Open an existing file for writing records to the end of the file (append).
 dcl-c cRECIO_WRITE_AND_APPEND const('ar');
+
+// Open an existing file for reading, writing or updating records.
 dcl-c cRECIO_READ_WRITE_AND_UPDATE const('rr+');
+
+// Open an existing file for reading, writing or updating records. If the file contains data, the content is cleared unless the file is a logical file.
 dcl-c cRECIO_CLAER_READ_WRITE_AND_UPDATE const('wr+');
+
+// Open an existing file for reading and writing records. All data is written to the end of the file.
 dcl-c cRECIO_READ_WRITE_AND_APPEND const('ar+');
 
 //==========================================================================================
