@@ -17,7 +17,7 @@
 // Templates
 //==========================================================================================
 
-dcl-s tRwrite_Size int(10) template;
+dcl-s tRwrite_Size uns(10) template;
 dcl-ds tRwrite_Return likeds(tRECIO_RIOFB) template;
 
 //==========================================================================================

@@ -448,9 +448,9 @@ dcl-ds dsSIRIO likeds(tSIRIO_Def) based(pSIRIO);
 
   pSIRIO = %addr(SIRIO);
 
-  rrn = getNextRRN(dsSIRIO);
-  //dsSIRIO.fb = Rwrited(dsSIRIO.fp : Buffer : BufferLength: rrn);
-  dsSIRIO.fb = Rwrite(dsSIRIO.fp : Buffer : BufferLength);
+  //rrn = getNextRRN(dsSIRIO);
+  dsSIRIO.fb = Rwrited(dsSIRIO.fp : Buffer : BufferLength: rrn);
+  //dsSIRIO.fb = Rwrite(dsSIRIO.fp : Buffer : BufferLength);
   pIoFeedBack = dsSIRIO.fb;
   if ioFeedBack.num_bytes = BufferLength;
     return *on;

@@ -39,12 +39,16 @@ dcl-pi SIRIOT;
 end-pi;
 dcl-s disp varchar(52);
 dcl-s myEmp like(tSIRIO);
+dcl-s myTest like(tSIRIO);
+dcl-s myText char(20);
 dcl-ds inMyEmp extname('$(LIBRARY)/MY_EMP':*input) qualified inz;
 end-ds;
 dcl-ds keyMyEmp extname('$(LIBRARY)/MY_EMP':*key) qualified inz;
 end-ds;
 dcl-ds outMyEmp extname('$(LIBRARY)/MY_EMP':*output) qualified inz;
 end-ds;
+
+  exsr testWrite2;
 
   myEmp = SIRIO_open('MY_EMP':'$(LIBRARY)');
   SIRIO_readNextWithLock(myEmp:%addr(inMyEmp):%size(inMyEmp));
@@ -84,6 +88,20 @@ end-ds;
       leavesr;
     endif;
      SIRIO_close(myEmp);
+  endsr;
+
+    // -------------------------------------------------------
+  begsr testWrite2;
+
+    myTest = SIRIO_open('MY_TEST2':'$(LIBRARY)':*omit:cRECIO_READ_WRITE_AND_APPEND);
+    myText = 'Hallo ich bin test';
+    if not SIRIO_write(myTest:%addr(myText):%size(myText));
+      disp = SIRIO_getErrorAsText(myTest);
+      dsply (disp);
+      SIRIO_close(myTest);
+      leavesr;
+    endif;
+     SIRIO_close(myTest);
   endsr;
 
   // -------------------------------------------------------
