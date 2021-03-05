@@ -15,7 +15,7 @@
 //
 //==========================================================================================
 
- ctl-opt main(SIEMAILUT) dftactgrp(*no) actgrp(*new) bnddir('SIIIA/SIIIA');
+ ctl-opt main(SIEMAILUT) dftactgrp(*no) actgrp(*new) bnddir('$(LIBRARY)/SIIIA');
 
 //==========================================================================================
 // Templates

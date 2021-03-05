@@ -14,7 +14,7 @@
 //
 //==========================================================================================
 
- ctl-opt main(SICURLUT) dftactgrp(*no) actgrp(*new) bnddir('SIIIA/SIIIA');
+ ctl-opt main(SICURLUT) dftactgrp(*no) actgrp(*new) bnddir('$(LIBRARY)/SIIIA');
 
 //==========================================================================================
 // Templates

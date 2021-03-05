@@ -15,7 +15,7 @@
 //
 //==========================================================================================
 
-ctl-opt main(siisfut) dftactgrp(*no) actgrp(*new) bnddir('SIIIA/SIIIA');
+ctl-opt main(siisfut) dftactgrp(*no) actgrp(*new) bnddir('$(LIBRARY)/SIIIA');
 
 //==========================================================================================
 // Templates

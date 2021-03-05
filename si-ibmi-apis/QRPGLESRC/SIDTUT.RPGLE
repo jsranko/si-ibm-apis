@@ -13,7 +13,8 @@
         //
         //==========================================================================================
 
-         ctl-opt main(SIDTUT) dftactgrp(*no) actgrp(*new) bnddir('SIIIA/SIIIA');
+         ctl-opt main(SIDTUT) dftactgrp(*no) actgrp(*new) ;
+         ctl-opt bnddir('$(LIBRARY)/SIIIA');
 
         //==========================================================================================
         // Templates

@@ -14,7 +14,7 @@
 //
 //==========================================================================================
 
-ctl-opt main(SIRIOT) dftactgrp(*no) actgrp(*new) bnddir('SIIIA/SIIIA');
+ctl-opt main(SIRIOT) dftactgrp(*no) actgrp(*new) bnddir('$(LIBRARY)/SIIIA');
 
 //==========================================================================================
 // Templates

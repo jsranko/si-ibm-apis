@@ -13,7 +13,7 @@
         //
         //==========================================================================================
 
-         ctl-opt NoMain bnddir('SIIIA/SIIIA');
+         ctl-opt NoMain bnddir('$(LIBRARY)/SIIIA');
 
          /define SIQSH
          /include qcpylesrc/siqshp
