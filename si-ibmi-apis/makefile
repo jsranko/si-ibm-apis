@@ -66,7 +66,8 @@ SIAPIS=\
 	$(DIR_RPG)/SIPFM.srvpgm \
 	$(DIR_RPG)/SIEMAIL.srvpgm \
 	$(DIR_RPG)/SIRIO.srvpgm \
-	$(DIR_RPG)/SIENVVAR.srvpgm
+	$(DIR_RPG)/SIENVVAR.srvpgm \
+	$(DIR_RPG)/SISCLI.srvpgm
 
 PGMS:=\
 	$(patsubst %.RPGLE,%.pgm,$(shell grep -il " main" $(DIR_RPG)/*.RPGLE)) \
@@ -128,7 +129,7 @@ IWSSCONF=\
 	
 # Ensure that intermediate files created by rules chains don't get
 # automatically deleted
-.PRECIOUS: %.srvpgm %.lib %.command %.messagefile %.pgm %.query %.srcpf %.clpgm %.jar
+.PRECIOUS: %.srvpgm %.lib %.command %.messagefile %.pgm %.query %.srcpf %.clpgm %.jar %.module
 
 all: build-core \
 	 install-iwss \
@@ -239,16 +240,18 @@ update:
 	printf "**FREE\n\n/if not defined(SICTLOPTP)\n  /define SICTLOPTP\n/else\n  /eof\n/endif\n\nctl-opt bnddir('$(LIBRARY)/SIIIA');" > $(SIIIA_CTLOPT)
 	
 %.module: %.RPGLE
-	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$(notdir $*))
+	# @echo "$$@=$@ $$%=$% $$<=$< $$?=$? $$^=$^ $$+=$+ $$|=$| $$*=$*"
+	$(call substitute,$<,$@) && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$*.module,$(LIBRARY),$(DIR_RPG),$(notdir $*))
 	liblist -a $(LIBRARY);\
-	system -Kp "CRTRPGMOD MODULE($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') STGMDL($(STGMDL)) TGTCCSID(*JOB) OUTPUT(*NONE)"  && \
-	touch $@	
+	system -Kp "CRTRPGMOD MODULE($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$@') DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') STGMDL($(STGMDL)) TGTCCSID(*JOB) OUTPUT(*NONE)"	
 	
 %.module: %.SQLRPGLE
-	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_RPG),$(notdir $*))
+	# @echo "$$@=$@ $$%=$% $$<=$< $$?=$? $$^=$^ $$+=$+ $$|=$| $$*=$*"
+	$(call substitute,$<,$@) && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$*.module,$(LIBRARY),$(DIR_RPG),$(notdir $*))
 	liblist -a $(LIBRARY);\
-	system -Kp "CRTSQLRPGI OBJ($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW($(DBGVIEW)) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL($(STGMDL))')" && \
-	touch $@
+	system -Kp "CRTSQLRPGI OBJ($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$@') OBJTYPE(*MODULE) RPGPPOPT(*LVL2) DBGVIEW($(DBGVIEW)) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') OUTPUT(*NONE) TGTCCSID(*JOB) STGMDL($(STGMDL))')"
 	
 %.bnddir: $(LIBRARY).lib 
 	(system -Kp "CHKOBJ OBJ($(LIBRARY)/$*) OBJTYPE(*BNDDIR)" || system -iKp "CRTBNDDIR BNDDIR($(LIBRARY)/$*) TEXT($(OBJECT_DESC))") && touch $@	
@@ -257,27 +260,26 @@ update:
 	$(call substitute,$<,$@) && \
 	$(call copy_to_srcpf,$(ROOT_DIR)/$*.pgm,$(LIBRARY),$(DIR_RPG),$(notdir $*))
 	liblist -a $(LIBRARY);\
-	system "CRTSQLRPGI OBJ($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$@') OBJTYPE(*PGM) DBGVIEW($(DBGVIEW)) RPGPPOPT(*LVL2) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') TGTCCSID(*JOB) DFTACTGRP(*NO) ACTGRP(*NEW) OUTPUT(*NONE)')" && \
-	touch $@
+	system "CRTSQLRPGI OBJ($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$@') OBJTYPE(*PGM) DBGVIEW($(DBGVIEW)) RPGPPOPT(*LVL2) REPLACE(*YES) COMPILEOPT('INCDIR(''$(ROOT_DIR)'') TGTCCSID(*JOB) DFTACTGRP(*NO) ACTGRP(*NEW) OUTPUT(*NONE)')"
 
 %.pgm: %.RPGLE
 	# @echo "$$@=$@ $$%=$% $$<=$< $$?=$? $$^=$^ $$+=$+ $$|=$| $$*=$*"
 	$(call substitute,$<,$@) && \
 	$(call copy_to_srcpf,$(ROOT_DIR)/$*.pgm,$(LIBRARY),$(DIR_RPG),$(notdir $*))
 	liblist -a $(LIBRARY);\
-	system -Kp "CRTBNDRPG PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$@') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') TGTCCSID(*JOB) OUTPUT(*NONE)" && \
-	touch $@
+	system -Kp "CRTBNDRPG PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$@') DFTACTGRP(*NO) ACTGRP(*NEW) DBGVIEW($(DBGVIEW)) REPLACE(*YES) INCDIR('$(ROOT_DIR)') TGTCCSID(*JOB) OUTPUT(*NONE)"
 		
 %.messagefile: $(DIR_MSGF)/%.$(EXT_MSGF)
-	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_MSGF),$*)
+	$(call substitute,$<,$@) && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$*.messagefile,$(LIBRARY),$(DIR_MSGF),$*)
 	liblist -a $(LIBRARY);\
-	system -Kp "$(LIBRARY)/SICRTMSGF SRCSTMF('$(ROOT_DIR)/$<')" && touch $@
+	system -Kp "$(LIBRARY)/SICRTMSGF SRCSTMF('$(ROOT_DIR)/$<')" 
 	
 %.command: %.$(EXT_CMD)
-	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_CMD),$(notdir $*))
+	$(call substitute,$<,$@) && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$*.command,$(LIBRARY),$(DIR_CMD),$(notdir $*))
 	liblist -a $(LIBRARY);\
-	system -Kp "CRTCMD CMD($(LIBRARY)/$(notdir $*)) PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') REPLACE(*YES)" && \
-	touch $@
+	system -Kp "CRTCMD CMD($(LIBRARY)/$(notdir $*)) PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') REPLACE(*YES)"
 	
 %.exitprogram: $(DIR_RPG)/%.pgm
 	# system -Kp "ADDEXITPGM EXITPNT(QIBM_QCA_RTV_COMMAND) FORMAT(RTVC0100) PGMNBR(19820622) PGM($(LIBRARY)/$*) PGMDTA(*JOB 30 'CRTSQLRPGIQSYS      *BEFORE   ') REPLACE(*YES)" && \
@@ -295,10 +297,10 @@ update:
 	touch $@
 	
 %.clpgm: %.$(EXT_CL)
-	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_CL),$(notdir $*))
+	$(call substitute,$<,$@) && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$*.clpgm,$(LIBRARY),$(DIR_CL),$(notdir $*))
 	liblist -a $(LIBRARY);\
-	system -kp "CRTBNDCL PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') DFTACTGRP(*NO) ACTGRP(*STGMDL) STGMDL(*SNGLVL) OUTPUT(*NONE) REPLACE(*YES) DBGVIEW($(DBGVIEW))" && \
-	touch $@      
+	system -kp "CRTBNDCL PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') DFTACTGRP(*NO) ACTGRP(*STGMDL) STGMDL(*SNGLVL) OUTPUT(*NONE) REPLACE(*YES) DBGVIEW($(DBGVIEW))"     
 
 %.cpysrc: %.$(EXT_CPYSRC) $(DIR_CPY).srcpf
 	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_CPY),$(notdir $*)) && \
@@ -306,8 +308,7 @@ update:
 
 %.cpyc: %.c $(DIR_C).srcpf
 	$(call substitute,$<,$@) && \
-	$(call copy_to_srcpf,$(ROOT_DIR)/$*.cpyc,$(LIBRARY),$(DIR_C),$(notdir $*)) && \
-	touch $@
+	$(call copy_to_srcpf,$(ROOT_DIR)/$*.cpyc,$(LIBRARY),$(DIR_C),$(notdir $*))
 
 %.jar: %.$(EXT_JAVA)
 	javac $< && \

@@ -240,166 +240,166 @@ dcl-c CLI_TC_DDL_IGNORE const(4);
 // Output values for SQL_DEFAULT_TXN_ISOLATION
 // info type in SQLGetInfo
 //
-dcl-c CLI_TXN_READ_UNCOMMITTED_MASK const(x'00000001'
-dcl-c CLI_TXN_READ_COMMITTED_MASK const(x'00000002'
-dcl-c CLI_TXN_REPEATABLE_READ_MASK const(x'00000004'
-dcl-c CLI_TXN_SERIALIZABLE_MASK const(x'00000008'
+dcl-c CLI_TXN_READ_UNCOMMITTED_MASK const(x'00000001');
+dcl-c CLI_TXN_READ_COMMITTED_MASK const(x'00000002');
+dcl-c CLI_TXN_REPEATABLE_READ_MASK const(x'00000004');
+dcl-c CLI_TXN_SERIALIZABLE_MASK const(x'00000008');
 
 //
 // Output values for SQL_STRING_FUNCTIONS
 // info type in SQLGetInfo
 //
-dcl-c CLI_FN_STR_CONCAT const(x'00000001'
-dcl-c CLI_FN_STR_UCASE const(x'00000002'
-dcl-c CLI_FN_STR_LCASE const(x'00000004'
-dcl-c CLI_FN_STR_SUBSTRING const(x'00000008'
-dcl-c CLI_FN_STR_LENGTH const(x'00000010'
-dcl-c CLI_FN_STR_POSITION const(x'00000020'
-dcl-c CLI_FN_STR_LTRIM const(x'00000040'
-dcl-c CLI_FN_STR_RTRIM const(x'00000080'
+dcl-c CLI_FN_STR_CONCAT const(x'00000001');
+dcl-c CLI_FN_STR_UCASE const(x'00000002');
+dcl-c CLI_FN_STR_LCASE const(x'00000004');
+dcl-c CLI_FN_STR_SUBSTRING const(x'00000008');
+dcl-c CLI_FN_STR_LENGTH const(x'00000010');
+dcl-c CLI_FN_STR_POSITION const(x'00000020');
+dcl-c CLI_FN_STR_LTRIM const(x'00000040');
+dcl-c CLI_FN_STR_RTRIM const(x'00000080');
 
 //
 // Output values for SQL_NUMERIC_FUNCTIONS
 // info type in SQLGetInfo
 //
-dcl-c CLI_FN_NUM_ABS const(x'00000001'
-dcl-c CLI_FN_NUM_ACOS const(x'00000002'
-dcl-c CLI_FN_NUM_ASIN const(x'00000004'
-dcl-c CLI_FN_NUM_ATAN const(x'00000008'
-dcl-c CLI_FN_NUM_ATAN2 const(x'00000010'
-dcl-c CLI_FN_NUM_CEILING const(x'00000020'
-dcl-c CLI_FN_NUM_COS const(x'00000040'
-dcl-c CLI_FN_NUM_COT const(x'00000080'
-dcl-c CLI_FN_NUM_EXP const(x'00000100'
-dcl-c CLI_FN_NUM_FLOOR const(x'00000200'
-dcl-c CLI_FN_NUM_LOG const(x'00000400'
-dcl-c CLI_FN_NUM_MOD const(x'00000800'
-dcl-c CLI_FN_NUM_SIGN const(x'00001000'
-dcl-c CLI_FN_NUM_SIN const(x'00002000'
-dcl-c CLI_FN_NUM_SQRT const(x'00004000'
-dcl-c CLI_FN_NUM_TAN const(x'00008000'
-dcl-c CLI_FN_NUM_PI const(x'00010000'
-dcl-c CLI_FN_NUM_RAND const(x'00020000'
-dcl-c CLI_FN_NUM_DEGREES const(x'00040000'
-dcl-c CLI_FN_NUM_LOG10 const(x'00080000'
-dcl-c CLI_FN_NUM_POWER const(x'00100000'
-dcl-c CLI_FN_NUM_RADIANS const(x'00200000'
-dcl-c CLI_FN_NUM_ROUND const(x'00400000'
-dcl-c CLI_FN_NUM_TRUNCATE const(x'00800000'
+dcl-c CLI_FN_NUM_ABS const(x'00000001');
+dcl-c CLI_FN_NUM_ACOS const(x'00000002');
+dcl-c CLI_FN_NUM_ASIN const(x'00000004' );
+dcl-c CLI_FN_NUM_ATAN const(x'00000008');
+dcl-c CLI_FN_NUM_ATAN2 const(x'00000010');
+dcl-c CLI_FN_NUM_CEILING const(x'00000020');
+dcl-c CLI_FN_NUM_COS const(x'00000040');
+dcl-c CLI_FN_NUM_COT const(x'00000080');
+dcl-c CLI_FN_NUM_EXP const(x'00000100');
+dcl-c CLI_FN_NUM_FLOOR const(x'00000200');
+dcl-c CLI_FN_NUM_LOG const(x'00000400');
+dcl-c CLI_FN_NUM_MOD const(x'00000800');
+dcl-c CLI_FN_NUM_SIGN const(x'00001000');
+dcl-c CLI_FN_NUM_SIN const(x'00002000');
+dcl-c CLI_FN_NUM_SQRT const(x'00004000');
+dcl-c CLI_FN_NUM_TAN const(x'00008000');
+dcl-c CLI_FN_NUM_PI const(x'00010000');
+dcl-c CLI_FN_NUM_RAND const(x'00020000');
+dcl-c CLI_FN_NUM_DEGREES const(x'00040000');
+dcl-c CLI_FN_NUM_LOG10 const(x'00080000');
+dcl-c CLI_FN_NUM_POWER const(x'00100000');
+dcl-c CLI_FN_NUM_RADIANS const(x'00200000');
+dcl-c CLI_FN_NUM_ROUND const(x'00400000');
+dcl-c CLI_FN_NUM_TRUNCATE const(x'00800000');
 
 //
 // SQL_SQL92_VALUE_EXPRESSIONS bitmasks
 //
-dcl-c CLI_SVE_CASE const(x'00000001'
-dcl-c CLI_SVE_CAST const(x'00000002'
-dcl-c CLI_SVE_COALESCE const(x'00000004'
-dcl-c CLI_SVE_NULLIF const(x'00000008'
+dcl-c CLI_SVE_CASE const(x'00000001');
+dcl-c CLI_SVE_CAST const(x'00000002');
+dcl-c CLI_SVE_COALESCE const(x'00000004');
+dcl-c CLI_SVE_NULLIF const(x'00000008');
 
 //
 // SQL_SQL92_PREDICATES bitmasks
 //
-dcl-c CLI_SP_EXISTS const(x'00000001'
-dcl-c CLI_SP_ISNOTNULL const(x'00000002'
-dcl-c CLI_SP_ISNULL const(x'00000004'
-dcl-c CLI_SP_MATCH_FULL const(x'00000008'
-dcl-c CLI_SP_MATCH_PARTIAL const(x'00000010'
-dcl-c CLI_SP_MATCH_UNIQUE_FULL const(x'00000020'
-dcl-c CLI_SP_MATCH_UNIQUE_PARTIAL const(x'00000040'
-dcl-c CLI_SP_OVERLAPS const(x'00000080'
-dcl-c CLI_SP_UNIQUE const(x'00000100'
-dcl-c CLI_SP_LIKE const(x'00000200'
-dcl-c CLI_SP_IN const(x'00000400'
-dcl-c CLI_SP_BETWEEN const(x'00000800'
-dcl-c CLI_SP_COMPARISON const(x'00001000'
-dcl-c CLI_SP_QUANTIFIED_COMPARISON const(x'00002000'
+dcl-c CLI_SP_EXISTS const(x'00000001');
+dcl-c CLI_SP_ISNOTNULL const(x'00000002');
+dcl-c CLI_SP_ISNULL const(x'00000004');
+dcl-c CLI_SP_MATCH_FULL const(x'00000008');
+dcl-c CLI_SP_MATCH_PARTIAL const(x'00000010');
+dcl-c CLI_SP_MATCH_UNIQUE_FULL const(x'00000020');
+dcl-c CLI_SP_MATCH_UNIQUE_PARTIAL const(x'00000040');
+dcl-c CLI_SP_OVERLAPS const(x'00000080');
+dcl-c CLI_SP_UNIQUE const(x'00000100');
+dcl-c CLI_SP_LIKE const(x'00000200');
+dcl-c CLI_SP_IN const(x'00000400');
+dcl-c CLI_SP_BETWEEN const(x'00000800');
+dcl-c CLI_SP_COMPARISON const(x'00001000');
+dcl-c CLI_SP_QUANTIFIED_COMPARISON const(x'00002000');
 
 //
 // SQL_SQL92_AGGREGATE_FUNCTIONS bitmasks
 //
-dcl-c CLI_AF_AVG const(x'00000001'
-dcl-c CLI_AF_COUNT const(x'00000002'
-dcl-c CLI_AF_MAX const(x'00000004'
-dcl-c CLI_AF_MIN const(x'00000008'
-dcl-c CLI_AF_SUM const(x'00000010'
-dcl-c CLI_AF_DISTINCT const(x'00000020'
-dcl-c CLI_AF_ALL const(x'00000040'
+dcl-c CLI_AF_AVG const(x'00000001');
+dcl-c CLI_AF_COUNT const(x'00000002');
+dcl-c CLI_AF_MAX const(x'00000004');
+dcl-c CLI_AF_MIN const(x'00000008');
+dcl-c CLI_AF_SUM const(x'00000010');
+dcl-c CLI_AF_DISTINCT const(x'00000020');
+dcl-c CLI_AF_ALL const(x'00000040');
 
 //
 // SQL_SQL_CONFORMANCE bitmasks
 //
-dcl-c CLI_SC_SQL92_ENTRY const(x'00000001'
-dcl-c CLI_SC_FIPS127_2_TRANSITIONAL const(x'00000002'
-dcl-c CLI_SC_SQL92_INTERMEDIATE const(x'00000004'
-dcl-c CLI_SC_SQL92_FULL const(x'00000008'
+dcl-c CLI_SC_SQL92_ENTRY const(x'00000001');
+dcl-c CLI_SC_FIPS127_2_TRANSITIONAL const(x'00000002');
+dcl-c CLI_SC_SQL92_INTERMEDIATE const(x'00000004');
+dcl-c CLI_SC_SQL92_FULL const(x'00000008');
 
 //
 // SQL_CONVERT_FUNCTIONS bitmasks
 //
-dcl-c CLI_FN_CVT_CONVERT const(x'00000001'
-dcl-c CLI_FN_CVT_CAST const(x'00000002'
+dcl-c CLI_FN_CVT_CONVERT const(x'00000001');
+dcl-c CLI_FN_CVT_CAST const(x'00000002');
 
 //
 // SQL_POSITIONED_STATEMENTS bitmasks
 //
-dcl-c CLI_PS_POSITIONED_DELETE const(x'00000001'
-dcl-c CLI_PS_POSITIONED_UPDATE const(x'00000002'
-dcl-c CLI_PS_SELECT_FOR_UPDATE const(x'00000004'
+dcl-c CLI_PS_POSITIONED_DELETE const(x'00000001');
+dcl-c CLI_PS_POSITIONED_UPDATE const(x'00000002');
+dcl-c CLI_PS_SELECT_FOR_UPDATE const(x'00000004');
 
 //
 // SQL supported conversion bitmasks
 //
-dcl-c CLI_CVT_CHAR const(x'00000001'
-dcl-c CLI_CVT_NUMERIC const(x'00000002'
-dcl-c CLI_CVT_DECIMAL const(x'00000004'
-dcl-c CLI_CVT_INTEGER const(x'00000008'
-dcl-c CLI_CVT_SMALLINT const(x'00000010'
-dcl-c CLI_CVT_FLOAT const(x'00000020'
-dcl-c CLI_CVT_REAL const(x'00000040'
-dcl-c CLI_CVT_DOUBLE const(x'00000080'
-dcl-c CLI_CVT_VARCHAR const(x'00000100'
-dcl-c CLI_CVT_LONGVARCHAR const(x'00000200'
-dcl-c CLI_CVT_BINARY const(x'00000400'
-dcl-c CLI_CVT_VARBINARY const(x'00000800'
-dcl-c CLI_CVT_BIT const(x'00001000'
-dcl-c CLI_CVT_TINYINT const(x'00002000'
-dcl-c CLI_CVT_BIGINT const(x'00004000'
-dcl-c CLI_CVT_DATE const(x'00008000'
-dcl-c CLI_CVT_TIME const(x'00010000'
-dcl-c CLI_CVT_TIMESTAMP const(x'00020000'
-dcl-c CLI_CVT_LONGVARBINARY const(x'00040000'
-dcl-c CLI_CVT_INTERVAL_YEAR_MONTH const(x'00080000'
-dcl-c CLI_CVT_INTERVAL_DAY_TIME const(x'00100000'
-dcl-c CLI_CVT_WCHAR const(x'00200000'
-dcl-c CLI_CVT_WLONGVARCHAR const(x'00400000'
-dcl-c CLI_CVT_WVARCHAR const(x'00800000'
-dcl-c CLI_CVT_BLOB const(x'01000000'
-dcl-c CLI_CVT_CLOB const(x'02000000'
-dcl-c CLI_CVT_DBCLOB const(x'04000000'
+dcl-c CLI_CVT_CHAR const(x'00000001');
+dcl-c CLI_CVT_NUMERIC const(x'00000002');
+dcl-c CLI_CVT_DECIMAL const(x'00000004');
+dcl-c CLI_CVT_INTEGER const(x'00000008');
+dcl-c CLI_CVT_SMALLINT const(x'00000010');
+dcl-c CLI_CVT_FLOAT const(x'00000020');
+dcl-c CLI_CVT_REAL const(x'00000040');
+dcl-c CLI_CVT_DOUBLE const(x'00000080');
+dcl-c CLI_CVT_VARCHAR const(x'00000100');
+dcl-c CLI_CVT_LONGVARCHAR const(x'00000200');
+dcl-c CLI_CVT_BINARY const(x'00000400');
+dcl-c CLI_CVT_VARBINARY const(x'00000800');
+dcl-c CLI_CVT_BIT const(x'00001000');
+dcl-c CLI_CVT_TINYINT const(x'00002000');
+dcl-c CLI_CVT_BIGINT const(x'00004000');
+dcl-c CLI_CVT_DATE const(x'00008000');
+dcl-c CLI_CVT_TIME const(x'00010000');
+dcl-c CLI_CVT_TIMESTAMP const(x'00020000');
+dcl-c CLI_CVT_LONGVARBINARY const(x'00040000');
+dcl-c CLI_CVT_INTERVAL_YEAR_MONTH const(x'00080000');
+dcl-c CLI_CVT_INTERVAL_DAY_TIME const(x'00100000');
+dcl-c CLI_CVT_WCHAR const(x'00200000');
+dcl-c CLI_CVT_WLONGVARCHAR const(x'00400000');
+dcl-c CLI_CVT_WVARCHAR const(x'00800000');
+dcl-c CLI_CVT_BLOB const(x'01000000');
+dcl-c CLI_CVT_CLOB const(x'02000000');
+dcl-c CLI_CVT_DBCLOB const(x'04000000');
 
 //
 // SQL_TIMEDATE_FUNCTIONS bitmasks
 //
-dcl-c CLI_FN_TD_NOW const(x'00000001'
-dcl-c CLI_FN_TD_CURDATE const(x'00000002'
-dcl-c CLI_FN_TD_DAYOFMONTH const(x'00000004'
-dcl-c CLI_FN_TD_DAYOFWEEK const(x'00000008'
-dcl-c CLI_FN_TD_DAYOFYEAR const(x'00000010'
-dcl-c CLI_FN_TD_MONTH const(x'00000020'
-dcl-c CLI_FN_TD_QUARTER const(x'00000040'
-dcl-c CLI_FN_TD_WEEK const(x'00000080'
-dcl-c CLI_FN_TD_YEAR const(x'00000100'
-dcl-c CLI_FN_TD_CURTIME const(x'00000200'
-dcl-c CLI_FN_TD_HOUR const(x'00000400'
-dcl-c CLI_FN_TD_MINUTE const(x'00000800'
-dcl-c CLI_FN_TD_SECOND const(x'00001000'
-dcl-c CLI_FN_TD_TIMESTAMPADD const(x'00002000'
-dcl-c CLI_FN_TD_TIMESTAMPDIFF const(x'00004000'
-dcl-c CLI_FN_TD_DAYNAME const(x'00008000'
-dcl-c CLI_FN_TD_MONTHNAME const(x'00010000'
-dcl-c CLI_FN_TD_CURRENT_DATE const(x'00020000'
-dcl-c CLI_FN_TD_CURRENT_TIME const(x'00040000'
-dcl-c CLI_FN_TD_CURRENT_TIMESTAMP const(x'00080000'
-dcl-c CLI_FN_TD_EXTRACT const(x'00100000'
+dcl-c CLI_FN_TD_NOW const(x'00000001');
+dcl-c CLI_FN_TD_CURDATE const(x'00000002');
+dcl-c CLI_FN_TD_DAYOFMONTH const(x'00000004');
+dcl-c CLI_FN_TD_DAYOFWEEK const(x'00000008');
+dcl-c CLI_FN_TD_DAYOFYEAR const(x'00000010');
+dcl-c CLI_FN_TD_MONTH const(x'00000020');
+dcl-c CLI_FN_TD_QUARTER const(x'00000040');
+dcl-c CLI_FN_TD_WEEK const(x'00000080');
+dcl-c CLI_FN_TD_YEAR const(x'00000100');
+dcl-c CLI_FN_TD_CURTIME const(x'00000200');
+dcl-c CLI_FN_TD_HOUR const(x'00000400');
+dcl-c CLI_FN_TD_MINUTE const(x'00000800');
+dcl-c CLI_FN_TD_SECOND const(x'00001000');
+dcl-c CLI_FN_TD_TIMESTAMPADD const(x'00002000');
+dcl-c CLI_FN_TD_TIMESTAMPDIFF const(x'00004000');
+dcl-c CLI_FN_TD_DAYNAME const(x'00008000');
+dcl-c CLI_FN_TD_MONTHNAME const(x'00010000');
+dcl-c CLI_FN_TD_CURRENT_DATE const(x'00020000');
+dcl-c CLI_FN_TD_CURRENT_TIME const(x'00040000');
+dcl-c CLI_FN_TD_CURRENT_TIMESTAMP const(x'00080000');
+dcl-c CLI_FN_TD_EXTRACT const(x'00100000');
 
 //
 // Output values for SQL_CORRELATION_NAME
@@ -482,8 +482,8 @@ dcl-c CLI_CB_PRESERVE const(3);
 dcl-s SQLSMALLINT int(5) template;
 dcl-s SQLUSMALLINT uns(5) template;
 dcl-s SQLUINTEGER uns(10) template;
-dcl-s SQLDOUBLE       s      8F   template;
-dcl-s SQLREAL s      4F   template;
+dcl-s SQLDOUBLE float(8) template;
+dcl-s SQLREAL float(4) template;
 dcl-s SQLINTEGER int(10) template;
 dcl-s SQLHENV int(10) template;
 dcl-s SQLHDBC  int(10) template;
@@ -491,7 +491,7 @@ dcl-s SQLHSTMT int(10) template;
 dcl-s SQLHDESC int(10) template;
 dcl-s SQLHANDLE int(10) template;
 dcl-s SQLRETURN like(SQLINTEGER) template;
-dcl-s SFLOAT  s      4F   template;
+dcl-s SFLOAT float(4) template;
 dcl-s SQLPOINTER pointer template;
 dcl-s SQLHWND pointer template;
 
@@ -1129,7 +1129,7 @@ dcl-pr SQLBindFileToParam like(SQLRETURN) ExtProc('SQLBindFileToParam');
   stmt like(SQLHSTMT) value;
   ParmNo like(SQLSMALLINT) value;
   DataType like(SQLSMALLINT) value;
-  FileName32767A options(*varsize);
+  FileName char(32767) options(*varsize);
   FileNameLen like(SQLINTEGER);
   FileOpts like(SQLINTEGER);
   MaxFileName like(SQLINTEGER) value;
