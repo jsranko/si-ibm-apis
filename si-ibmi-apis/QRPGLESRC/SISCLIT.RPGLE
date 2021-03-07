@@ -38,12 +38,25 @@ dcl-proc SISCLIT;
 dcl-pi SISCLIT;
 end-pi;
 dcl-s stmSelTBL like(tSISCLI_Statement);
+dcl-s confWW like(tSISCLI_DBConfig);
 dcl-s dbWW like(tSISCLI);
+dcl-ds dsFetch extname('SYSTABLES') qualified;
+end-ds;
 
-  dbWW = SISCLI_connect();
-  SISCLI_setAttrCommit(dbWW:cSISCLI_NO_COMMIT);
+  confWW = SISCLI_crtConfig('W+W');
+  SISCLI_setSysNaming(confWW:*on);
+  SISCLI_setCommit(confWW:cSISCLI_NO_COMMIT);
 
-  stmSelTBL = SISCLI_createStatement(dbWW:'select * from systables');
+  dbWW = SISCLI_connect(*omit:confWW);
+
+  stmSelTBL = SISCLI_crtStatement(dbWW:'select * from systables');
+  if not SISCLI_execute(stmSelTBL);
+
+  endif;
+  dow not SISCLI_isEOF(stmSelTBL);
+    dsFetch = SISCLI_fetch(stmSelTBL);
+  enddo;
+  SISCLI_closeStatement(stmSelTBL);
 
   SISCLI_disconnect(dbWW);
 

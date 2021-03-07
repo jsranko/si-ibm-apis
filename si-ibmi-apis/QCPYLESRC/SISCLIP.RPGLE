@@ -12,6 +12,9 @@
 // Constants
 //==========================================================================================
 
+dcl-c cSISCLI_LOCAL const('*LOCAL');
+dcl-c cSISCLI_TRUE const(1);
+dcl-c cSISCLI_FALSE const(0);
 dcl-c cSISCLI_NO_COMMIT const(1);
 
 
@@ -29,17 +32,42 @@ dcl-s tSISCLI_Option int(10) template;
 dcl-s tSISCLI_StatementText varchar(1024) template;
 dcl-s tSISCLI_StatementHandle int(10) template;
 dcl-s tSISCLI_Statement like(tSISCLI_Statement_Def) template;
+dcl-s tSISCLI_SqlState char(6) template;
+dcl-s tSISCLI_SqlCode int(10) template;
+dcl-s tSISCLI_MessageText char(512) template;
+dcl-s tSISCLI_DBConfig like(tSISCLI_DBConfig_Def) template;
+dcl-s tSISCLI_SysNaming int(10) template;
+dcl-s tSISCLI_CommitCtl int(10) template;
+dcl-s tSISCLI_Name varchar(40) template;
+dcl-s tSISCLI_Record char(32767) ccsid(*hex) template;
+
+dcl-ds tSISCLI_DBConfig_Def qualified template;
+  name like(tSISCLI_Name) inz('*INIT');
+  sysNaming like(tSISCLI_SysNaming) inz(cSISCLI_TRUE);
+  commitCtl like(tSISCLI_commitCtl) inz(cSISCLI_NO_COMMIT);
+end-ds;
+
+dcl-ds tSISCLI_Error_Def qualified template;
+  sqlState like(tSISCLI_SqlState);
+  sqlCode like(tSISCLI_SqlCode);
+  MessageText like(tSISCLI_MessageText);
+end-ds;
 
 dcl-ds tSISCLI_Def qualified template;
   env like(tSISCLI_Environment);
   hdbc like(tSISCLI_ConnectionHandle);
   retCode like(tSISCLI_Return);
   db like(tSISCLI_Database);
+  error likeds(tSISCLI_Error_Def);
+  config likeds(tSISCLI_DBConfig_Def) inz(*likeds);
 end-ds;
 
 dcl-ds tSISCLI_Statement_Def qualified template;
   hstmt like(tSISCLI_StatementHandle);
   text like(tSISCLI_StatementText);
+  retCode like(tSISCLI_Return);
+  error likeds(tSISCLI_Error_Def);
+  eof ind;
 end-ds;
 
 //==========================================================================================
@@ -50,20 +78,46 @@ end-ds;
   /eof
 /endif
 
+dcl-pr SISCLI_crtConfig like(tSISCLI_DBConfig) extproc(*dclcase);
+ Name like(tSISCLI_Name) value options(*nopass);
+end-pr;
+
 dcl-pr SISCLI_connect like(tSISCLI) extproc(*dclcase);
-  Database like(tSISCLI_Database) value options(*nopass);
+  Database like(tSISCLI_Database) const options(*omit:*nopass);
+  SISCLI_DBConfig like(tSISCLI_DBConfig) options(*nopass);
 end-pr;
 
 dcl-pr SISCLI_disconnect ind extproc(*dclcase);
  SISCLI like(tSISCLI);
 end-pr;
 
-dcl-pr SISCLI_setAttrCommit ind extproc(*dclcase);
-  SISCLI like(tSISCLI);
-  Attr like(tSISCLI_ConnectionAttr) value options(*nopass);
+dcl-pr SISCLI_setCommit ind extproc(*dclcase);
+  SISCLI_DBConfig like(tSISCLI_DBConfig);
+  CommitCtl like(tSISCLI_CommitCtl) value;
 end-pr;
 
-dcl-pr SISCLI_createStatement like(tSISCLI_Statement) extproc(*dclcase);
+dcl-pr SISCLI_crtStatement like(tSISCLI_Statement) extproc(*dclcase);
   SISCLI like(tSISCLI);
   StatementText like(tSISCLI_StatementText) value;
+end-pr;
+
+dcl-pr SISCLI_execute ind extproc(*dclcase);
+  Statement like(tSISCLI_Statement);
+end-pr;
+
+dcl-pr SISCLI_closeStatement ind extproc(*dclcase);
+  Statement like(tSISCLI_Statement);
+end-pr;
+
+dcl-pr SISCLI_setSysNaming extproc(*dclcase);
+  SISCLI_DBConfig like(tSISCLI_DBConfig);
+  Attr ind value;
+end-pr;
+
+dcl-pr SISCLI_fetch like(tSISCLI_Record) extproc(*dclcase);
+  Statement like(tSISCLI_Statement);
+end-pr;
+
+dcl-pr SISCLI_isEOF ind extproc(*dclcase);
+  Statement like(tSISCLI_Statement);
 end-pr;
