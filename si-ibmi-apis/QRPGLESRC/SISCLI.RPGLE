@@ -141,7 +141,7 @@ dcl-ds dsSISCLI_DBConfig likeds(tSISCLI_DBConfig_Def) based(pSISCLI_DBConfig);
 
   dsSISCLI_DBConfig.commitCtl = CommitCtl;
 
-  //dsSISCLI.retCode = setAttr(dsSISCLI:CLI_ATTR_COMMIT:%addr(sAttr));
+  //dsSISCLI.retCode = setAttr(dsSISCLI:SQL_ATTR_COMMIT:%addr(sAttr));
 
   return *on;
 end-proc;
@@ -202,7 +202,7 @@ dcl-ds dsStatement likeds(tSISCLI_Statement_Def) based(pStatement);
 
   initStmt(dsStatement);
 
-  dsStatement.retCode = SQLFreeHandle(CLI_HANDLE_STMT:dsStatement.hstmt);
+  dsStatement.retCode = SQLFreeHandle(SQL_HANDLE_STMT:dsStatement.hstmt);
   if isErrorFreeHandle(dsStatement);
     dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
     return *off;
@@ -264,6 +264,28 @@ end-proc;
 
 //------------------------------------------------------------------------------------------
 
+dcl-proc SISCLI_getNumResultCols export;
+dcl-pi SISCLI_getNumResultCols like(tSISCLI_NumResultCols) extproc(*dclcase);
+  Statement like(tSISCLI_Statement);
+end-pi;
+dcl-s output like(tSISCLI_NumResultCols);
+dcl-ds dsStatement likeds(tSISCLI_Statement_Def) based(pStatement);
+
+  pStatement = %addr(Statement);
+
+  initStmt(dsStatement);
+
+  dsStatement.retCode = SQLNumResultCols(dsStatement.hstmt:output);
+  if isErrorNumResultCols(dsStatement);
+    dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
+    return 0;
+  endif;
+
+  return output;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
 dcl-proc initStmt;
 dcl-pi initStmt;
   dsStatement likeds(tSISCLI_Statement_Def);
@@ -290,16 +312,16 @@ dcl-s recCode like(tSISCLI_Return);
 dcl-ds output likeds(tSISCLI_Error_Def);
 
   if %addr(connectionHandle) <> *null;
-    handleType = CLI_HANDLE_DBC;
+    handleType = SQL_HANDLE_DBC;
     handle = connectionHandle;
   endif;
   if %parms() >= %parmnum(environmentHandle)
   and %addr(environmentHandle) <> *null;
-    handleType = CLI_HANDLE_ENV;
+    handleType = SQL_HANDLE_ENV;
     handle = environmentHandle;
   endif;
   if %parms() >= %parmnum(statementHandle);
-    handleType = CLI_HANDLE_STMT;
+    handleType = SQL_HANDLE_STMT;
     handle = statementHandle;
   endif;
 
@@ -331,7 +353,7 @@ end-pi;
   endif;
 
   // Set SysNaming
-  dsSISCLI.retCode = SQLSetEnvAttr(dsSISCLI.env:CLI_ATTR_SYS_NAMING:%addr(dsSISCLI.config.sysNaming):0);
+  dsSISCLI.retCode = SQLSetEnvAttr(dsSISCLI.env:SQL_ATTR_SYS_NAMING:%addr(dsSISCLI.config.sysNaming):0);
   if isErrorSetEnvAttr(dsSISCLI);
     dsSISCLI.error = getError(dsSISCLI.env);
     return *off;
@@ -354,7 +376,7 @@ end-pi;
   endif;
 
   // Set Attribute commit
-  dsSISCLI.retCode = SQLSetConnectOption(dsSISCLI.hdbc:CLI_ATTR_COMMIT:%addr(dsSISCLI.config.commitCtl));
+  dsSISCLI.retCode = SQLSetConnectOption(dsSISCLI.hdbc:SQL_ATTR_COMMIT:%addr(dsSISCLI.config.commitCtl));
   if isErrorSetConnectOption(dsSiSCLI);
     return *off;
   endif;
@@ -369,8 +391,8 @@ dcl-pi isErrorSetEnvAttr ind;
   dsSISCLI likeds(tSISCLI_Def);
 end-pi;
 
-  if dsSISCLI.retCode <> CLI_SUCCESS
-  and dsSISCLI.retCode <> CLI_SUCCESS_WITH_INFO;
+  if dsSISCLI.retCode <> SQL_SUCCESS
+  and dsSISCLI.retCode <> SQL_SUCCESS_WITH_INFO;
     return *on;
   endif;
 
@@ -384,7 +406,7 @@ dcl-pi isErrorAllocEnv ind;
   dsSISCLI likeds(tSISCLI_Def);
 end-pi;
 
-  if dsSISCLI.retCode <> CLI_SUCCESS;
+  if dsSISCLI.retCode <> SQL_SUCCESS;
     return *on;
   endif;
 
@@ -398,7 +420,7 @@ dcl-pi isErrorAllocConnect ind;
   dsSISCLI likeds(tSISCLI_Def);
 end-pi;
 
-  if dsSISCLI.retCode <> CLI_SUCCESS;
+  if dsSISCLI.retCode <> SQL_SUCCESS;
     return *on;
   endif;
 
@@ -412,8 +434,8 @@ dcl-pi isErrorSetConnectOption ind;
   dsSISCLI likeds(tSISCLI_Def);
 end-pi;
 
-  if dsSISCLI.retCode <> CLI_SUCCESS
-  and dsSISCLI.retCode <> CLI_SUCCESS_WITH_INFO;
+  if dsSISCLI.retCode <> SQL_SUCCESS
+  and dsSISCLI.retCode <> SQL_SUCCESS_WITH_INFO;
     return *on;
   endif;
 
@@ -427,8 +449,8 @@ dcl-pi isErrorConnect ind;
   dsSISCLI likeds(tSISCLI_Def);
 end-pi;
 
-  if dsSISCLI.retCode <> CLI_SUCCESS
-  and dsSISCLI.retCode <> CLI_SUCCESS_WITH_INFO;
+  if dsSISCLI.retCode <> SQL_SUCCESS
+  and dsSISCLI.retCode <> SQL_SUCCESS_WITH_INFO;
     return *on;
   endif;
 
@@ -442,7 +464,7 @@ dcl-pi isErrorAllocStmt ind;
   dsSISCLI likeds(tSISCLI_Def);
 end-pi;
 
-  if dsSISCLI.retCode <> CLI_SUCCESS;
+  if dsSISCLI.retCode <> SQL_SUCCESS;
     return *on;
   endif;
 
@@ -456,8 +478,8 @@ dcl-pi isErrorExecDirect ind;
   dsStatement likeds(tSISCLI_Statement_Def);
 end-pi;
 
-  if dsStatement.retCode <> CLI_SUCCESS
-  and dsStatement.retCode <> CLI_SUCCESS_WITH_INFO;
+  if dsStatement.retCode <> SQL_SUCCESS
+  and dsStatement.retCode <> SQL_SUCCESS_WITH_INFO;
     return *on;
   endif;
 
@@ -471,10 +493,69 @@ dcl-pi isErrorFreeHandle ind;
   dsStatement likeds(tSISCLI_Statement_Def);
 end-pi;
 
-  if dsStatement.retCode <> CLI_SUCCESS;
+  if dsStatement.retCode <> SQL_SUCCESS;
     return *on;
   endif;
 
   return *off;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc isErrorNumResultCols;
+dcl-pi isErrorNumResultCols ind;
+  dsStatement likeds(tSISCLI_Statement_Def);
+end-pi;
+
+  if dsStatement.retCode <> SQL_SUCCESS;
+    return *on;
+  endif;
+
+  return *off;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc isErrorColAttribute;
+dcl-pi isErrorColAttribute ind;
+  dsStatement likeds(tSISCLI_Statement_Def);
+end-pi;
+
+  if dsStatement.retCode <> SQL_SUCCESS
+  and dsStatement.retCode <> SQL_SUCCESS_WITH_INFO;
+    return *on;
+  endif;
+
+  return *off;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc crtBufferForResultSet export;
+dcl-pi crtBufferForResultSet pointer extproc(*dclcase);
+  dsStatement likeds(tSISCLI_Statement_Def);
+end-pi;
+dcl-s numResultCols like(tSISCLI_NumResultCols);
+dcl-s retCode like(tSISCLI_Return);
+dcl-s sqlType like(SQLSMALLINT) based(pSqlType);
+dcl-s charAttrPtr pointer;
+dcl-s StringLengthPtr like(SQLSMALLINT);
+dcl-s i like(tSISCLI_NumResultCols);
+
+  numResultCols = SISCLI_getNumResultCols(dsStatement);
+  if isErrorNumResultCols(dsStatement);
+    dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
+    return *null;
+  endif;
+
+  for i = 1 to numResultCols;
+      //retCode = SQLColAttribute(dsStatement.hstmt:i:SQL_DESC_TYPE:charAttrPtr:0:StringLengthPtr:pSqlType);
+      if isErrorColAttribute(dsStatement);
+        return *null;
+      endif;
+
+  endfor;
+
+  return *null;
 end-proc;
 

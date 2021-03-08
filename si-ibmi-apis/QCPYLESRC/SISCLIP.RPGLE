@@ -40,6 +40,7 @@ dcl-s tSISCLI_SysNaming int(10) template;
 dcl-s tSISCLI_CommitCtl int(10) template;
 dcl-s tSISCLI_Name varchar(40) template;
 dcl-s tSISCLI_Record char(32767) ccsid(*hex) template;
+dcl-s tSISCLI_NumResultCols int(5) template;
 
 dcl-ds tSISCLI_DBConfig_Def qualified template;
   name like(tSISCLI_Name) inz('*INIT');
@@ -120,4 +121,12 @@ end-pr;
 
 dcl-pr SISCLI_isEOF ind extproc(*dclcase);
   Statement like(tSISCLI_Statement);
+end-pr;
+
+dcl-pr SISCLI_getNumResultCols like(tSISCLI_NumResultCols) extproc(*dclcase);
+  Statement like(tSISCLI_Statement);
+end-pr;
+
+dcl-pr crtBufferForResultSet pointer extproc(*dclcase);
+  dsStatement likeds(tSISCLI_Statement_Def);
 end-pr;

@@ -37,6 +37,7 @@
 dcl-proc SISCLIT;
 dcl-pi SISCLIT;
 end-pi;
+dcl-s ptr pointer;
 dcl-s stmSelTBL like(tSISCLI_Statement);
 dcl-s confWW like(tSISCLI_DBConfig);
 dcl-s dbWW like(tSISCLI);
@@ -55,10 +56,16 @@ end-ds;
   endif;
   dow not SISCLI_isEOF(stmSelTBL);
     dsFetch = SISCLI_fetch(stmSelTBL);
+
+    ptr = crtBufferForResultSet(stmSelTBL);
   enddo;
   SISCLI_closeStatement(stmSelTBL);
 
   SISCLI_disconnect(dbWW);
 
 return;
+
+on-exit;
+  SISCLI_closeStatement(stmSelTBL);
+  SISCLI_disconnect(dbWW);
 end-proc;
