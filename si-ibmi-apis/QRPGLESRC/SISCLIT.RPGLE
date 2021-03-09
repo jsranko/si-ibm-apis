@@ -37,11 +37,12 @@
 dcl-proc SISCLIT;
 dcl-pi SISCLIT;
 end-pi;
-dcl-s ptr pointer;
+dcl-s dspVar varchar(52);
+dcl-s indAra int(10) dim(20);
 dcl-s stmSelTBL like(tSISCLI_Statement);
 dcl-s confWW like(tSISCLI_DBConfig);
 dcl-s dbWW like(tSISCLI);
-dcl-ds dsFetch extname('SYSTABLES') qualified;
+dcl-ds dsFetch extname('SYSFEATURE') qualified;
 end-ds;
 
   confWW = SISCLI_crtConfig('W+W');
@@ -50,14 +51,18 @@ end-ds;
 
   dbWW = SISCLI_connect(*omit:confWW);
 
-  stmSelTBL = SISCLI_crtStatement(dbWW:'select * from systables');
+  stmSelTBL = SISCLI_crtStatement(dbWW:'select * from sysfeature':*on);
   if not SISCLI_execute(stmSelTBL);
 
   endif;
   dow not SISCLI_isEOF(stmSelTBL);
-    dsFetch = SISCLI_fetch(stmSelTBL);
+    if not SISCLI_fetch(stmSelTBL:%addr(dsFetch):%addr(indAra));
+      leave;
+    endif;
 
-    ptr = crtBufferForResultSet(stmSelTBL);
+    dspVar = dsFetch.FEATURE_ID;
+    dsply (dspVar);
+
   enddo;
   SISCLI_closeStatement(stmSelTBL);
 

@@ -16,6 +16,7 @@ dcl-c cSISCLI_LOCAL const('*LOCAL');
 dcl-c cSISCLI_TRUE const(1);
 dcl-c cSISCLI_FALSE const(0);
 dcl-c cSISCLI_NO_COMMIT const(1);
+dcl-c cSISCLI_MAXCOLS const(1000);
 
 
 //==========================================================================================
@@ -39,8 +40,15 @@ dcl-s tSISCLI_DBConfig like(tSISCLI_DBConfig_Def) template;
 dcl-s tSISCLI_SysNaming int(10) template;
 dcl-s tSISCLI_CommitCtl int(10) template;
 dcl-s tSISCLI_Name varchar(40) template;
-dcl-s tSISCLI_Record char(32767) ccsid(*hex) template;
 dcl-s tSISCLI_NumResultCols int(5) template;
+dcl-s tSISCLI_DataType int(10) template;
+
+dcl-ds tSISCLI_FieldAttrs qualified template;
+  offset int(10);
+  size int(10);
+  dataType like(tSISCLI_DataType);
+  dataTypeC like(tSISCLI_DataType);
+end-ds;
 
 dcl-ds tSISCLI_DBConfig_Def qualified template;
   name like(tSISCLI_Name) inz('*INIT');
@@ -48,7 +56,7 @@ dcl-ds tSISCLI_DBConfig_Def qualified template;
   commitCtl like(tSISCLI_commitCtl) inz(cSISCLI_NO_COMMIT);
 end-ds;
 
-dcl-ds tSISCLI_Error_Def qualified template;
+dcl-ds tSISCLI_Error qualified template;
   sqlState like(tSISCLI_SqlState);
   sqlCode like(tSISCLI_SqlCode);
   MessageText like(tSISCLI_MessageText);
@@ -59,16 +67,19 @@ dcl-ds tSISCLI_Def qualified template;
   hdbc like(tSISCLI_ConnectionHandle);
   retCode like(tSISCLI_Return);
   db like(tSISCLI_Database);
-  error likeds(tSISCLI_Error_Def);
+  error likeds(tSISCLI_Error);
   config likeds(tSISCLI_DBConfig_Def) inz(*likeds);
 end-ds;
 
 dcl-ds tSISCLI_Statement_Def qualified template;
   hstmt like(tSISCLI_StatementHandle);
+  hstmtEmergency like(tSISCLI_StatementHandle);
   text like(tSISCLI_StatementText);
   retCode like(tSISCLI_Return);
-  error likeds(tSISCLI_Error_Def);
+  error likeds(tSISCLI_Error);
   eof ind;
+  //binded ind;
+  fields likeds(tSISCLI_FieldAttrs) dim(cSISCLI_MAXCOLS);
 end-ds;
 
 //==========================================================================================
@@ -100,6 +111,7 @@ end-pr;
 dcl-pr SISCLI_crtStatement like(tSISCLI_Statement) extproc(*dclcase);
   SISCLI like(tSISCLI);
   StatementText like(tSISCLI_StatementText) value;
+  ForUpdate ind value options(*nopass);
 end-pr;
 
 dcl-pr SISCLI_execute ind extproc(*dclcase);
@@ -115,8 +127,10 @@ dcl-pr SISCLI_setSysNaming extproc(*dclcase);
   Attr ind value;
 end-pr;
 
-dcl-pr SISCLI_fetch like(tSISCLI_Record) extproc(*dclcase);
+dcl-pr SISCLI_fetch ind extproc(*dclcase);
   Statement like(tSISCLI_Statement);
+  PointerToData pointer value;
+  PointerToIndAra pointer value;
 end-pr;
 
 dcl-pr SISCLI_isEOF ind extproc(*dclcase);
@@ -127,6 +141,6 @@ dcl-pr SISCLI_getNumResultCols like(tSISCLI_NumResultCols) extproc(*dclcase);
   Statement like(tSISCLI_Statement);
 end-pr;
 
-dcl-pr crtBufferForResultSet pointer extproc(*dclcase);
-  dsStatement likeds(tSISCLI_Statement_Def);
+dcl-pr SISCLI_closeCursor ind extproc(*dclcase);
+  Statement like(tSISCLI_Statement);
 end-pr;

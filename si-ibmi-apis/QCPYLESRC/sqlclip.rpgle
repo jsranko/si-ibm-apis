@@ -1271,8 +1271,8 @@ dcl-pr SQLColAttribute like(SQLRETURN) ExtProc('SQLColAttribute');
   FieldIdentifier like(SQLSMALLINT) value;
   CharacterAttributePtr pointer;
   BufferLength like(SQLSMALLINT) value;
-  StringLengthPtr like(SQLSMALLINT);
-  NumericAttributePtr pointer;
+  StringLength like(SQLINTEGER);
+  NumericAttributePtr like(SQLPOINTER) value;
 end-pr;
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
