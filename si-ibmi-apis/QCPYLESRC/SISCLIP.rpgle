@@ -16,7 +16,7 @@ dcl-c cSISCLI_LOCAL const('*LOCAL');
 dcl-c cSISCLI_TRUE const(1);
 dcl-c cSISCLI_FALSE const(0);
 dcl-c cSISCLI_NO_COMMIT const(1);
-dcl-c cSISCLI_MAXCOLS const(1000);
+dcl-c cSISCLI_MAXCOLS const(500);
 
 
 //==========================================================================================
@@ -63,11 +63,11 @@ dcl-ds tSISCLI_Error qualified template;
 end-ds;
 
 dcl-ds tSISCLI_Def qualified template;
-  env like(tSISCLI_Environment);
-  hdbc like(tSISCLI_ConnectionHandle);
-  retCode like(tSISCLI_Return);
-  db like(tSISCLI_Database);
-  error likeds(tSISCLI_Error);
+  env like(tSISCLI_Environment) inz;
+  hdbc like(tSISCLI_ConnectionHandle) inz;
+  retCode like(tSISCLI_Return) inz;
+  db like(tSISCLI_Database) inz;
+  error likeds(tSISCLI_Error) inz;
   config likeds(tSISCLI_DBConfig_Def) inz(*likeds);
 end-ds;
 
@@ -78,7 +78,7 @@ dcl-ds tSISCLI_Statement_Def qualified template;
   retCode like(tSISCLI_Return);
   error likeds(tSISCLI_Error);
   eof ind;
-  //binded ind;
+  numResultCols like(tSISCLI_NumResultCols);
   fields likeds(tSISCLI_FieldAttrs) dim(cSISCLI_MAXCOLS);
 end-ds;
 
@@ -130,7 +130,6 @@ end-pr;
 dcl-pr SISCLI_fetch ind extproc(*dclcase);
   Statement like(tSISCLI_Statement);
   PointerToData pointer value;
-  PointerToIndAra pointer value;
 end-pr;
 
 dcl-pr SISCLI_isEOF ind extproc(*dclcase);

@@ -24,7 +24,6 @@ DIR_JAVA=src/java
 DIR_SHELL=QSHSRC
 DIR_IWSS=QIWSSSRC
 DIR_C=QCSRC
-EXT_CPYSRC=RPGLE
 EXT_MSGF=MSGF
 EXT_CMD=CMD
 EXT_CL=CLLE
@@ -110,7 +109,7 @@ SRCFILES=\
 	$(SRCFILES_0:=.srcpf)
 
 CPYSRCS:=\
-	$(patsubst %.$(EXT_CPYSRC),%.cpysrc,$(wildcard $(DIR_CPY)/*.$(EXT_CPYSRC)))
+	$(patsubst %.rpgle,%.cpysrc,$(wildcard $(DIR_CPY)/*.rpgle)) 
 
 CSRCS:=\
 	$(patsubst %.c,%.cpyc,$(wildcard $(DIR_C)/*.c)) \
@@ -158,7 +157,7 @@ build-core-2: $(LIBRARY).lib \
 	    build-pgms \
 	    build-cls \
 	    build-commands \
-	    copy-srcfiles \
+	    copy-cpyfiles \
 	    copy-cfiles
 
 build-udf: build-sqls  \
@@ -182,7 +181,7 @@ create-srcfiles: $(SRCFILES)
 
 build-cls: $(CLS)
 
-copy-srcfiles: $(LIBRARY).lib \
+copy-cpyfiles: $(LIBRARY).lib \
            $(CPYSRCS)
 
 copy-cfiles: $(LIBRARY).lib \
@@ -219,6 +218,9 @@ setup:
 update:
 	$(shell git pull) && \
 	build
+
+update-cpyfiles: clean-cpyfiles \
+	copy-cpyfiles
 
 %.envvar: 
 	system -Kp "ADDENVVAR ENVVAR(RPGINCDIR) VALUE('$(ROOT_DIR)') CCSID(*JOB) LEVEL(*SYS) REPLACE(*YES)" && \
@@ -302,8 +304,9 @@ update:
 	liblist -a $(LIBRARY);\
 	system -kp "CRTBNDCL PGM($(LIBRARY)/$(notdir $*)) SRCSTMF('$(ROOT_DIR)/$<') DFTACTGRP(*NO) ACTGRP(*STGMDL) STGMDL(*SNGLVL) OUTPUT(*NONE) REPLACE(*YES) DBGVIEW($(DBGVIEW))"     
 
-%.cpysrc: %.$(EXT_CPYSRC) $(DIR_CPY).srcpf
-	$(call copy_to_srcpf,$(ROOT_DIR)/$<,$(LIBRARY),$(DIR_CPY),$(notdir $*)) && \
+%.cpysrc: %.rpgle $(DIR_CPY).srcpf
+	$(call substitute,$<,$@) && \
+	$(call copy_to_srcpf,$(ROOT_DIR)/$*.cpysrc,$(LIBRARY),$(DIR_CPY),$(notdir $*)) && \
 	touch $@
 
 %.cpyc: %.c $(DIR_C).srcpf
@@ -336,6 +339,11 @@ clean-lib:
 
 clean-srcfiles:
 	rm -f *.srcpf
+
+clean-cpyfiles:
+	rm -f $(DIR_CPY).srcpf
+	rm -f $(DIR_CPY)/*.cpysrc 
+	system -Kp 'DLTF FILE($(LIBRARY)/$(DIR_CPY))'
 
 clean-bnddir:
 	rm -f *.bnddir
@@ -389,13 +397,14 @@ clean: clean-cpysrc \
 		clean-exitprograms \
 		clean-bnddir \
 		clean-srcfiles \
+		clean-cpyfiles \
 		clean-iwss \
 		clean-lib
 		
 
 define copy_to_srcpf
-	system -Kp "CPYFRMSTMF FROMSTMF('$(1)') TOMBR('/QSYS.LIB/$(2).LIB/$(3).FILE/$(4).MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)" && \
-	system -Kp "CHGPFM FILE($(2)/$(3)) MBR($(4)) SRCTYPE($(subst .,,$(suffix $(1)))) TEXT('just for read-only')"
+	system -Kp "CPYFRMSTMF FROMSTMF('$(subst _,,$(1))') TOMBR('/QSYS.LIB/$(2).LIB/$(3).FILE/$(subst _,,$(4)).MBR') MBROPT(*REPLACE) STMFCCSID(*STMF) DBFCCSID(*FILE) ENDLINFMT(*ALL)" && \
+	system -Kp "CHGPFM FILE($(2)/$(3)) MBR($(subst _,,$(4))) SRCTYPE($(subst .,,$(suffix $(1)))) TEXT('just for read-only')"
 endef	
 
 define log_and_run	
@@ -415,7 +424,7 @@ define setJobCCSID
 endef
 
 define substitute
-	-rm $(2)
-	export QIBM_CCSID=$(SHELL_CCSID) && touch $(2) && \
-	sed 's/$$(LIBRARY)/$(LIBRARY)/g; s/$$(ROOT_DIR)/$(subst /,\/,$(ROOT_DIR))/g; s/$$(DIR_JAVA)/$(subst /,\/,$(DIR_JAVA))/g' $(1) >> $(2)
+	-rm $(subst _,,$(2))
+	export QIBM_CCSID=$(SHELL_CCSID) && touch $(subst _,,$(2)) && \
+	sed 's/$$(LIBRARY)/$(LIBRARY)/g; s/$$(ROOT_DIR)/$(subst /,\/,$(ROOT_DIR))/g; s/$$(DIR_JAVA)/$(subst /,\/,$(DIR_JAVA))/g' $(1) >> $(subst _,,$(2))
 endef

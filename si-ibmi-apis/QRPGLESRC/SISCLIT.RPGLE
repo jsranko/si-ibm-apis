@@ -64,9 +64,6 @@ end-ds;
     dsply (dspVar);
 
   enddo;
-  SISCLI_closeStatement(stmSelTBL);
-
-  SISCLI_disconnect(dbWW);
 
 return;
 

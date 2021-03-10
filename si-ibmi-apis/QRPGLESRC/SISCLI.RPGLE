@@ -200,6 +200,8 @@ dcl-ds dsStatement likeds(tSISCLI_Statement_Def) based(pStatement);
     return *off;
   endif;
 
+  dsStatement.numResultCols = SISCLI_getNumResultCols(Statement);
+
   dsStatement.fields = getFieldAttrs(dsStatement);
 
   return *on;
@@ -256,7 +258,6 @@ dcl-proc SISCLI_fetch export;
 dcl-pi SISCLI_fetch ind extproc(*dclcase);
   Statement like(tSISCLI_Statement);
   PointerToData pointer value;
-  PointerToIndAra pointer value;
 end-pi;
 dcl-ds dsStatement likeds(tSISCLI_Statement_Def) based(pStatement);
 
@@ -264,15 +265,17 @@ dcl-ds dsStatement likeds(tSISCLI_Statement_Def) based(pStatement);
 
   initStmt(dsStatement);
 
-  //if not dsStatement.binded;
-  if not bindColumnsToProgramVars(dsStatement:PointerToData:PointerToIndAra);
-    return *off;
-  endif;
+  //if not bindColumnsToProgramVars(dsStatement:PointerToData:PointerToIndAra);
+  //  return *off;
   //endif;
 
   dsStatement.retCode = SQLFetch(dsStatement.hstmt);
   if isErrorFetch(dsStatement);
     dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
+    return *off;
+  endif;
+
+  if not getData(dsStatement:PointerToData);
     return *off;
   endif;
 
@@ -644,6 +647,22 @@ end-pi;
   return *off;
 end-proc;
 
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc isErrorGetCol;
+dcl-pi isErrorGetCol ind;
+  dsStatement likeds(tSISCLI_Statement_Def);
+end-pi;
+
+  if dsStatement.retCode <> SQL_SUCCESS
+  and dsStatement.retCode <> SQL_SUCCESS_WITH_INFO;
+    return *on;
+  endif;
+
+  return *off;
+end-proc;
+
 //------------------------------------------------------------------------------------------
 
 dcl-proc getFieldAttrs export;
@@ -651,36 +670,51 @@ dcl-pi getFieldAttrs likeds(tSISCLI_FieldAttrs) dim(cSISCLI_MAXCOLS) extproc(*dc
   dsStatement likeds(tSISCLI_Statement_Def);
 end-pi;
 dcl-ds output likeds(tSISCLI_FieldAttrs) dim(cSISCLI_MAXCOLS) inz;
-dcl-s numResultCols like(tSISCLI_NumResultCols);
 dcl-s retCode like(tSISCLI_Return);
 dcl-s offset like(SQLINTEGER) inz(0);
 dcl-s nullPtr pointer;
-dcl-s fieldSize like(SQLINTEGER);
-dcl-s fieldType like(SQLINTEGER);
+dcl-s fieldNameLen like(SQLSMALLINT);
+dcl-s fieldType like(SQLSMALLINT);
+dcl-s fieldPrec like(SQLINTEGER);
+dcl-s fieldScale like(SQLSMALLINT);
+dcl-s fieldNull like(SQLSMALLINT);
+dcl-s fieldName char(513);
 dcl-s number2 like(SQLINTEGER);
 dcl-s i like(tSISCLI_NumResultCols);
 
-  numResultCols = SISCLI_getNumResultCols(dsStatement);
-  for i = 1 to numResultCols;
+  for i = 1 to dsStatement.numResultCols;
 
-      retCode = SQLColAttribute(dsStatement.hstmt:i:SQL_DESC_LENGTH:nullPtr:%size(fieldSize):number2:%addr(fieldSize));
-      if isErrorColAttribute(dsStatement);
-        dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
-        return output;
-      endif;
+      retCode = SQLDescribeCol(dsStatement.hstmt:i:fieldName:%size(fieldName):fieldNameLen:fieldType:fieldPrec:fieldScale:fieldNull);
 
-      retCode = SQLColAttribute(dsStatement.hstmt:i:SQL_DESC_TYPE:nullPtr:%size(fieldType):number2:%addr(fieldType));
-      if isErrorColAttribute(dsStatement);
-        dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
-        return output;
-      endif;
+//      retCode = SQLColAttribute(dsStatement.hstmt:i:SQL_DESC_LENGTH:nullPtr:%size(fieldSize):number2:%addr(fieldSize));
+//      if isErrorColAttribute(dsStatement);
+//        dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
+//        return output;
+//      endif;
+//
+//      retCode = SQLColAttribute(dsStatement.hstmt:i:SQL_DESC_TYPE:nullPtr:%size(fieldType):number2:%addr(fieldType));
+//      if isErrorColAttribute(dsStatement);
+//        dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
+//        return output;
+//      endif;
+
+//      retCode = SQLColAttribute(dsStatement.hstmt:i:SQL_DESC_BASE_COLUMN:nullPtr:%size(fieldType):number2:%addr(fieldType));
+//      if isErrorColAttribute(dsStatement);
+//        dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
+//        return output;
+//      endif;
 
       output(i).offset = offset;
-      output(i).size = fieldSize;
+      output(i).size = fieldPrec;
       output(i).dataType = fieldType;
       output(i).dataTypeC = fieldType;
       select;
+      when fieldType = SQL_NUMERIC;
+        output(i).dataTypeC = SQL_CHAR;
+      when fieldType = SQL_DECIMAL;
+        output(i).dataTypeC = SQL_CHAR;
       when fieldType = SQL_VARCHAR;
+        output(i).dataTypeC = SQL_CHAR;
         output(i).size = output(i).size + 2;
         //output(i).dataTypeC = SQL_CHAR;
       endsl;
@@ -698,14 +732,11 @@ dcl-proc bindColumnsToProgramVars ;
 dcl-pi bindColumnsToProgramVars ind;
   dsStatement likeds(tSISCLI_Statement_Def);
   PointerToData pointer;
-  PointerToInd pointer;
 end-pi;
-dcl-s numResultCols like(tSISCLI_NumResultCols);
-dcl-s sizeReturned like(SQLINTEGER) dim(cSISCLI_MAXCOLS) based(PointerToInd);
+dcl-s sizeReturned like(SQLINTEGER) dim(cSISCLI_MAXCOLS);
 dcl-s i like(tSISCLI_NumResultCols);
 
-  numResultCols = SISCLI_getNumResultCols(dsStatement);
-  for i = 1 to numResultCols;
+  for i = 1 to dsStatement.numResultCols;
     dsStatement.retCode = SQLBindCol(dsStatement.hstmt
                                     :i
                                     :dsStatement.fields(i).dataTypeC
@@ -714,6 +745,39 @@ dcl-s i like(tSISCLI_NumResultCols);
                                     :sizeReturned(i)
                                     );
     if isErrorBindCol(dsStatement);
+      dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
+      return *off;
+    endif;
+
+  endfor;
+
+  //dsStatement.binded = *on;
+
+  return *on;
+end-proc;
+
+//------------------------------------------------------------------------------------------
+
+dcl-proc getData ;
+dcl-pi getData ind;
+  dsStatement likeds(tSISCLI_Statement_Def);
+  PointerToData pointer;
+end-pi;
+dcl-s ptrToBuffer like(SQLPOINTER);
+dcl-s sizeReturned like(SQLINTEGER) dim(cSISCLI_MAXCOLS);
+dcl-s i like(tSISCLI_NumResultCols);
+
+  ptrToBuffer = PointerToData;
+  for i = 1 to dsStatement.numResultCols;
+    ptrToBuffer = ptrToBuffer +  dsStatement.fields(i).size;
+    dsStatement.retCode = SQLGetCol(dsStatement.hstmt
+                                   :i
+                                   :dsStatement.fields(i).dataTypeC
+                                   :ptrToBuffer
+                                   :dsStatement.fields(i).size
+                                   :sizeReturned(i)
+                                   );
+    if isErrorGetCol(dsStatement);
       dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
       return *off;
     endif;
