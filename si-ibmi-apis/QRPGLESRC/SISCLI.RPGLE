@@ -769,7 +769,7 @@ dcl-s i like(tSISCLI_NumResultCols);
 
   ptrToBuffer = PointerToData;
   for i = 1 to dsStatement.numResultCols;
-    ptrToBuffer = ptrToBuffer +  dsStatement.fields(i).size;
+
     dsStatement.retCode = SQLGetCol(dsStatement.hstmt
                                    :i
                                    :dsStatement.fields(i).dataTypeC
@@ -781,6 +781,7 @@ dcl-s i like(tSISCLI_NumResultCols);
       dsStatement.error = getError(*omit:*omit:dsStatement.hstmt);
       return *off;
     endif;
+    ptrToBuffer = ptrToBuffer +  dsStatement.fields(i).size;
 
   endfor;
 
