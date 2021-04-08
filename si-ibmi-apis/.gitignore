@@ -8,6 +8,7 @@ SICTLOPT.RPGLE
 *.exitprogram
 *.command
 *.query
+*.queryjava
 *.messagefile
 *.srcpf
 *.clpgm
